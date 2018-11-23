@@ -1,0 +1,55 @@
+﻿#maven
+target
+
+# runti
+me added files
+build
+lib/example-*.jar
+
+# IntelliJ IDEA files
+.idea
+out/
+*.ipr
+*.iws
+*.iml
+
+# Eclipse files (and some general ones also used by Eclipse)
+.metadata
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.classpath
+.project
+
+# NetBeans files
+nbproject/private/
+nbbuild/
+.nb-gradle/
+#忽略 dist/
+nbdist/
+logsShop/
+nbactions.xml
+nb-configuration.xml
+
+# OSX auto files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows auto files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux auto files
+*~
+*.log
+logs
