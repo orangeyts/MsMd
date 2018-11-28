@@ -1,8 +1,11 @@
-package com.demo.project;
+package com.demo.step;
 
 import com.demo.common.model.TbProject;
+import com.demo.common.model.TbStep;
+import com.demo.project.TbStepService;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Page;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -11,15 +14,20 @@ import com.jfinal.core.Controller;
  * StepController
  * 所有 sql 与业务逻辑写在 Model 或 Service 中，不要写在 Controller 中，养成好习惯，有利于大型项目的开发与维护
  */
-public class ProjectController extends Controller {
+public class StepController extends Controller {
 
-	private String modelKey = "project";
+	private String modelKey = "step";
 	
 	@Inject
-	ProjectService service;
+	TbStepService service;
 	
 	public void index() {
-		setAttr(modelKey+"Page", service.paginate(getParaToInt(0, 1), 10));
+		Integer projectId = getParaToInt("projectId");
+		if (projectId == null){
+		    //返回错误信息
+        }
+        Page<TbStep> paginate = service.paginate(getParaToInt(0, 1), 10, projectId);
+        setAttr(modelKey+"Page", paginate);
 		render(modelKey+".html");
 	}
 	
@@ -36,7 +44,7 @@ public class ProjectController extends Controller {
 	}
 	
 	public void edit() {
-		setAttr("tbProject", service.findById(getParaToInt()));
+		setAttr("tbStep", service.findById(getParaToInt()));
 	}
 	
 	/**
