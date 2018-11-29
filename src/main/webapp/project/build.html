@@ -1,0 +1,14 @@
+#@layout()
+#define main()
+<fieldset class="solid">
+	<legend>构建工程: #(tbProject.title??)</legend>
+	<div id="scriptOutput">
+	</div>
+</fieldset>
+<script type="text/javascript">
+	console.log("javascript work...");
+	setInterval(function(){
+		$("#scriptOutput").append("git pull"+"<br/>");
+	}, 1000);
+</script>
+#end

@@ -1,5 +1,6 @@
 package com.demo.project;
 
+import com.demo.command.CommandExecutor;
 import com.demo.common.model.TbProject;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
@@ -52,6 +53,18 @@ public class ProjectController extends Controller {
 	public void delete() {
 		service.deleteById(getParaToInt());
 		redirect("/"+modelKey);
+	}
+	public void build() throws Exception {
+		Integer projectId = getParaToInt("projectId");
+		TbProject obj = service.findById(projectId);
+		runScript(obj);
+
+		setAttr("tbProject",obj);
+		render("/project/build.html");
+	}
+
+	private void runScript(TbProject obj) throws Exception {
+		new CommandExecutor().execute(obj);
 	}
 }
 

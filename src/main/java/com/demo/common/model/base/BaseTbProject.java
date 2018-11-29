@@ -41,6 +41,14 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getStr("dutyPerson");
 	}
 
+	public void setScript(java.lang.String script) {
+		set("script", script);
+	}
+	
+	public java.lang.String getScript() {
+		return getStr("script");
+	}
+
 	public void setPhone(java.lang.String phone) {
 		set("phone", phone);
 	}
