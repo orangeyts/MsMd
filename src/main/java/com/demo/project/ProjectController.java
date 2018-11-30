@@ -1,11 +1,14 @@
 package com.demo.project;
 
+import com.demo.account.TbAccountService;
 import com.demo.command.CommandExecutor;
 import com.demo.command.PathUtils;
+import com.demo.common.model.TbAccount;
 import com.demo.common.model.TbBuild;
 import com.demo.common.model.TbProject;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -24,13 +27,17 @@ import java.util.List;
  * StepController
  * 所有 sql 与业务逻辑写在 Model 或 Service 中，不要写在 Controller 中，养成好习惯，有利于大型项目的开发与维护
  */
+@Slf4j
 public class ProjectController extends Controller {
+
 
 	private String modelKey = "project";
 	
 	@Inject
 	ProjectService service;
-	
+	@Inject
+	TbAccountService tbAccountService;
+
 	public void index() {
 		setAttr(modelKey+"Page", service.paginate(getParaToInt(0, 1), 10));
 		render(modelKey+".html");
@@ -82,6 +89,9 @@ public class ProjectController extends Controller {
 	 */
 	private void runScript(TbProject obj) throws Exception {
 		String script = obj.getScript();
+		Integer accountId = obj.getAccountId();
+		TbAccount tbAccount = tbAccountService.getTbAccount(accountId);
+		log.info("账户信息: {}  {}",tbAccount.getUserName(),tbAccount.getPwd());
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(script.getBytes(Charset.forName("utf8"))), Charset.forName("utf8")));
 		List<String> commands = new ArrayList<String>();
@@ -96,6 +106,7 @@ public class ProjectController extends Controller {
 		TbBuild tbBuild = new TbBuild();
 		tbBuild.setCreateTime(new Date());
 		tbBuild.setProjectId(obj.getId());
+		tbBuild.setTriggerDesc("desc");
 		boolean save = tbBuild.save();
 
 		String absPath = PathUtils.CI_HOME + File.separator + obj.getId() + File.separator + tbBuild.getId();

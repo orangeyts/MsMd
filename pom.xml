@@ -83,19 +83,30 @@
 		 在未来基于 jfinal demo 为模板做开发时做准备工作
 		 注意：eclipse 下可以将 scope 设置为 provided
 		 -->
-	<dependency>
+	<!--<dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-nop</artifactId>
 		<version>1.7.25</version>
-		<!-- 打包前改成 provided，此处使用 compile 仅为支持 IDEA -->
+		&lt;!&ndash; 打包前改成 provided，此处使用 compile 仅为支持 IDEA &ndash;&gt;
 		<scope>compile</scope>
-	</dependency>
+	</dependency>-->
+
+	 <dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.1.7</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.9</version>
+			</dependency>
     
-    <dependency>
+   <!-- <dependency>
     	<groupId>log4j</groupId>
     	<artifactId>log4j</artifactId>
     	<version>1.2.16</version>
-    </dependency>
+    </dependency>-->
     <dependency>
     	<groupId>mysql</groupId>
     	<artifactId>mysql-connector-java</artifactId>

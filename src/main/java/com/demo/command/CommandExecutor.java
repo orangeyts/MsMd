@@ -1,7 +1,7 @@
 package com.demo.command;
 
 import com.demo.common.model.TbProject;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -13,12 +13,12 @@ import java.util.Map;
 /**
  * command executor
  */
+@Slf4j
 public class CommandExecutor {
 
-    Logger logger = Logger.getLogger(CommandExecutor.class);
-    
+
     public String execute(TbProject param) throws Exception {
-        logger.info("param: " + param);
+        log.info("param: " + param);
         String script = param.getScript();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(script.getBytes(Charset.forName("utf8"))), Charset.forName("utf8")));
@@ -44,14 +44,14 @@ public class CommandExecutor {
             // command log
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                logger.info(line);
+                log.info(line);
             }
 
             // command exit
             process.waitFor();
             exitValue = process.exitValue();
         } catch (Exception e) {
-            logger.error(e);
+            log.error(e.getMessage(),e);
         } finally {
             if (bufferedReader != null) {
                 bufferedReader.close();

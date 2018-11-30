@@ -41,6 +41,22 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getStr("dutyPerson");
 	}
 
+	public void setAccountId(java.lang.Integer accountId) {
+		set("accountId", accountId);
+	}
+	
+	public java.lang.Integer getAccountId() {
+		return getInt("accountId");
+	}
+
+	public void setScmPath(java.lang.String scmPath) {
+		set("scmPath", scmPath);
+	}
+	
+	public java.lang.String getScmPath() {
+		return getStr("scmPath");
+	}
+
 	public void setScriptFilePath(java.lang.String scriptFilePath) {
 		set("scriptFilePath", scriptFilePath);
 	}

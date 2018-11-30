@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50536
 File Encoding         : 65001
 
-Date: 2018-11-23 17:53:54
+Date: 2018-11-30 17:52:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -29,12 +29,29 @@ CREATE TABLE `blog` (
 -- ----------------------------
 -- Records of blog
 -- ----------------------------
-INSERT INTO `blog` VALUES ('1', 'JFinal Demo Title here', 'JFinal Demo Content here');
+INSERT INTO `blog` VALUES ('1', 'JFinal Demo Title here2222', 'JFinal Demo Content here121');
 INSERT INTO `blog` VALUES ('2', 'test 1', 'test 1');
 INSERT INTO `blog` VALUES ('3', 'test 2', 'test 2');
 INSERT INTO `blog` VALUES ('4', 'test 3', 'test 3');
 INSERT INTO `blog` VALUES ('5', 'test 4', 'test 4');
 INSERT INTO `blog` VALUES ('6', '111', '2222');
+
+-- ----------------------------
+-- Table structure for tb_account
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_account`;
+CREATE TABLE `tb_account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) NOT NULL COMMENT '描述',
+  `userName` varchar(50) NOT NULL COMMENT '用户名',
+  `pwd` varchar(50) DEFAULT NULL COMMENT '密码',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of tb_account
+-- ----------------------------
+INSERT INTO `tb_account` VALUES ('1', 'gitee', 'ss', 'ss');
 
 -- ----------------------------
 -- Table structure for tb_build
@@ -49,7 +66,7 @@ CREATE TABLE `tb_build` (
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_build
@@ -64,15 +81,20 @@ CREATE TABLE `tb_project` (
   `title` varchar(200) NOT NULL,
   `type` int(11) NOT NULL COMMENT '项目类型 1 web 2 rpc',
   `dutyPerson` varchar(255) DEFAULT NULL COMMENT '责任人',
+  `accountId` int(11) DEFAULT NULL COMMENT '账户Id,用于git 检出鉴权',
+  `scmPath` varchar(255) DEFAULT NULL COMMENT '版本控制地址',
+  `scriptFilePath` varchar(255) DEFAULT NULL COMMENT '脚本执行路径',
+  `script` text COMMENT '执行脚本',
   `phone` varchar(20) DEFAULT NULL COMMENT '手机号',
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_project
 -- ----------------------------
+INSERT INTO `tb_project` VALUES ('2', 'wx2333', '2', 'he2', '1', null, null, 'cmd.exe /c cd %projectHome%\r\ncmd.exe /c mvn clean install -DskipTests', '137111112', '2018-11-27 15:15:29', '2018-11-27 15:15:34');
 
 -- ----------------------------
 -- Table structure for tb_step
@@ -91,8 +113,9 @@ CREATE TABLE `tb_step` (
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_step
 -- ----------------------------
+INSERT INTO `tb_step` VALUES ('1', '2', '1', '1', '1', '2', '121221', '2018-11-28 18:22:49', '2018-11-28 18:22:51', '2018-11-28 18:22:54', '2018-11-28 18:22:58');
