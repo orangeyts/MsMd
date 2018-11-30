@@ -41,6 +41,14 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getStr("dutyPerson");
 	}
 
+	public void setScriptFilePath(java.lang.String scriptFilePath) {
+		set("scriptFilePath", scriptFilePath);
+	}
+	
+	public java.lang.String getScriptFilePath() {
+		return getStr("scriptFilePath");
+	}
+
 	public void setScript(java.lang.String script) {
 		set("script", script);
 	}

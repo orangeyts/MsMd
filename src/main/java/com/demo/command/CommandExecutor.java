@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -61,6 +62,41 @@ public class CommandExecutor {
             return "1";
         } else {
             return "0";
+        }
+    }
+
+    /**
+     *https://www.cnblogs.com/whatlonelytear/p/7885270.html
+     * ProcessBuilder 用法
+     * @throws IOException
+     */
+    public void execWindowCmd(Map<String, String> userEnv,File dir, String... command) throws IOException {
+
+        ProcessBuilder pb = new ProcessBuilder();
+        // 独立环境变量
+        Map<String, String> env = pb.environment();
+        env.putAll(userEnv);
+        // 打印环境变量
+        System.out.println(env);
+        // 重定向错误输出流到正常输出流
+        pb.redirectErrorStream(true);
+
+        try {
+            // 执行命令
+            pb.directory(dir);
+            pb.command(command);
+            Process process1;
+            // 启动进程
+            process1 = pb.start();
+            BufferedReader br1;
+            br1 = new BufferedReader(new InputStreamReader(process1.getInputStream(), "gbk"));
+            String line1 = null;
+            while ((line1 = br1.readLine()) != null) {
+                System.out.println(line1);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
