@@ -15,10 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -99,7 +96,9 @@ public class ProjectController extends Controller {
 		while ( (lineT = br.readLine()) != null ) {
 			if(!lineT.trim().equals("")){
 				System.out.println(lineT);
-				commands.add(lineT);
+				//命令要用 空格分开才可以执行
+				String[] split = lineT.split(" ");
+				commands.addAll(Arrays.asList(split));
 			}
 		}
 
@@ -110,7 +109,8 @@ public class ProjectController extends Controller {
 		boolean save = tbBuild.save();
 
 		String absPath = PathUtils.CI_HOME + File.separator + obj.getId() + File.separator + tbBuild.getId();
-		File dir = new File(absPath);
+//		File dir = new File(absPath);
+		File dir = new File("E:\\freedom\\jfinal-cms-shop\\jfinal-cms\\cms-model");
 		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,commands.toArray(new String[]{}));
 	}
 }
