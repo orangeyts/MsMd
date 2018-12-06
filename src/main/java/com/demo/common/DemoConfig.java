@@ -3,6 +3,9 @@ package com.demo.common;
 import com.demo.blog.BlogController;
 import com.demo.common.model._MappingKit;
 import com.demo.index.IndexController;
+import com.demo.io.HelloTioController;
+import com.demo.io.client.HelloClientStarter;
+import com.demo.io.server.HelloServerStarter;
 import com.demo.project.ProjectController;
 import com.demo.step.StepController;
 import com.jfinal.config.Constants;
@@ -60,6 +63,8 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/blog", BlogController.class);			// 第三个参数省略时默认与第一个参数值相同，在此即为 "/blog"
 		me.add("/project", ProjectController.class);
 		me.add("/step", StepController.class);
+
+		me.add("/tio", HelloTioController.class);
 	}
 	
 	public void configEngine(Engine me) {
@@ -81,6 +86,9 @@ public class DemoConfig extends JFinalConfig {
 		// 所有映射在 MappingKit 中自动化搞定
 		_MappingKit.mapping(arp);
 		me.add(arp);
+
+		me.add(new HelloServerStarter());
+		me.add(new HelloClientStarter());
 	}
 	
 	public static DruidPlugin createDruidPlugin() {

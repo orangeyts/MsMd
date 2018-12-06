@@ -16,4 +16,6 @@
 
 ## 访问路径
     http://localhost
+
+## https://gitee.com/xiaoxustudent/jfinal-tio  WebSocket 参考
 	
