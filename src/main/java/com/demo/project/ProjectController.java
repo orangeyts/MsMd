@@ -93,12 +93,15 @@ public class ProjectController extends Controller {
 		BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(script.getBytes(Charset.forName("utf8"))), Charset.forName("utf8")));
 		List<String> commands = new ArrayList<String>();
 		String lineT = "";
+		log.info("工程路径: {}",obj.getScriptFilePath());
+		File dir = new File(obj.getScriptFilePath());
 		while ( (lineT = br.readLine()) != null ) {
 			if(!lineT.trim().equals("")){
-				System.out.println(lineT);
+//				System.out.println(lineT);
 				//命令要用 空格分开才可以执行
 				String[] split = lineT.split(" ");
-				commands.addAll(Arrays.asList(split));
+				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
+//				commands.addAll(Arrays.asList(split));
 			}
 		}
 
@@ -110,8 +113,7 @@ public class ProjectController extends Controller {
 
 		String absPath = PathUtils.CI_HOME + File.separator + obj.getId() + File.separator + tbBuild.getId();
 //		File dir = new File(absPath);
-		File dir = new File("E:\\freedom\\jfinal-cms-shop\\jfinal-cms\\cms-model");
-		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,commands.toArray(new String[]{}));
+
 	}
 }
 
