@@ -1,3 +1,4 @@
+cd %home%
 set path=%path%;"C:\Program Files\Git\bin\"
 
 if exist .git (
@@ -8,4 +9,5 @@ if exist .git (
 
 if not exist .git (
 	echo clone
+	git clone https://githubsync:githubsync1@gitee.com/githubsync/spring-mvc-chat.git
 )
