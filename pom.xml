@@ -146,6 +146,16 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+
+	  <!-- https://mvnrepository.com/artifact/com.jcraft/jsch
+	  ssh 操作库
+	  -->
+	  <dependency>
+		<groupId>com.jcraft</groupId>
+		<artifactId>jsch</artifactId>
+		<version>0.1.54</version>
+	</dependency>
+
 	
   </dependencies>
   
