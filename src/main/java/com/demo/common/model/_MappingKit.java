@@ -19,6 +19,7 @@ public class _MappingKit {
 		arp.addMapping("blog", "id", Blog.class);
 		arp.addMapping("tb_account", "id", TbAccount.class);
 		arp.addMapping("tb_build", "id", TbBuild.class);
+		arp.addMapping("tb_env_config", "id", TbEnvConfig.class);
 		arp.addMapping("tb_project", "id", TbProject.class);
 		arp.addMapping("tb_step", "id", TbStep.class);
 	}

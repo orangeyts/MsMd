@@ -5,6 +5,7 @@
     <logger name="org.eclipse" level="WARN" />  
     <logger name="druid.sql.ResultSet" level="WARN" />  
     <logger name="druid.sql.Connection" level="WARN" />  
-    <logger name="io.netty" level="WARN" />  
+    <logger name="org.tio" level="WARN" />
+    <logger name="io.netty" level="WARN" />
     <logger name="net.sf.ehcache" level="WARN" />  
 </included>

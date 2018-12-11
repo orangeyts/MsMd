@@ -2,6 +2,7 @@ package com.demo.common;
 
 import com.demo.blog.BlogController;
 import com.demo.common.model._MappingKit;
+import com.demo.env.TbEnvConfigController;
 import com.demo.index.IndexController;
 import com.demo.io.HelloTioController;
 import com.demo.io.client.HelloClientStarter;
@@ -63,6 +64,7 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/blog", BlogController.class);			// 第三个参数省略时默认与第一个参数值相同，在此即为 "/blog"
 		me.add("/project", ProjectController.class);
 		me.add("/step", StepController.class);
+		me.add("/env", TbEnvConfigController.class);
 
 		me.add("/tio", HelloTioController.class);
 	}
