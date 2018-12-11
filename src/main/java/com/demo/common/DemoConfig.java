@@ -1,14 +1,20 @@
 package com.demo.common;
 
 import com.demo.blog.BlogController;
+import com.demo.common.model.TbEnvConfig;
 import com.demo.common.model._MappingKit;
+import com.demo.constant.ConstantConfig;
 import com.demo.env.TbEnvConfigController;
+import com.demo.env.TbEnvConfigService;
 import com.demo.index.IndexController;
 import com.demo.io.HelloTioController;
 import com.demo.io.client.HelloClientStarter;
 import com.demo.io.server.HelloServerStarter;
 import com.demo.project.ProjectController;
 import com.demo.step.StepController;
+import com.demo.util.FileUtils;
+import com.jfinal.aop.Aop;
+import com.jfinal.aop.Inject;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -16,10 +22,18 @@ import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
+import com.jfinal.kit.FileKit;
+import com.jfinal.kit.PathKit;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.template.Engine;
+import com.jfinal.template.source.FileSourceFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.util.StringUtil;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -27,6 +41,7 @@ import com.jfinal.template.Engine;
  * 
  * API引导式配置
  */
+@Slf4j
 public class DemoConfig extends JFinalConfig {
 	
 	/**
@@ -38,7 +53,7 @@ public class DemoConfig extends JFinalConfig {
 	 * 
 	 */
 	public static void main(String[] args) {
-		JFinal.start("src/main/webapp", 80, "/", 5);
+		JFinal.start("src/main/webapp", 801, "/", 5);
 	}
 	
 	/**
@@ -109,5 +124,32 @@ public class DemoConfig extends JFinalConfig {
 	 */
 	public void configHandler(Handlers me) {
 		
+	}
+
+	static TbEnvConfigService service = Aop.get(TbEnvConfigService.class);
+
+	@Override
+	public void afterJFinalStart() {
+		log.info("service: {}",service);
+		Map<String, String> config = service.getConfig();
+		String home = config.get(ConstantConfig.HOME);
+		log.info("ci home: {}",home);
+		if (StringUtil.isNotBlank(home)){
+			File homePath = new File(home);
+			if (!homePath.exists()){homePath.mkdirs();};
+			String rootClassPath = PathKit.getRootClassPath();
+			log.info("rootClassPath: {}",rootClassPath);
+			String scriptTemplatePath = rootClassPath + File.separator + "scriptTemplate";
+			FileUtils.directory(scriptTemplatePath,home);
+			log.info("template copy complete");
+		}else {
+			log.error("un config: CI home key");
+		}
+
+
+		Engine engine = Engine.create(ConstantConfig.ENJOY_KEY);
+		engine.setBaseTemplatePath(home);
+		engine.setDevMode(true);
+		engine.setSourceFactory(new FileSourceFactory());
 	}
 }

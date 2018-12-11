@@ -3,6 +3,11 @@ package com.demo.env;
 import com.demo.common.model.TbEnvConfig;
 import com.jfinal.plugin.activerecord.Page;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
  * 详见 JFinal 俱乐部: http://jfinal.com/club
@@ -30,5 +35,19 @@ public class TbEnvConfigService {
 	
 	public void deleteById(int id) {
 		dao.deleteById(id);
+	}
+
+	/**
+	 * 加载所有配置到内存
+	 * @return
+	 */
+	public Map<String,String> getConfig(){
+		String sql = "select * from tb_env_config";
+		List<TbEnvConfig> tbEnvConfigs = dao.find(sql);
+		Map<String,String> configs = new HashMap<>(tbEnvConfigs.size());
+		for (TbEnvConfig tbEnvConfig:tbEnvConfigs) {
+			configs.put(tbEnvConfig.getCKey(),tbEnvConfig.getCValue());
+		}
+		return configs;
 	}
 }
