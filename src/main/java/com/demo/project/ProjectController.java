@@ -7,6 +7,7 @@ import com.demo.common.model.TbAccount;
 import com.demo.common.model.TbBuild;
 import com.demo.common.model.TbProject;
 import com.demo.constant.ConstantConfig;
+import com.demo.constant.ConstantOS;
 import com.demo.env.TbEnvConfigService;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
@@ -58,6 +59,8 @@ public class ProjectController extends Controller {
 	
 	public void edit() {
 		setAttr("tbProject", service.findById(getParaToInt()));
+		List<TbAccount> tbAccountList = tbAccountService.getTbAccountList();
+		setAttr("tbAccountList", tbAccountList);
 	}
 	
 	/**
@@ -91,6 +94,7 @@ public class ProjectController extends Controller {
 	private void runScript(TbProject obj) throws Exception {
 		Map<String, String> config = tbEnvConfigService.getConfig();
 		String home = config.get(ConstantConfig.HOME);
+		String gitRoot = config.get(ConstantConfig.GIT_ROOT);
 
 
 		String script = obj.getScript();
@@ -101,15 +105,22 @@ public class ProjectController extends Controller {
 		Engine engine = Engine.use(ConstantConfig.ENJOY_KEY);
 
 		Kv by = Kv.by("home", home);
-		by.set("projectName","spring-mvc-chat");
-		by.set("scmUser","githubsync");
-		by.set("scmPwd","githubsync1");
+		by.set("gitHome",gitRoot);
+		by.set("projectName",obj.getTitle());
+		by.set("scmUser",tbAccount.getUserName());
+		by.set("scmPwd",tbAccount.getPwd());
 
-		by.set("scmPath","gitee.com/githubsync/spring-mvc-chat.git");
+		by.set("scmPath",obj.getScmPath());
 //        String s = engine.getTemplate("run.bat").renderToString(by);
 //        log.info("out: {}",s);
-		String exeScriptFile = home + File.separator+by.get("projectName") + ".bat";
-		engine.getTemplate("windows" + File.separator +"run.bat").render(by,exeScriptFile);
+		String osExtion = ".sh";
+		if (ConstantOS.WINDOWS.equals(obj.getOs())){
+			osExtion = ".bat";
+		}else if (ConstantOS.LINUX.equals(obj.getOs())){
+			osExtion = ".sh";
+		}
+		String exeScriptFile = home + File.separator+by.get("projectName") + osExtion;
+		engine.getTemplate(obj.getOs() + File.separator +"run" + osExtion).render(by,exeScriptFile);
 
 		List<String> commands = new ArrayList<String>();
 		String lineT = "cmd /c "+exeScriptFile;

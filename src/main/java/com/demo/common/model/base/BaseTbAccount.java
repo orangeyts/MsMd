@@ -17,12 +17,12 @@ public abstract class BaseTbAccount<M extends BaseTbAccount<M>> extends Model<M>
 		return getInt("id");
 	}
 
-	public void setTitle(java.lang.String title) {
-		set("title", title);
+	public void setType(java.lang.String type) {
+		set("type", type);
 	}
 	
-	public java.lang.String getTitle() {
-		return getStr("title");
+	public java.lang.String getType() {
+		return getStr("type");
 	}
 
 	public void setUserName(java.lang.String userName) {

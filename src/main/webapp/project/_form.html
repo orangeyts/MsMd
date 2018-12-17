@@ -12,8 +12,37 @@
 		<input type="text" name="tbProject.type" value="#(tbProject.type??)" />
 	</div>
 	<div>
-		<label>项目类型</label>
+		<label>OS类型</label>
+		<select name="tbProject.os">
+			#if(tbProject.os == 'linux')
+				<option value="linux" selected>linux</option>
+				<option value="windows">windows</option>
+			#else
+				<option value="linux" selected>linux</option>
+				<option value="windows" selected>windows</option>
+			#end
+		</select>
+	</div>
+	<div>
+		<label>项目负责人</label>
 		<input type="text" name="tbProject.dutyPerson" value="#(tbProject.dutyPerson??)" />
+	</div>
+	<div>
+		<label>代码仓库</label>
+		<input type="text" name="tbProject.scmPath" value="#(tbProject.scmPath??)" />
+	</div>
+	<div>
+		<label>代码仓库-账号信息</label>
+		<select name="tbProject.accountId">
+			#for(x : tbAccountList)
+				#if(tbProject.accountId == x.id)
+					<option value="#(x.id)" selected>#(x.userName)/**</option>
+				#else
+					<option value="#(x.id)">#(x.userName)/**</option>
+				#end
+			#end
+
+		</select>
 	</div>
 	<div>
 		<label>手机号</label>

@@ -1,5 +1,5 @@
 cd #(home??)
-set path=%path%;"C:\Program Files\Git\bin\"
+set path=%path%;"#(gitHome??)"
 
 if exist #(projectName??) (
     rem pause;
@@ -16,3 +16,5 @@ if not exist #(projectName??) (
 	echo clone
 	git clone https://#(scmUser??):#(scmPwd??)@#(scmPath??)
 )
+
+pause;

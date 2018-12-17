@@ -146,7 +146,10 @@ public class DemoConfig extends JFinalConfig {
 			log.error("un config: CI home key");
 		}
 
-
+		//git command path
+		String gitRoot = config.get(ConstantConfig.GIT_ROOT);
+		log.info("gitRoot: {}",gitRoot);
+		//ci script template
 		Engine engine = Engine.create(ConstantConfig.ENJOY_KEY);
 		engine.setBaseTemplatePath(home);
 		engine.setDevMode(true);

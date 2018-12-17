@@ -25,6 +25,14 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getStr("title");
 	}
 
+	public void setOs(java.lang.String os) {
+		set("os", os);
+	}
+	
+	public java.lang.String getOs() {
+		return getStr("os");
+	}
+
 	public void setType(java.lang.Integer type) {
 		set("type", type);
 	}
