@@ -6,9 +6,11 @@ import com.demo.command.PathUtils;
 import com.demo.common.model.TbAccount;
 import com.demo.common.model.TbBuild;
 import com.demo.common.model.TbProject;
+import com.demo.common.model.TbTemplate;
 import com.demo.constant.ConstantConfig;
 import com.demo.constant.ConstantOS;
 import com.demo.env.TbEnvConfigService;
+import com.demo.template.TemplateService;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.Kv;
@@ -38,6 +40,8 @@ public class ProjectController extends Controller {
 	@Inject
 	TbAccountService tbAccountService;
 	@Inject
+	TemplateService templateService;
+	@Inject
 	TbEnvConfigService tbEnvConfigService;
 
 	public void index() {
@@ -46,8 +50,14 @@ public class ProjectController extends Controller {
 	}
 	
 	public void add() {
+		List<TbTemplate> templateList = templateService.getList();
+		setAttr("templateList", templateList);
 	}
-	
+	public void getTemplate() {
+		TbTemplate template = templateService.getById(getParaToInt("id", 1),getPara("os", ConstantOS.LINUX));
+		renderJson(template);
+	}
+
 	/**
 	 * save 与 update 的业务逻辑在实际应用中也应该放在 serivce 之中，
 	 * 并要对数据进正确性进行验证，在此仅为了偷懒
@@ -120,7 +130,8 @@ public class ProjectController extends Controller {
 			osExtion = ".sh";
 		}
 		String exeScriptFile = home + File.separator+by.get("projectName") + osExtion;
-		engine.getTemplate(obj.getOs() + File.separator +"run" + osExtion).render(by,exeScriptFile);
+		engine.getTemplateByString(obj.getScript()).render(by,exeScriptFile);
+//		engine.getTemplate(obj.getOs() + File.separator +"run" + osExtion).render(by,exeScriptFile);
 
 		List<String> commands = new ArrayList<String>();
 		String lineT = "cmd /c "+exeScriptFile;

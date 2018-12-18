@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50536
 File Encoding         : 65001
 
-Date: 2018-11-30 17:52:32
+Date: 2018-12-18 18:45:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -42,16 +42,17 @@ INSERT INTO `blog` VALUES ('6', '111', '2222');
 DROP TABLE IF EXISTS `tb_account`;
 CREATE TABLE `tb_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(200) NOT NULL COMMENT '描述',
+  `type` varchar(200) NOT NULL COMMENT '类型-linux git 等',
   `userName` varchar(50) NOT NULL COMMENT '用户名',
   `pwd` varchar(50) DEFAULT NULL COMMENT '密码',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_account
 -- ----------------------------
 INSERT INTO `tb_account` VALUES ('1', 'gitee', 'ss', 'ss');
+INSERT INTO `tb_account` VALUES ('2', '2', 'githubsync', 'githubsync1');
 
 -- ----------------------------
 -- Table structure for tb_build
@@ -66,11 +67,65 @@ CREATE TABLE `tb_build` (
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_build
 -- ----------------------------
+INSERT INTO `tb_build` VALUES ('1', '2', null, 'desc', null, '2018-11-30 18:10:39', null);
+INSERT INTO `tb_build` VALUES ('2', '2', null, 'desc', null, '2018-12-06 17:16:51', null);
+INSERT INTO `tb_build` VALUES ('3', '2', null, 'desc', null, '2018-12-06 17:18:38', null);
+INSERT INTO `tb_build` VALUES ('4', '2', null, 'desc', null, '2018-12-06 17:19:16', null);
+INSERT INTO `tb_build` VALUES ('5', '2', null, 'desc', null, '2018-12-06 17:26:20', null);
+INSERT INTO `tb_build` VALUES ('6', '2', null, 'desc', null, '2018-12-06 17:28:58', null);
+INSERT INTO `tb_build` VALUES ('7', '2', null, 'desc', null, '2018-12-06 17:30:03', null);
+INSERT INTO `tb_build` VALUES ('8', '2', null, 'desc', null, '2018-12-06 17:30:42', null);
+INSERT INTO `tb_build` VALUES ('9', '2', null, 'desc', null, '2018-12-06 17:31:06', null);
+INSERT INTO `tb_build` VALUES ('10', '2', null, 'desc', null, '2018-12-07 14:20:35', null);
+INSERT INTO `tb_build` VALUES ('11', '2', null, 'desc', null, '2018-12-07 14:21:05', null);
+INSERT INTO `tb_build` VALUES ('12', '2', null, 'desc', null, '2018-12-07 14:22:28', null);
+INSERT INTO `tb_build` VALUES ('13', '2', null, 'desc', null, '2018-12-07 14:23:28', null);
+INSERT INTO `tb_build` VALUES ('14', '2', null, 'desc', null, '2018-12-07 14:24:22', null);
+INSERT INTO `tb_build` VALUES ('15', '2', null, 'desc', null, '2018-12-07 14:25:20', null);
+INSERT INTO `tb_build` VALUES ('16', '2', null, 'desc', null, '2018-12-07 14:28:23', null);
+INSERT INTO `tb_build` VALUES ('17', '2', null, 'desc', null, '2018-12-07 14:31:51', null);
+INSERT INTO `tb_build` VALUES ('18', '2', null, 'desc', null, '2018-12-07 14:33:08', null);
+INSERT INTO `tb_build` VALUES ('19', '2', null, 'desc', null, '2018-12-07 14:33:51', null);
+INSERT INTO `tb_build` VALUES ('20', '2', null, 'desc', null, '2018-12-07 14:34:23', null);
+INSERT INTO `tb_build` VALUES ('21', '2', null, 'desc', null, '2018-12-07 14:34:50', null);
+INSERT INTO `tb_build` VALUES ('22', '2', null, 'desc', null, '2018-12-07 14:39:12', null);
+INSERT INTO `tb_build` VALUES ('23', '2', null, 'desc', null, '2018-12-07 14:43:24', null);
+INSERT INTO `tb_build` VALUES ('24', '2', null, 'desc', null, '2018-12-07 14:44:06', null);
+INSERT INTO `tb_build` VALUES ('25', '2', null, 'desc', null, '2018-12-07 14:44:48', null);
+INSERT INTO `tb_build` VALUES ('26', '2', null, 'desc', null, '2018-12-07 14:46:28', null);
+INSERT INTO `tb_build` VALUES ('27', '2', null, 'desc', null, '2018-12-07 14:47:00', null);
+INSERT INTO `tb_build` VALUES ('28', '2', null, 'desc', null, '2018-12-07 14:47:28', null);
+INSERT INTO `tb_build` VALUES ('29', '2', null, 'desc', null, '2018-12-07 14:48:39', null);
+INSERT INTO `tb_build` VALUES ('30', '2', null, 'desc', null, '2018-12-07 14:49:13', null);
+INSERT INTO `tb_build` VALUES ('31', '2', null, 'desc', null, '2018-12-07 15:12:40', null);
+INSERT INTO `tb_build` VALUES ('32', '2', null, 'desc', null, '2018-12-07 15:14:15', null);
+INSERT INTO `tb_build` VALUES ('33', '2', null, 'desc', null, '2018-12-07 15:15:51', null);
+INSERT INTO `tb_build` VALUES ('34', '2', null, 'desc', null, '2018-12-07 15:19:50', null);
+INSERT INTO `tb_build` VALUES ('35', '2', null, 'desc', null, '2018-12-07 15:26:59', null);
+INSERT INTO `tb_build` VALUES ('36', '2', null, 'desc', null, '2018-12-07 15:27:02', null);
+
+-- ----------------------------
+-- Table structure for tb_env_config
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_env_config`;
+CREATE TABLE `tb_env_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cGroup` varchar(200) NOT NULL COMMENT '分组',
+  `cKey` varchar(50) NOT NULL COMMENT 'key',
+  `cValue` varchar(50) DEFAULT NULL COMMENT '配置值',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of tb_env_config
+-- ----------------------------
+INSERT INTO `tb_env_config` VALUES ('1', 'common', 'HOME', 'E:\\ciHome');
+INSERT INTO `tb_env_config` VALUES ('2', 'common', 'GIT', 'C:\\Program Files\\Git\\bin');
 
 -- ----------------------------
 -- Table structure for tb_project
@@ -79,6 +134,7 @@ DROP TABLE IF EXISTS `tb_project`;
 CREATE TABLE `tb_project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(200) NOT NULL,
+  `os` varchar(255) NOT NULL DEFAULT '' COMMENT 'linux windows',
   `type` int(11) NOT NULL COMMENT '项目类型 1 web 2 rpc',
   `dutyPerson` varchar(255) DEFAULT NULL COMMENT '责任人',
   `accountId` int(11) DEFAULT NULL COMMENT '账户Id,用于git 检出鉴权',
@@ -94,7 +150,7 @@ CREATE TABLE `tb_project` (
 -- ----------------------------
 -- Records of tb_project
 -- ----------------------------
-INSERT INTO `tb_project` VALUES ('2', 'wx2333', '2', 'he2', '1', null, null, 'cmd.exe /c cd %projectHome%\r\ncmd.exe /c mvn clean install -DskipTests', '137111112', '2018-11-27 15:15:29', '2018-11-27 15:15:34');
+INSERT INTO `tb_project` VALUES ('2', 'spring-mvc-chat', 'linux', '2', 'he2', '2', 'gitee.com/githubsync/spring-mvc-chat.git', 'E:\\hs\\software\\jfinal-3.5_demo_for_maven\\MsMd', 'cmd.exe /c run.bat', '137111112', '2018-11-27 15:15:29', '2018-11-27 15:15:34');
 
 -- ----------------------------
 -- Table structure for tb_step
@@ -119,3 +175,23 @@ CREATE TABLE `tb_step` (
 -- Records of tb_step
 -- ----------------------------
 INSERT INTO `tb_step` VALUES ('1', '2', '1', '1', '1', '2', '121221', '2018-11-28 18:22:49', '2018-11-28 18:22:51', '2018-11-28 18:22:54', '2018-11-28 18:22:58');
+
+-- ----------------------------
+-- Table structure for tb_template
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_template`;
+CREATE TABLE `tb_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `os` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL COMMENT '脚本名称',
+  `script` text COMMENT '脚本内容',
+  `createTime` datetime DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of tb_template
+-- ----------------------------
+INSERT INTO `tb_template` VALUES ('1', 'linux', 'springBoot-edas', 'edas:deploy', '2018-11-28 18:22:54', '2018-11-28 18:22:58');
+INSERT INTO `tb_template` VALUES ('2', 'windows', 'tomcat', 'tomcat', '2018-11-28 18:22:54', '2018-11-28 18:22:54');

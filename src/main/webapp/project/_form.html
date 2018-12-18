@@ -13,15 +13,27 @@
 	</div>
 	<div>
 		<label>OS类型</label>
-		<select name="tbProject.os">
-			#if(tbProject.os == 'linux')
-				<option value="linux" selected>linux</option>
-				<option value="windows">windows</option>
+		<select name="tbProject.os" id="osSelectId">
+			#if(tbProject.os?? == 'linux')
+			<option value="linux" selected>linux</option>
+			<option value="windows">windows</option>
 			#else
-				<option value="linux" selected>linux</option>
-				<option value="windows" selected>windows</option>
+			<option value="linux" selected>linux</option>
+			<option value="windows" selected>windows</option>
 			#end
 		</select>
+	</div>
+	<div>
+		<label>脚本模板</label>
+	#if(tbProject.id?? == null)
+		<select id="templateSelectId">
+			#for(x : templateList)
+			<option value="#(x.id)">#(x.name)</option>
+			#end
+		</select>
+	#else
+		编辑无法选择模板
+	#end
 	</div>
 	<div>
 		<label>项目负责人</label>
@@ -54,10 +66,29 @@
 	</div>
 	<div>
 		<label>执行脚本</label>
-		<textarea name="tbProject.script" cols="80" rows="10">#(tbProject.script??)</textarea>#(contentMsg)
+		<textarea name="tbProject.script" id="script" cols="200" rows="50">#(tbProject.script??)</textarea>#(contentMsg)
 	</div>
 	<div>
 		<label>&nbsp;</label>
 		<input value="提交" type="submit">
 	</div>
 </fieldset>
+<script type="text/javascript">
+
+	$(function(){
+　　	$("#templateSelectId").change(function(){
+			var select_val = $(this).children('option:selected').val();
+			console.log(select_val);
+			var os = $("#osSelectId").val();
+			$.post("/project/getTemplate?id="+select_val+"&os="+os,function(result){
+				console.log(result);
+				if(result){
+					$("#script").val(result.script);
+				}else{
+					alert('没有对应的模板');
+				}
+			});
+		});
+　　　　//adding your code here
+　　});
+</script>
