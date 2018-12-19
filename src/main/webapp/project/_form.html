@@ -8,10 +8,6 @@
 		<input type="text" name="tbProject.title" value="#(tbProject.title??)" />
 	</div>
 	<div>
-		<label>项目类型</label>
-		<input type="text" name="tbProject.type" value="#(tbProject.type??)" />
-	</div>
-	<div>
 		<label>OS类型</label>
 		<select name="tbProject.os" id="osSelectId">
 			#if(tbProject.os?? == 'linux')
@@ -47,7 +43,7 @@
 		<label>代码仓库-账号信息</label>
 		<select name="tbProject.accountId">
 			#for(x : tbAccountList)
-				#if(tbProject.accountId == x.id)
+				#if(tbProject.accountId?? == x.id)
 					<option value="#(x.id)" selected>#(x.userName)/**</option>
 				#else
 					<option value="#(x.id)">#(x.userName)/**</option>

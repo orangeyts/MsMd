@@ -1,6 +1,7 @@
-package com.demo.common;
+package com.demo;
 
 import com.demo.blog.BlogController;
+import com.demo.common.Slf4jLogFactory;
 import com.demo.common.model.TbEnvConfig;
 import com.demo.common.model._MappingKit;
 import com.demo.constant.ConstantConfig;

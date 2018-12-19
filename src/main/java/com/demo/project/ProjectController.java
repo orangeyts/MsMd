@@ -50,6 +50,8 @@ public class ProjectController extends Controller {
 	}
 	
 	public void add() {
+		List<TbAccount> tbAccountList = tbAccountService.getTbAccountList();
+		setAttr("tbAccountList", tbAccountList);
 		List<TbTemplate> templateList = templateService.getList();
 		setAttr("templateList", templateList);
 	}
@@ -63,7 +65,20 @@ public class ProjectController extends Controller {
 	 * 并要对数据进正确性进行验证，在此仅为了偷懒
 	 */
 	public void save() {
-		getBean(TbProject.class).save();
+		TbProject bean = getBean(TbProject.class);
+		String scmPath = bean.getScmPath();
+		String scmPathRelace = scmPath.replace("https://","");
+		bean.setScmPath(scmPathRelace);
+		service.checkRepeatName(bean);
+		if (bean.getId() == null){
+			bean.setCreateTime(new Date());
+			bean.setUpdateTime(bean.getCreateTime());
+			bean.save();
+		}else{
+			bean.setUpdateTime(new Date());
+			bean.update();
+		}
+
 		redirect("/"+modelKey);
 	}
 	
@@ -79,6 +94,7 @@ public class ProjectController extends Controller {
 	 */
 	public void update() {
 		TbProject bean = getBean(TbProject.class);
+
 		bean.update();
 		redirect("/"+modelKey);
 	}
@@ -94,6 +110,14 @@ public class ProjectController extends Controller {
 
 		setAttr("tbProject",obj);
 		render("/project/build.html");
+	}
+	public void copy() throws Exception {
+		Integer projectId = getParaToInt("projectId");
+		TbProject obj = service.findById(projectId);
+		obj.setId(null);
+		obj.setTitle(UUID.randomUUID().toString());
+		obj.save();
+		redirect("/"+modelKey);
 	}
 
 	/**

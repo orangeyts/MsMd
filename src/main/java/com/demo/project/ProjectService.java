@@ -4,6 +4,8 @@ import com.demo.common.model.Blog;
 import com.demo.common.model.TbProject;
 import com.jfinal.plugin.activerecord.Page;
 
+import java.util.List;
+
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
  * 详见 JFinal 俱乐部: http://jfinal.com/club
@@ -31,5 +33,16 @@ public class ProjectService {
 	
 	public void deleteById(int id) {
 		dao.deleteById(id);
+	}
+
+	public void checkRepeatName(TbProject bean) {
+		String sql = "select id from tb_project where 1=1 and title=?";
+		if (bean.getId() != null){
+			sql = sql + " AND id !="+bean.getId();
+		}
+		List<TbProject> tbProjects = dao.find(sql,bean.getTitle());
+		if (tbProjects.size() > 0){
+			throw new RuntimeException("名字重复");
+		}
 	}
 }
