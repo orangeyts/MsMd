@@ -135,7 +135,7 @@ CREATE TABLE `tb_project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(200) NOT NULL,
   `os` varchar(255) NOT NULL DEFAULT '' COMMENT 'linux windows',
-  `type` int(11) NOT NULL COMMENT '项目类型 1 web 2 rpc',
+  `type` int(11) DEFAULT 1 COMMENT '项目类型 1 web 2 rpc',
   `dutyPerson` varchar(255) DEFAULT NULL COMMENT '责任人',
   `accountId` int(11) DEFAULT NULL COMMENT '账户Id,用于git 检出鉴权',
   `scmPath` varchar(255) DEFAULT NULL COMMENT '版本控制地址',
