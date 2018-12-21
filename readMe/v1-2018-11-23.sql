@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50536
 File Encoding         : 65001
 
-Date: 2018-12-18 18:45:29
+Date: 2018-12-21 17:37:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -35,24 +35,6 @@ INSERT INTO `blog` VALUES ('3', 'test 2', 'test 2');
 INSERT INTO `blog` VALUES ('4', 'test 3', 'test 3');
 INSERT INTO `blog` VALUES ('5', 'test 4', 'test 4');
 INSERT INTO `blog` VALUES ('6', '111', '2222');
-
--- ----------------------------
--- Table structure for tb_account
--- ----------------------------
-DROP TABLE IF EXISTS `tb_account`;
-CREATE TABLE `tb_account` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(200) NOT NULL COMMENT '类型-linux git 等',
-  `userName` varchar(50) NOT NULL COMMENT '用户名',
-  `pwd` varchar(50) DEFAULT NULL COMMENT '密码',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of tb_account
--- ----------------------------
-INSERT INTO `tb_account` VALUES ('1', 'gitee', 'ss', 'ss');
-INSERT INTO `tb_account` VALUES ('2', '2', 'githubsync', 'githubsync1');
 
 -- ----------------------------
 -- Table structure for tb_build
@@ -145,12 +127,14 @@ CREATE TABLE `tb_project` (
   `createTime` datetime DEFAULT NULL,
   `updateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_project
 -- ----------------------------
-INSERT INTO `tb_project` VALUES ('2', 'spring-mvc-chat', 'linux', '2', 'he2', '2', 'gitee.com/githubsync/spring-mvc-chat.git', 'E:\\hs\\software\\jfinal-3.5_demo_for_maven\\MsMd', 'cmd.exe /c run.bat', '137111112', '2018-11-27 15:15:29', '2018-11-27 15:15:34');
+INSERT INTO `tb_project` VALUES ('2', 'spring-mvc-chat_bak', 'linux', '2', 'he2', '2', 'gitee.com/githubsync/spring-mvc-chat.git', 'E:\\hs\\software\\jfinal-3.5_demo_for_maven\\MsMd', 'cmd.exe /c run.bat', '137111112', '2018-11-27 15:15:29', '2018-11-27 15:15:34');
+INSERT INTO `tb_project` VALUES ('3', 'tomcatApp', 'windows', '2', 'he2', '1', 'gitee.com/githubsync/spring-mvc-chat.git', null, 'tomcat-------------', null, null, null);
+INSERT INTO `tb_project` VALUES ('4', 'spring-mvc-chat', 'windows', '2', 'he2', '2', 'gitee.com/githubsync/spring-mvc-chat.git', 'run.bat', 'cd #(home??)\r\nset path=%path%;\"#(gitHome??)\"\r\n\r\nif exist #(projectName??) (\r\n    rem pause;\r\n    cd #(projectName??)\r\n	git clean -df\r\n	git reset --hard\r\n	git pull\r\n	echo \'back parentPath, otherWise not exist will repeat execute!!!\'\r\n    cd ..\r\n)\r\n\r\nif not exist #(projectName??) (\r\n    rem pause;\r\n	echo clone\r\n	git clone https://#(scmUser??):#(scmPwd??)@#(scmPath??)\r\n)\r\n\r\npause;', '13711111', null, null);
 
 -- ----------------------------
 -- Table structure for tb_step
@@ -194,4 +178,4 @@ CREATE TABLE `tb_template` (
 -- Records of tb_template
 -- ----------------------------
 INSERT INTO `tb_template` VALUES ('1', 'linux', 'springBoot-edas', 'edas:deploy', '2018-11-28 18:22:54', '2018-11-28 18:22:58');
-INSERT INTO `tb_template` VALUES ('2', 'windows', 'tomcat', 'tomcat', '2018-11-28 18:22:54', '2018-11-28 18:22:54');
+INSERT INTO `tb_template` VALUES ('2', 'windows', 'tomcat', 'cd #(home??)\r\nset path=%path%;\"#(gitHome??)\"\r\n\r\nif exist #(projectName??) (\r\n    rem pause;\r\n    cd #(projectName??)\r\n	git clean -df\r\n	git reset --hard\r\n	git pull\r\n	echo \'back parentPath, otherWise not exist will repeat execute!!!\'\r\n    cd ..\r\n)\r\n\r\nif not exist #(projectName??) (\r\n    rem pause;\r\n	echo clone\r\n	git clone https://#(scmUser??):#(scmPwd??)@#(scmPath??)\r\n)\r\n\r\npause;', '2018-11-28 18:22:54', '2018-11-28 18:22:54');
