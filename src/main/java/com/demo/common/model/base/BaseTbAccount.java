@@ -41,4 +41,12 @@ public abstract class BaseTbAccount<M extends BaseTbAccount<M>> extends Model<M>
 		return getStr("pwd");
 	}
 
+	public void setIp(java.lang.String ip) {
+		set("ip", ip);
+	}
+	
+	public java.lang.String getIp() {
+		return getStr("ip");
+	}
+
 }

@@ -49,6 +49,14 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getStr("dutyPerson");
 	}
 
+	public void setSshAccountId(java.lang.Integer sshAccountId) {
+		set("sshAccountId", sshAccountId);
+	}
+	
+	public java.lang.Integer getSshAccountId() {
+		return getInt("sshAccountId");
+	}
+
 	public void setAccountId(java.lang.Integer accountId) {
 		set("accountId", accountId);
 	}
@@ -71,6 +79,14 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 	
 	public java.lang.String getScriptFilePath() {
 		return getStr("scriptFilePath");
+	}
+
+	public void setSshScript(java.lang.String sshScript) {
+		set("sshScript", sshScript);
+	}
+	
+	public java.lang.String getSshScript() {
+		return getStr("sshScript");
 	}
 
 	public void setScript(java.lang.String script) {

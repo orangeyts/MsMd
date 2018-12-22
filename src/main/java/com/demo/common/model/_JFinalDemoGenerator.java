@@ -19,6 +19,7 @@ public class _JFinalDemoGenerator {
 	public static DataSource getDataSource() {
 		PropKit.use("a_little_config.txt");
 		DruidPlugin druidPlugin = DemoConfig.createDruidPlugin();
+		druidPlugin.setInitialSize(1);
 		druidPlugin.start();
 		return druidPlugin.getDataSource();
 	}

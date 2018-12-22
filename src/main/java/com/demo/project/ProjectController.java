@@ -3,6 +3,7 @@ package com.demo.project;
 import com.demo.account.TbAccountService;
 import com.demo.command.CommandExecutor;
 import com.demo.command.PathUtils;
+import com.demo.command.linux.SSHClient;
 import com.demo.common.model.TbAccount;
 import com.demo.common.model.TbBuild;
 import com.demo.common.model.TbProject;
@@ -162,7 +163,28 @@ public class ProjectController extends Controller {
 		log.info("工程路径: {}",obj.getScriptFilePath());
 		File dir = new File(home);
 		String[] split = lineT.split(" ");
-		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
+//		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
+
+		if (obj.getSshAccountId().intValue() != 0){
+			TbAccount sshTbAccount = tbAccountService.getTbAccount(obj.getSshAccountId());
+			SSHClient sshClient = new SSHClient();
+			sshClient.setHost(sshTbAccount.getIp()).setPort(22).setUsername(sshTbAccount.getUserName()).setPassword(sshTbAccount.getPwd());
+			sshClient.login();
+
+			String sshScriptFile =by.get("projectName") + "_ssh" + osExtion;
+			Kv sshConfig = Kv.by("home", home);
+			engine.getTemplateByString(obj.getSshScript()).render(sshConfig, home + File.separator + sshScriptFile);
+			String remotePath = "/data";
+			sshClient.putFile(home, sshScriptFile,remotePath);
+			sshClient.sendCmd("chmod u+x " + remotePath + "/" + sshScriptFile);
+			sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile);
+
+			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile);
+			log.info("sshCmdOut: {}",sshCmdOut);
+		}else{
+			log.warn("没有配置 ssh账户");
+		}
+
 		/*TbBuild tbBuild = new TbBuild();
 		tbBuild.setCreateTime(new Date());
 		tbBuild.setProjectId(obj.getId());

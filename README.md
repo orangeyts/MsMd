@@ -18,4 +18,6 @@
     http://localhost
 
 ## https://gitee.com/xiaoxustudent/jfinal-tio  WebSocket 参考
-	
+
+
+## 需要运行linux命令的服务器 要安装 yum -y install dos2unix,否则在window上生成的文件,由于格式问题，无法执行

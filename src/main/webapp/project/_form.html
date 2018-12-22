@@ -65,6 +65,24 @@
 		<textarea name="tbProject.script" id="script" cols="200" rows="50">#(tbProject.script??)</textarea>#(contentMsg)
 	</div>
 	<div>
+		<label>ssh-账号信息</label>
+		<select name="tbProject.sshAccountId">
+			<option value="0">不上传ssh</option>
+			#for(x : tbAccountList)
+			#if(tbProject.sshAccountId?? == x.id)
+			<option value="#(x.id)" selected>#(x.type)/**</option>
+			#else
+			<option value="#(x.id)">#(x.type)/**</option>
+			#end
+			#end
+
+		</select>
+	</div>
+	<div>
+		<label>ssh执行脚本</label>
+		<textarea name="tbProject.sshScript" cols="200" rows="50">#(tbProject.sshScript??)</textarea>#(contentMsg)
+	</div>
+	<div>
 		<label>&nbsp;</label>
 		<input value="提交" type="submit">
 	</div>
