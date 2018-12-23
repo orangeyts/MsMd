@@ -12,6 +12,7 @@ import com.demo.constant.ConstantConfig;
 import com.demo.constant.ConstantOS;
 import com.demo.env.TbEnvConfigService;
 import com.demo.template.TemplateService;
+import com.demo.util.ZipUtils;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.Kv;
@@ -163,7 +164,7 @@ public class ProjectController extends Controller {
 		log.info("工程路径: {}",obj.getScriptFilePath());
 		File dir = new File(home);
 		String[] split = lineT.split(" ");
-//		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
+		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
 
 		if (obj.getSshAccountId().intValue() != 0){
 			TbAccount sshTbAccount = tbAccountService.getTbAccount(obj.getSshAccountId());
@@ -179,6 +180,8 @@ public class ProjectController extends Controller {
 			sshClient.sendCmd("chmod u+x " + remotePath + "/" + sshScriptFile);
 			sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile);
 
+
+			zipAndUploadRemoteServer(obj, home, by, sshClient);
 			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile);
 			log.info("sshCmdOut: {}",sshCmdOut);
 		}else{
@@ -195,6 +198,21 @@ public class ProjectController extends Controller {
 		*/
 //		File dir = new File(absPath);
 
+	}
+
+	private void zipAndUploadRemoteServer(TbProject obj, String home, Kv by, SSHClient sshClient) throws Exception {
+		String zipDir = null;
+		String zipFile = null;
+		String zipFileName = "dist.zip";
+		if (obj.getType().intValue() == ConstantConfig.VUE){
+			zipDir = home + File.separator+by.get("projectName") + File.separator + "dist";
+			zipFile = zipDir + File.separator + zipFileName;
+			ZipUtils.compress(zipDir,zipFile);
+		}
+		if (zipFile != null){
+			sshClient.putFile(zipDir,zipFileName,"/data");
+			log.info("{}  上传成功",zipFileName);
+		}
 	}
 }
 

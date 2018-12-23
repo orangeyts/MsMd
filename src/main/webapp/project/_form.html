@@ -53,6 +53,13 @@
 		</select>
 	</div>
 	<div>
+		<label>项目类型</label>
+		<select name="tbProject.type" id="projectTypeSelect">
+			<option value="1">java</option>
+			<option value="0">vue</option>
+		</select>
+	</div>
+	<div>
 		<label>手机号</label>
 		<input type="text" name="tbProject.phone" value="#(tbProject.phone??)" />
 	</div>
@@ -90,6 +97,7 @@
 <script type="text/javascript">
 
 	$(function(){
+		$("#projectTypeSelect").val("#(tbProject.type??)");
 　　	$("#templateSelectId").change(function(){
 			var select_val = $(this).children('option:selected').val();
 			console.log(select_val);
