@@ -1,5 +1,6 @@
 package com.demo.index;
 
+import com.demo.constant.ConstantConfig;
 import com.jfinal.core.Controller;
 
 /**
@@ -11,6 +12,19 @@ import com.jfinal.core.Controller;
 public class IndexController extends Controller {
 	public void index() {
 		render("index.html");
+	}
+	public void toLogin() {
+		render("login.html");
+	}
+	public void login() {
+		String username = getPara("username");
+		String password = getPara("password");
+		if ("u".equals(username) && "p".equals(password)){
+			getSession().setAttribute(ConstantConfig.SESSION_KEY,username);
+			render("index.html");
+		}else {
+			renderHtml("登录错误");
+		}
 	}
 }
 
