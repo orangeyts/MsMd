@@ -65,6 +65,7 @@
     	<groupId>com.jfinal</groupId>
     	<artifactId>jetty-server</artifactId>
     	<version>2018.11</version>
+		<scope>${jetty_scope}</scope>
     	<!--
 			此处的 scope 值为 compile 仅为支持 IDEA 下启动项目
 			打 war 包时需要改成 provided，以免将一些无用的 jar 打进去
@@ -160,7 +161,7 @@
   </dependencies>
   
   <build>
-    <finalName>jfinal_demo_for_maven</finalName>
+    <finalName>MsMd</finalName>
 	    <plugins>
 	    	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -240,5 +241,42 @@
                 </configuration>
             </plugin>
 	  </plugins>
+
+	  <!-- 配置使用变量的配置文件 -->
+	  <resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>prod/*</exclude>
+					<exclude>dev/*</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/${profiles.active}</directory>
+			</resource>
+		</resources>
   </build>
+
+	<profiles>
+		<profile>
+			<!-- 本地开发环境 -->
+			<id>dev</id>
+			<properties>
+				<jetty_scope>compile</jetty_scope>
+				<profiles.active>dev</profiles.active>
+			</properties>
+			<activation>
+				<!-- 设置默认激活这个配置 -->
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<!-- 发布环境 -->
+			<id>prod</id>
+			<properties>
+				<jetty_scope>provided</jetty_scope>
+				<profiles.active>prod</profiles.active>
+			</properties>
+		</profile>
+	</profiles>
 </project>
