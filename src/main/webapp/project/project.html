@@ -3,9 +3,9 @@
 <h1>Blog管理&nbsp;&nbsp;
 <a href="/project/add">创建project</a>
 </h1>
-<div class="table_box">
+<div class="table_box" name="srcTable">
 	<table class="list">
-		<tbody>
+		<tbody id="up">
 			<tr>
 				<th width="4%">id</th>
 				<th width="35%">标题</th>
@@ -19,7 +19,7 @@
 			</tr>
 			
 			#for(x : projectPage.getList())
-			<tr>
+			<tr id="src_#(x.id)" draggable="true" ondragstart="dragStart(event,#(x.id))" ondragover="pd(event)">
 				<td style="text-align:left;">#(x.id)</td>
 				<td style="text-align:left;">#(x.title)</td>
 				#if(x.type == 1)
@@ -48,5 +48,68 @@
 		</tbody>
 	</table>
 	#@paginate(projectPage.pageNumber, projectPage.totalPage, "/project/")
+	<div>执行目标</div>
+	<div class="table_box" name="targetTable" id="down">
+		<table class="list">
+			<tbody  ondragover="pd(event);" id="targetBody"></tbody>
+		</table>
+	</div>
 </div>
 #end
+
+<script type="text/javascript">
+	//方法设置被拖数据的数据类型和值
+	var dragStart = function(ev,id){
+		var id = "src_"+id;
+		var tr = document.getElementById(id);
+		console.log("set tr id: " + id);
+		ev.dataTransfer.setData('Text', id);
+	}
+
+	var pd = function(ev){
+		ev.preventDefault(); //阻止向上冒泡
+	}
+
+	$(function(){
+
+			//上－〉下
+        document.getElementById('up').ondragover = function (ev) {
+            ev.preventDefault(); //阻止向上冒泡
+        }
+
+			document.getElementById('up').ondrop = function (ev) {
+            ev.preventDefault();
+            var id = ev.dataTransfer.getData('Text');
+            var elem = document.getElementById(id);
+            var targetBody = document.getElementById("srcBody"); //当前拖动的元素
+            var toElem = ev.toElement.id;
+            if (toElem == 'up') {
+                //如果为container,元素放置在末尾
+                targetBody.appendChild(elem);
+            } else {
+                //如果为container里的元素，则插入该元素之前
+                targetBody.insertBefore(elem, document.getElementById(toElem));
+            }
+        }
+
+		//下－〉上
+        document.getElementById('down').ondragover = function (ev) {
+            ev.preventDefault(); //阻止向上冒泡
+        }
+        document.getElementById('down').ondrop = function (ev) {
+            ev.preventDefault();
+            var id = ev.dataTransfer.getData('Text');
+            var elem = document.getElementById(id); //当前拖动的元素
+            var targetBody = document.getElementById("targetBody"); //当前拖动的元素
+            var toElem = ev.toElement.id; //放置位置
+            if (toElem == 'down') {
+                //如果为container,元素放置在末尾
+                targetBody.appendChild(elem);
+            } else {
+                //如果为container里的元素，则插入该元素之前
+                targetBody.insertBefore(elem, document.getElementById(toElem));
+            }
+        }
+
+　　});
+</script>
