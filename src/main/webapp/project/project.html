@@ -48,11 +48,14 @@
 		</tbody>
 	</table>
 	#@paginate(projectPage.pageNumber, projectPage.totalPage, "/project/")
-	<div>执行目标</div>
-	<div class="table_box" name="targetTable" id="down">
-		<table class="list">
-			<tbody id="targetBody"></tbody>
-		</table>
+	<div>
+		<label>执行目标</label>
+		<div class="table_box" name="targetTable" id="down">
+			<table class="list">
+				<tbody id="targetBody"></tbody>
+			</table>
+		</div>
+		<input type="button" value="批量启动" onclick="batRun()">
 	</div>
 </div>
 #end
@@ -68,6 +71,13 @@
 
 	var pd = function(ev){
 		ev.preventDefault(); //阻止向上冒泡
+	}
+
+	//批量启动任务
+	var batRun = function(){
+		$("#targetBody").children().each(function(){
+			console.log(this.id);
+		});
 	}
 
 	$(function(){
