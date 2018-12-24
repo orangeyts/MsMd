@@ -19,7 +19,7 @@
 			</tr>
 			
 			#for(x : projectPage.getList())
-			<tr id="src_#(x.id)" draggable="true" ondragstart="dragStart(event,#(x.id))" ondragover="pd(event)">
+			<tr id="src_#(x.id)" draggable="true" ondragstart="dragStart(event,#(x.id))">
 				<td style="text-align:left;">#(x.id)</td>
 				<td style="text-align:left;">#(x.title)</td>
 				#if(x.type == 1)
@@ -51,7 +51,7 @@
 	<div>执行目标</div>
 	<div class="table_box" name="targetTable" id="down">
 		<table class="list">
-			<tbody  ondragover="pd(event);" id="targetBody"></tbody>
+			<tbody id="targetBody"></tbody>
 		</table>
 	</div>
 </div>
@@ -81,8 +81,9 @@
             ev.preventDefault();
             var id = ev.dataTransfer.getData('Text');
             var elem = document.getElementById(id);
-            var targetBody = document.getElementById("srcBody"); //当前拖动的元素
-            var toElem = ev.toElement.id;
+            var targetBody = document.getElementById("up"); //当前拖动的元素
+            //toElement 有可能是td
+            var toElem = ev.toElement.parentElement.id;
             if (toElem == 'up') {
                 //如果为container,元素放置在末尾
                 targetBody.appendChild(elem);
@@ -101,7 +102,7 @@
             var id = ev.dataTransfer.getData('Text');
             var elem = document.getElementById(id); //当前拖动的元素
             var targetBody = document.getElementById("targetBody"); //当前拖动的元素
-            var toElem = ev.toElement.id; //放置位置
+            var toElem = ev.toElement.parentElement.id; //放置位置
             if (toElem == 'down') {
                 //如果为container,元素放置在末尾
                 targetBody.appendChild(elem);
