@@ -54,7 +54,7 @@ public class DemoConfig extends JFinalConfig {
 	 * 
 	 */
 	public static void main(String[] args) {
-		JFinal.start("src/main/webapp", 801, "/", 5);
+		JFinal.start("src/main/webapp", 801, "/msmd", 5);
 	}
 	
 	/**
@@ -86,6 +86,7 @@ public class DemoConfig extends JFinalConfig {
 	}
 	
 	public void configEngine(Engine me) {
+		me.addSharedObject("ctx", "msmd");
 		me.addSharedFunction("/common/_layout.html");
 		me.addSharedFunction("/common/_paginate.html");
 	}
@@ -105,8 +106,8 @@ public class DemoConfig extends JFinalConfig {
 		_MappingKit.mapping(arp);
 		me.add(arp);
 
-		me.add(new HelloServerStarter());
-		me.add(new HelloClientStarter());
+//		me.add(new HelloServerStarter());
+//		me.add(new HelloClientStarter());
 	}
 	
 	public static DruidPlugin createDruidPlugin() {

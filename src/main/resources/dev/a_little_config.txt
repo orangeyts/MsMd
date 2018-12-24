@@ -3,5 +3,3 @@ jdbcUrl = jdbc:mysql://localhost/jfinal_demo?characterEncoding=utf8&useSSL=false
 user = root
 password = buzhidao
 devMode = true
-
-ci.home=E:\ciHome

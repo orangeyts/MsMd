@@ -16,7 +16,7 @@ public class SessionAttrInterceptor implements Interceptor {
     public void intercept(Invocation ai) {
         String url = ai.getController().getRequest().getRequestURI();
         log.info("url: {}",url);
-        if ("/toLogin".equals(url) || "/login".equals(url)){
+        if (url.endsWith("/toLogin")|| (url.endsWith("/login"))){
             ai.invoke();
         }else{
             HttpSession session = ai.getController().getSession();

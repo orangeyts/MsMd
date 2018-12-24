@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>cn.orange</groupId>
   <artifactId>MsMd</artifactId>
@@ -12,9 +12,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
   </properties>
-  
-  	<!-- 使用阿里 maven 库 -->
-	<repositories>
+
+    <!-- 使用阿里 maven 库 -->
+    <repositories>
 		<repository>
 			<id>ali-maven</id>
 			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
@@ -28,9 +28,9 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	
-	<!-- 添加快照版本库,updatePolicy: always、daily、interval、never -->
-	<!-- repositories>
+
+    <!-- 添加快照版本库,updatePolicy: always、daily、interval、never -->
+    <!-- repositories>
     <repository>
            <id>sonatype-nexus-snapshots</id>
            <name>Sonatype Nexus Snapshots</name>
@@ -43,12 +43,12 @@
                <updatePolicy>daily</updatePolicy>
            </snapshots>
        </repository>
-  	</repositories -->
-	
-  <dependencies>
+      </repositories -->
+
+    <dependencies>
 
 	  <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-	  <dependency>
+        <dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>1.18.0</version>
@@ -60,16 +60,22 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    
+
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-util</artifactId>
+    	<version>9.4.12.v20180830</version>
+	</dependency>
+
     <dependency>
     	<groupId>com.jfinal</groupId>
     	<artifactId>jetty-server</artifactId>
     	<version>2018.11</version>
 		<scope>${jetty_scope}</scope>
-    	<!--
-			此处的 scope 值为 compile 仅为支持 IDEA 下启动项目
-			打 war 包时需要改成 provided，以免将一些无用的 jar 打进去
-		-->
+        <!--
+            此处的 scope 值为 compile 仅为支持 IDEA 下启动项目
+            打 war 包时需要改成 provided，以免将一些无用的 jar 打进去
+        -->
     </dependency>
     
     <dependency>
@@ -77,22 +83,22 @@
     	<artifactId>jfinal</artifactId>
     	<version>3.5</version>
     </dependency>
-    
-    <!-- 避免控制台输出如下提示信息：
-		 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
-		 项目中实际上用不到这个 jar 包，本 jfinal demo 用不上这个依赖，在此仅为大家
-		 在未来基于 jfinal demo 为模板做开发时做准备工作
-		 注意：eclipse 下可以将 scope 设置为 provided
-		 -->
-	<!--<dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-nop</artifactId>
-		<version>1.7.25</version>
-		&lt;!&ndash; 打包前改成 provided，此处使用 compile 仅为支持 IDEA &ndash;&gt;
-		<scope>compile</scope>
-	</dependency>-->
 
-	 <dependency>
+        <!-- 避免控制台输出如下提示信息：
+             SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+             项目中实际上用不到这个 jar 包，本 jfinal demo 用不上这个依赖，在此仅为大家
+             在未来基于 jfinal demo 为模板做开发时做准备工作
+             注意：eclipse 下可以将 scope 设置为 provided
+             -->
+        <!--<dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.25</version>
+            &lt;!&ndash; 打包前改成 provided，此处使用 compile 仅为支持 IDEA &ndash;&gt;
+            <scope>compile</scope>
+        </dependency>-->
+
+        <dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
 				<version>1.1.7</version>
@@ -102,13 +108,13 @@
 				<artifactId>slf4j-api</artifactId>
 				<version>1.7.9</version>
 			</dependency>
-    
-   <!-- <dependency>
-    	<groupId>log4j</groupId>
-    	<artifactId>log4j</artifactId>
-    	<version>1.2.16</version>
-    </dependency>-->
-    <dependency>
+
+        <!-- <dependency>
+             <groupId>log4j</groupId>
+             <artifactId>log4j</artifactId>
+             <version>1.2.16</version>
+         </dependency>-->
+        <dependency>
     	<groupId>mysql</groupId>
     	<artifactId>mysql-connector-java</artifactId>
     	<version>5.1.44</version>
@@ -123,19 +129,19 @@
     	<artifactId>cos</artifactId>
     	<version>2017.5</version>
     </dependency>
-    
-    <!--
-    	当需要支持 JSP、JSTL 时，开启下面的依赖，注意 IDEA 下开发需要将 scope 改成 compile，
-    	但打包部署到独立容器时需要再改为 provided，以免打进去一些不需要的 jar 包
-    
-	<dependency>
-		<groupId>org.eclipse.jetty</groupId>
-		<artifactId>jetty-jsp</artifactId>
-		<version>9.2.26.v20180806</version>
-		<scope>provided</scope>
-	</dependency>
-	-->
-	  <dependency>
+
+        <!--
+            当需要支持 JSP、JSTL 时，开启下面的依赖，注意 IDEA 下开发需要将 scope 改成 compile，
+            但打包部署到独立容器时需要再改为 provided，以免打进去一些不需要的 jar 包
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp</artifactId>
+            <version>9.2.26.v20180806</version>
+            <scope>provided</scope>
+        </dependency>
+        -->
+        <dependency>
 			<groupId>org.t-io</groupId>
 			<artifactId>tio-core</artifactId>
 			<version>3.2.1.v20181024-RELEASE</version>
@@ -148,10 +154,10 @@
 			<scope>test</scope>
 		</dependency>
 
-	  <!-- https://mvnrepository.com/artifact/com.jcraft/jsch
-	  ssh 操作库
-	  -->
-	  <dependency>
+        <!-- https://mvnrepository.com/artifact/com.jcraft/jsch
+        ssh 操作库
+        -->
+        <dependency>
 		<groupId>com.jcraft</groupId>
 		<artifactId>jsch</artifactId>
 		<version>0.1.54</version>
@@ -161,7 +167,7 @@
   </dependencies>
   
   <build>
-    <finalName>MsMd</finalName>
+    <finalName>msmd</finalName>
 	    <plugins>
 	    	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -171,20 +177,20 @@
 					<source>1.8</source>
 					<target>1.8</target>
 					<encoding>UTF-8</encoding>
-					<!-- java8 保留参数名编译参数，支持 action 带参 -->
-					<compilerArgument>-parameters</compilerArgument>
+                    <!-- java8 保留参数名编译参数，支持 action 带参 -->
+                    <compilerArgument>-parameters</compilerArgument>
 					<compilerArguments>
-						<verbose />
+						<verbose/>
 					</compilerArguments>
 				</configuration>
 			</plugin>
-			
-			<!-- 开发阶段可选的项目启动方式
-				 启动命令: mvn jetty:run
-				 指定端口号启动: mvn jetty:run -Djetty.port=8080 (必须先删掉后面的 httpConnector 配置)
-				 http://www.eclipse.org/jetty/documentation/current/jetty-maven-plugin.html#jetty-run-goal
-				-->
-			<plugin>
+
+            <!-- 开发阶段可选的项目启动方式
+                 启动命令: mvn jetty:run
+                 指定端口号启动: mvn jetty:run -Djetty.port=8080 (必须先删掉后面的 httpConnector 配置)
+                 http://www.eclipse.org/jetty/documentation/current/jetty-maven-plugin.html#jetty-run-goal
+                -->
+            <plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.4.12.v20180830</version>
@@ -198,11 +204,11 @@
 					<scanIntervalSeconds>5</scanIntervalSeconds>
 				</configuration>
 			</plugin>
-			
-			
-			<!-- 打包为可执行 jar 包的插件，具体用法参考
-				 maven-assembly-plugin 官方文档
-				-->
+
+
+            <!-- 打包为可执行 jar 包的插件，具体用法参考
+                 maven-assembly-plugin 官方文档
+                -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -242,8 +248,8 @@
             </plugin>
 	  </plugins>
 
-	  <!-- 配置使用变量的配置文件 -->
-	  <resources>
+      <!-- 配置使用变量的配置文件 -->
+      <resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<excludes>
@@ -260,19 +266,19 @@
 	<profiles>
 		<profile>
 			<!-- 本地开发环境 -->
-			<id>dev</id>
+            <id>dev</id>
 			<properties>
 				<jetty_scope>compile</jetty_scope>
 				<profiles.active>dev</profiles.active>
 			</properties>
 			<activation>
 				<!-- 设置默认激活这个配置 -->
-				<activeByDefault>true</activeByDefault>
+                <activeByDefault>true</activeByDefault>
 			</activation>
 		</profile>
 		<profile>
 			<!-- 发布环境 -->
-			<id>prod</id>
+            <id>prod</id>
 			<properties>
 				<jetty_scope>provided</jetty_scope>
 				<profiles.active>prod</profiles.active>
