@@ -150,7 +150,9 @@ public class ProjectController extends Controller {
 //        String s = engine.getTemplate("run.bat").renderToString(by);
 //        log.info("out: {}",s);
 		String osExtion = ".sh";
+		String osCmdPrefix = "";
 		if (ConstantOS.WINDOWS.equals(obj.getOs())){
+			osCmdPrefix = "cmd /c ";
 			osExtion = ".bat";
 		}else if (ConstantOS.LINUX.equals(obj.getOs())){
 			osExtion = ".sh";
@@ -160,10 +162,12 @@ public class ProjectController extends Controller {
 //		engine.getTemplate(obj.getOs() + File.separator +"run" + osExtion).render(by,exeScriptFile);
 
 		List<String> commands = new ArrayList<String>();
-		String lineT = "cmd /c "+exeScriptFile;
+		String lineT = osCmdPrefix + exeScriptFile;
 		log.info("工程路径: {}",obj.getScriptFilePath());
 		File dir = new File(home);
 		String[] split = lineT.split(" ");
+		log.info("执行命令的值: {}",lineT);
+		//TODO 要执行.sh 脚本,需要转码()和授权才行
 		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
 
 		if (obj.getSshAccountId().intValue() != 0){
