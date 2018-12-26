@@ -168,6 +168,11 @@ public class ProjectController extends Controller {
 		String[] split = lineT.split(" ");
 		log.info("执行命令的值: {}",lineT);
 		//TODO 要执行.sh 脚本,需要转码()和授权才行
+		if (ConstantOS.LINUX.equals(obj.getOs())){
+			String chmod = "chmod u+x "+by.get("projectName") + osExtion;
+			new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod);
+			log.info("授权 .sh 成功");
+		}
 		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
 
 		if (obj.getSshAccountId().intValue() != 0){
