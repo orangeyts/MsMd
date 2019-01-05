@@ -26,3 +26,4 @@ https://my.oschina.net/jfinal/blog/353062
 但是对于一个tocmat要放多个应用的话,还是设置好ctx变量
 
 ## 需要运行linux命令的服务器 要安装 yum -y install dos2unix,否则在window上生成的文件,由于格式问题，无法执行
+dos2unix -q spring-mvc-chat.sh

@@ -167,11 +167,15 @@ public class ProjectController extends Controller {
 		File dir = new File(home);
 		String[] split = lineT.split(" ");
 		log.info("执行命令的值: {}",lineT);
-		//TODO 要执行.sh 脚本,需要转码()和授权才行
 		if (ConstantOS.LINUX.equals(obj.getOs())){
-			String chmod = "chmod u+x "+by.get("projectName") + osExtion;
-			new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod);
-			log.info("授权 .sh 成功");
+			String fileName = by.get("projectName") + osExtion;
+			String chmod = "chmod u+x "+ fileName;
+			log.info("授权dir: {} chmod: {}",dir,chmod);
+			new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
+            chmod = "dos2unix -q " + fileName;
+            log.info("转码 dir: {} chmod: {}",dir,chmod);
+            new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
+			log.info("授权.转码 .sh 成功");
 		}
 		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
 
