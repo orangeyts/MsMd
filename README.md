@@ -61,3 +61,7 @@ npm config set registry https://registry.npm.taobao.org
 npm config get registry
 ```
 
+### edas API 接入指南
+edas_config.yaml无法配置私有内部地址上传，可以使用oss sdk(internal地址)和 edas java sdk(部署api)配合使用
+https://help.aliyun.com/document_detail/62123.html?spm=a2c4g.11186623.6.747.4328d29aS5dHC0
+
