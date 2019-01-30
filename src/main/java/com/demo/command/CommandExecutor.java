@@ -77,7 +77,7 @@ public class CommandExecutor {
         Map<String, String> env = pb.environment();
         env.putAll(userEnv);
         // 打印环境变量
-        System.out.println(env);
+        log.info(env.toString());
         // 重定向错误输出流到正常输出流
         pb.redirectErrorStream(true);
 
@@ -92,10 +92,10 @@ public class CommandExecutor {
             br1 = new BufferedReader(new InputStreamReader(process1.getInputStream(), "gbk"));
             String line1 = null;
             while ((line1 = br1.readLine()) != null) {
-                System.out.println(line1);
+                log.info("sh脚本执行输出: {}",line1);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("IO异常",e);
             throw e;
         }
     }

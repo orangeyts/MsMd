@@ -1,0 +1,74 @@
+#node project
+#!/bin/sh
+
+cd #(home??)
+if [ -d #(projectName??) ]
+then
+    rem pause;
+    cd #(projectName??)
+	git clean -df
+	git reset --hard
+	git pull
+	echo 'back parentPath, otherWise not exist will repeat execute!!!'
+    cd ..
+fi
+
+if [ ! -d #(projectName??) ]
+then 
+	echo clone
+	git clone https://#(scmUser??):#(scmPwd??)@#(scmPath??) #(projectName??)
+fi
+cd #(projectName??)
+npm install --unsafe-perm && npm run build:test_linux --unsafe-perm
+
+
+
+==================================================================================================================
+
+
+#java maven project
+#!/bin/sh
+
+## mvn home
+export MAVEN_HOME=/mnt/cihome/apache-maven-3.5.4
+export PATH=$PATH:$MAVEN_HOME/bin
+
+cd #(home??)
+if [ -d #(projectName??) ]
+then
+    rem pause;
+    cd #(projectName??)
+	git clean -df
+	git reset --hard
+	git pull
+	echo 'back parentPath, otherWise not exist will repeat execute!!!'
+    cd ..
+fi
+
+if [ ! -d #(projectName??) ]
+then 
+	echo clone
+	git clone https://#(scmUser??):#(scmPwd??)@#(scmPath??)
+fi
+cd #(projectName??)
+mvn clean install -DskipTests
+
+
+echo 'copy static file'
+
+timestamp=1524645845573
+type=test
+htmlPath=$type/$timestamp
+
+projectPath=#(home??)/#(projectName??)
+echo 'projectPath......  $projectPath'
+
+wechatUIProjectPath=#(home??)/web-vue
+echo 'wechatUIProjectPath......  $wechatUIProjectPath'
+
+echo "=== copy static file"
+rm -rf $projectPath/src/main/resources/static/structure/static
+cp -rfv $wechatUIProjectPath/dist/structure/static $projectPath/src/main/resources/static/structure/
+
+echo "=== copy template file"
+cp -rfv $wechatUIProjectPath/dist/index.html $projectPath/src/main/resources/templates

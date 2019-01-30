@@ -32,3 +32,32 @@ chmod u+x *
 ## 转码
 需要运行linux命令的服务器 要安装 yum -y install dos2unix,否则在window上生成的文件,由于格式问题，无法执行
 dos2unix -q spring-mvc-chat.sh
+
+## 前端项目记得在环境安装 nodejs
+[nodejs](https://www.cnblogs.com/emao/p/5511394.html)
+wget https://nodejs.org/download/release/v9.9.0/node-v9.9.0-linux-x64.tar.gz
+
+### nodejs 下载是 tar.xz
+可以看到这个压缩包也是打包后再压缩，外面是xz压缩方式，里层是tar打包方式。
+```
+$xz -d ***.tar.xz
+$tar -xvf  ***.tar
+mv node-v10.15.1-linux-x64 nodePackage 这样建立软连接-如果更换了node版本,只需要下载新的版本，改成这个名字就可以了
+ln -s /mnt/cihome/nodePackage/bin/npm /usr/bin/npm (bash目录)
+ln -s /mnt/cihome/nodePackage/bin/node /usr/bin/node（bash 目录）
+
+删除已有的软连接
+rm -rf /usr/bin/npm
+rm -rf /usr/bin/node
+
+node -v
+npm -v
+
+1.临时使用
+npm --registry https://registry.npm.taobao.org install express
+2.持久使用
+npm config set registry https://registry.npm.taobao.org
+3.配置后可通过下面方式来验证是否成功
+npm config get registry
+```
+
