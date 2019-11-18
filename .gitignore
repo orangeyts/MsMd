@@ -3,6 +3,7 @@ target
 
 #忽略 数据库配置文件,请用自己的
 a_little_config_db.txt
+rebel.xml
 
 # runti
 me added files

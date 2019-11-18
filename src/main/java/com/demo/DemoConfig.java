@@ -13,7 +13,9 @@ import com.demo.io.client.HelloClientStarter;
 import com.demo.io.server.HelloServerStarter;
 import com.demo.project.ProjectController;
 import com.demo.step.StepController;
+import com.demo.tbuser.UserController;
 import com.demo.util.FileUtils;
+import com.demo.weekreport.WeekReportController;
 import com.jfinal.aop.Aop;
 import com.jfinal.aop.Inject;
 import com.jfinal.config.Constants;
@@ -83,6 +85,8 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/env", TbEnvConfigController.class);
 
 		me.add("/tio", HelloTioController.class);
+		me.add("/weekreport", WeekReportController.class);
+		me.add("/users", UserController.class);
 	}
 	
 	public void configEngine(Engine me) {

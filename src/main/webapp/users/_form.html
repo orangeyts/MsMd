@@ -1,0 +1,21 @@
+<fieldset class="solid">
+	<legend>注册</legend>
+	<input type="hidden" name="tbUser.id" value="#(tbUser.id??)" />
+	<input type="hidden" name="tbUser.type" value="2" />
+	<div>
+		<label>真实名称</label>
+		<input type="text" name="tbUser.realName" value="#(tbUser.realName??)" />#(realNameMsg)
+	</div>
+	<div>
+		<label>登录用户名称</label>
+		<input type="text" name="tbUser.userName" value="#(tbUser.userName??)" />#(realNameMsg)
+	</div>
+	<div>
+		<label>密码</label>
+		<input type="text" name="tbUser.pwd" value="#(tbUser.pwd??)" />#(realNameMsg)
+	</div>
+	<div>
+		<label>&nbsp;</label>
+		<input value="提交" type="submit">
+	</div>
+</fieldset>

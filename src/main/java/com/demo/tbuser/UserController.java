@@ -1,9 +1,12 @@
-package com.demo.blog;
+package com.demo.tbuser;
 
+import com.demo.blog.BlogInterceptor;
+import com.demo.blog.BlogService;
+import com.demo.blog.BlogValidator;
+import com.demo.common.model.Blog;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
-import com.demo.common.model.Blog;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -13,18 +16,17 @@ import com.demo.common.model.Blog;
  * 所有 sql 与业务逻辑写在 Model 或 Service 中，不要写在 Controller 中，养成好习惯，有利于大型项目的开发与维护
  */
 @Before(BlogInterceptor.class)
-public class BlogController extends Controller {
-	
+public class UserController extends Controller {
+
 	@Inject
-	BlogService service;
+	TbUserService service;
 	
 	public void index() {
-		setAttr("blogPage", service.paginate(getParaToInt(0, 1), 10));
-		render("blog.html");
+		setAttr("page", service.paginate(getParaToInt(0, 1), 10));
+		render("users.html");
 	}
 	
 	public void add() {
-		System.out.println("what ???");
 	}
 	
 	/**

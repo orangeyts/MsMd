@@ -6,3 +6,7 @@
 
 
 自定义开发: com.demo.common.model._JFinalDemoGenerator用于生成基本方法
+
+
+### 周报
+http://localhost:801/msmd/weekreport/download

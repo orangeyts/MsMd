@@ -23,6 +23,8 @@ public class _MappingKit {
 		arp.addMapping("tb_project", "id", TbProject.class);
 		arp.addMapping("tb_step", "id", TbStep.class);
 		arp.addMapping("tb_template", "id", TbTemplate.class);
+		arp.addMapping("tb_user", "id", TbUser.class);
+		arp.addMapping("tb_week_report", "id", TbWeekReport.class);
 	}
 }
 
