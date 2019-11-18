@@ -77,5 +77,7 @@ Hi nuo! You've successfully authenticated, but GITEE.COM does not provide shell 
 Administrator@topfeel-PC MINGW64 ~/.ssh
 $ ssh -T git@me.gitee.com
 Hi orangehs! You've successfully authenticated, but GITEE.COM does not provide shell access.
+
+克隆地址就变成了 git@me.gitee.com:orangehs/MsMd.git 类似于dns解析一样的
 ```
 
