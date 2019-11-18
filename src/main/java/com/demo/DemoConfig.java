@@ -62,7 +62,7 @@ public class DemoConfig extends JFinalConfig {
 	 */
 	public void configConstant(Constants me) {
 		// 加载少量必要配置，随后可用PropKit.get(...)获取值
-		PropKit.use("a_little_config.txt");
+		PropKit.use("a_little_config_db.txt");
 		me.setDevMode(PropKit.getBoolean("devMode", false));
 		
 		// 支持 Controller、Interceptor 之中使用 @Inject 注入业务层，并且自动实现 AOP

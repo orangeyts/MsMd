@@ -1,6 +1,9 @@
 ﻿#maven
 target
 
+#忽略 数据库配置文件,请用自己的
+a_little_config_db.txt
+
 # runti
 me added files
 build

@@ -17,7 +17,7 @@ import com.jfinal.plugin.druid.DruidPlugin;
 public class _JFinalDemoGenerator {
 	
 	public static DataSource getDataSource() {
-		PropKit.use("a_little_config.txt");
+		PropKit.use("a_little_config_db.txt");
 		DruidPlugin druidPlugin = DemoConfig.createDruidPlugin();
 		druidPlugin.setInitialSize(1);
 		druidPlugin.start();
