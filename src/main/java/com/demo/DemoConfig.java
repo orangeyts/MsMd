@@ -25,6 +25,7 @@ import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
+import com.jfinal.ext.interceptor.SessionInViewInterceptor;
 import com.jfinal.kit.FileKit;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.PropKit;
@@ -122,6 +123,7 @@ public class DemoConfig extends JFinalConfig {
 	 * 配置全局拦截器
 	 */
 	public void configInterceptor(Interceptors me) {
+		me.add(new SessionInViewInterceptor());
 		me.add(new SessionAttrInterceptor());
 	}
 	

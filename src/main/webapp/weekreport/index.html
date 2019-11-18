@@ -1,7 +1,24 @@
 #@layout()
 #define main()
-<h1>周报管理&nbsp;&nbsp;
-<a href="weekreport/add">创建</a>
+<h1>
+	<form action="/#(ctx??)/weekreport" method="post">
+		<fieldset class="solid">
+			<legend>菜单</legend>
+			<span>
+				<label>起始时间:</label>
+				<input type="date" name="startTime" value="#(startTime)" />
+			</span>
+			<span>
+				<label>结束时间:</label>
+				<input type="date" name="endTime" value="#(endTime)" />
+			</span>
+			<span>
+				<label>&nbsp;</label>
+				<input value="提交" type="submit">
+				<a href="weekreport" class="red">创建</a>
+			</span>
+		</fieldset>
+	</form>
 </h1>
 <div class="table_box">
 	<table class="list">
@@ -19,10 +36,14 @@
 				<td style="text-align:left;">#(x.id)</td>
 				<td style="text-align:left;">#(x.content)</td>
 				<td style="text-align:left;">#(x.userName)</td>
-				<td style="text-align:left;">#date(x.createTime,"yyyy年MM月dd日 hh:mm:ss")</td>
+				<td style="text-align:left;">#date(x.createTime,"yyyy年MM月dd日 HH:mm:ss")</td>
 				<td style="text-align:left;">
+					#if((session.uid.id) == (x.userId))
 					&nbsp;&nbsp;<a href="/#(ctx??)/weekreport/delete/#(x.id)">删除</a>
 					&nbsp;&nbsp;<a href="/#(ctx??)/weekreport/edit/#(x.id)">修改</a>
+					#else
+						not you
+					#end
 				</td>
 			</tr>
 			#end

@@ -4,6 +4,8 @@ import com.demo.common.model.TbUser;
 import com.demo.common.model.TbWeekReport;
 import com.jfinal.plugin.activerecord.Page;
 
+import java.util.List;
+
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
  * 详见 JFinal 俱乐部: http://jfinal.com/club
@@ -21,8 +23,9 @@ public class WeekReportService {
 	 */
 	private TbWeekReport dao = new TbWeekReport().dao();
 	
-	public Page<TbWeekReport> paginate(int pageNumber, int pageSize) {
-		return dao.paginate(pageNumber, pageSize, "select *", "from tb_week_report order by id asc");
+	public Page<TbWeekReport> paginate(int pageNumber, int pageSize, String condition,List<Object> paramValue) {
+		return dao.paginate(pageNumber, pageSize, "select * ",
+				"FROM tb_week_report WHERE 1=1 " + condition + " order by createTime desc", paramValue.toArray());
 	}
 	
 	public TbWeekReport findById(int id) {

@@ -30,7 +30,22 @@ public class WeekReportController extends Controller {
     WeekReportService service;
 	
 	public void index() {
-		setAttr("page", service.paginate(getParaToInt(0, 1), 10));
+		String startTime = getPara("startTime");
+		String endTime = getPara("endTime");
+		List<Object> paramValue = new ArrayList<Object>();
+		String condition = "";
+		if(startTime != null){
+			condition = condition + " and createTime>=?";
+			paramValue.add(startTime);
+		}
+		if(endTime != null){
+			condition = condition + " and createTime=<?";
+			paramValue.add(endTime);
+		}
+
+		setAttr("page", service.paginate(getParaToInt(0, 1), 10,condition,paramValue));
+		setAttr("startTime",startTime);
+		setAttr("endTime",endTime);
 		render("index.html");
 	}
 
