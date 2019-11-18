@@ -68,3 +68,14 @@ https://help.aliyun.com/document_detail/62123.html?spm=a2c4g.11186623.6.747.4328
 .ssh多git账户修改,下载的时候要用git协议,不能用https协议,还要配置项目私有配置
 git config user.email "112260085@qq.com"
 
+https://www.cnblogs.com/fourous/p/11424285.html
+
+```
+$ ssh -T git@gitee.com
+Hi nuo! You've successfully authenticated, but GITEE.COM does not provide shell access.
+
+Administrator@topfeel-PC MINGW64 ~/.ssh
+$ ssh -T git@me.gitee.com
+Hi orangehs! You've successfully authenticated, but GITEE.COM does not provide shell access.
+```
+
