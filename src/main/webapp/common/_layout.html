@@ -16,8 +16,12 @@
 		<div class="manage_head">
 			<div class="manage_logo">
 				<a href="http://www.jfinal.com" target="_blank">JFinal web framework</a>
-				<a href="/#(ctx??)/logout" class="red">注销</a>
-				<a href="/#(ctx??)/toRegister" class="red">注册</a>
+				#if((session != null) && (session.uid != null))
+					<a href="/#(ctx??)/logout" class="red">注销</a>
+				#else
+					<a href="/#(ctx??)/toLogin" class="red">登录</a>
+					<a href="/#(ctx??)/toRegister" class="red">注册</a>
+				#end
 			</div>
 			<div id="nav">
 				<ul>
