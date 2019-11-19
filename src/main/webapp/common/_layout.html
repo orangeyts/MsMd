@@ -21,11 +21,17 @@
 			</div>
 			<div id="nav">
 				<ul>
-					<li><a href="/#(ctx??)/index"><b>首页</b></a></li>
-					<li><a href="/#(ctx??)/blog"><b>Blog管理</b></a></li>
-					<li><a href="/#(ctx??)/project"><b>项目管理</b></a></li>
+					#if((session != null) && (session.uid != null))
+						#if((session.uid.type) == "1")
+							<li><a href="/#(ctx??)/index"><b>首页</b></a></li>
+							<li><a href="/#(ctx??)/blog"><b>Blog管理</b></a></li>
+							<li><a href="/#(ctx??)/project"><b>项目管理</b></a></li>
+							<li><a href="/#(ctx??)/env"><b>配置</b></a></li>
+						#else
+							<li><a href="javascript:void(0)"><b>普通用户</b></a></li>
+						#end
+					#end
 					<li><a href="/#(ctx??)/weekreport"><b class="red">周报</b></a></li>
-					<li><a href="/#(ctx??)/env"><b>配置</b></a></li>
 				</ul>
 			</div>
 		</div>
