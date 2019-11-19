@@ -57,6 +57,7 @@ public class WeekReportController extends Controller {
 	 * save 与 update 的业务逻辑在实际应用中也应该放在 serivce 之中，
 	 * 并要对数据进正确性进行验证，在此仅为了偷懒
 	 */
+	@Before(WeekReportValidator.class)
 	public void save() {
 		TbWeekReport bean = getBean(TbWeekReport.class);
 
@@ -78,6 +79,7 @@ public class WeekReportController extends Controller {
 	 * save 与 update 的业务逻辑在实际应用中也应该放在 serivce 之中，
 	 * 并要对数据进正确性进行验证，在此仅为了偷懒
 	 */
+	@Before(WeekReportValidator.class)
 	public void update() {
 		TbWeekReport bean = getBean(TbWeekReport.class);
 		bean.setUpdateTime(new Date());

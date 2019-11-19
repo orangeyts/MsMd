@@ -1,7 +1,7 @@
 #@layout()
 #define main()
 <h1>
-	<form action="/#(ctx??)/weekreport" method="post">
+	<form action="/#(ctx??)" method="post">
 		<fieldset class="solid">
 			<legend>菜单</legend>
 			<span>
@@ -15,7 +15,7 @@
 			<span>
 				<label>&nbsp;</label>
 				<input value="提交" type="submit">
-				<a href="weekreport" class="red">创建</a>
+				<a href="/#(ctx??)/weekreport/add" class="red">创建</a>
 			</span>
 		</fieldset>
 	</form>

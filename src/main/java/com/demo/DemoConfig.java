@@ -1,5 +1,6 @@
 package com.demo;
 
+import com.alibaba.druid.util.StringUtils;
 import com.demo.blog.BlogController;
 import com.demo.common.Slf4jLogFactory;
 import com.demo.common.model.TbEnvConfig;
@@ -31,10 +32,10 @@ import com.jfinal.kit.PathKit;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
+import com.jfinal.server.undertow.UndertowServer;
 import com.jfinal.template.Engine;
 import com.jfinal.template.source.FileSourceFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jetty.util.StringUtil;
 
 import java.io.File;
 import java.util.Map;
@@ -57,7 +58,8 @@ public class DemoConfig extends JFinalConfig {
 	 * 
 	 */
 	public static void main(String[] args) {
-		JFinal.start("src/main/webapp", 801, "/msmd", 5);
+//		JFinal.start("src/main/webapp", 801, "/msmd", 5);
+		UndertowServer.start(DemoConfig.class);
 	}
 	
 	/**
@@ -137,12 +139,12 @@ public class DemoConfig extends JFinalConfig {
 	static TbEnvConfigService service = Aop.get(TbEnvConfigService.class);
 
 	@Override
-	public void afterJFinalStart() {
+	public void onStart() {
 		log.info("service: {}",service);
 		Map<String, String> config = service.getConfig();
 		String home = config.get(ConstantConfig.HOME);
 		log.info("ci home: {}",home);
-		if (StringUtil.isNotBlank(home)){
+		if (!StringUtils.isEmpty(home)){
 			File homePath = new File(home);
 			if (!homePath.exists()){homePath.mkdirs();};
 			String rootClassPath = PathKit.getRootClassPath();
