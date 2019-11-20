@@ -17,7 +17,7 @@
 			#if (currentPage == 1)
 				<span class="disabled prev_page">上页</span>
 			#else
-				<a href="#(link)#(currentPage - 1)#(append)" class="prev_page">上页</a>
+				<a href="#(link)?page=#(currentPage - 1)#(append)" class="prev_page">上页</a>
 			#end
 			
 			#if (currentPage > 8)
@@ -30,20 +30,20 @@
 				#if (currentPage == i)
 					<span class="current">#(i)</span>
 				#else
-					<a href="#(link)#(i)#(append)">#(i)</a>
+					<a href="#(link)?page=#(i)#(append)">#(i)</a>
 				#end
 			#end
 			
 			#if ((totalPage - currentPage) >= 8)
 				<span class="gap">…</span>
 				<a href="#(link)#(totalPage - 1)#(append)">#(totalPage - 1)</a>
-				<a href="#(link)#(totalPage)#(append)">#(totalPage)</a>
+				<a href="#(link)?page=#(totalPage)#(append)">#(totalPage)</a>
 			#end
 			
 			#if (currentPage == totalPage)
 				<span class="disabled next_page">下页</span>
 			#else
-				<a href="#(link)#(currentPage + 1)#(append)" class="next_page" rel="next">下页</a>
+				<a href="#(link)?page=#(currentPage + 1)#(append)" class="next_page" rel="next">下页</a>
 			#end
 	</div>
 #end

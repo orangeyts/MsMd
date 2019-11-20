@@ -32,6 +32,7 @@ public class WeekReportController extends Controller {
 	public void index() {
 		String startTime = getPara("startTime");
 		String endTime = getPara("endTime");
+//		Integer page = getParaToInt("page");
 		List<Object> paramValue = new ArrayList<Object>();
 		String condition = "";
 		if(startTime != null){
@@ -42,8 +43,9 @@ public class WeekReportController extends Controller {
 			condition = condition + " and createTime=<?";
 			paramValue.add(endTime);
 		}
-
-		setAttr("page", service.paginate(getParaToInt(0, 1), 10,condition,paramValue));
+		Integer pageNumber = getParaToInt("page", 1);
+		System.out.println(pageNumber);
+		setAttr("page", service.paginate(pageNumber, 10,condition,paramValue));
 		setAttr("startTime",startTime);
 		setAttr("endTime",endTime);
 		render("index.html");
@@ -62,7 +64,7 @@ public class WeekReportController extends Controller {
 		TbWeekReport bean = getBean(TbWeekReport.class);
 
 		Date now = new Date();
-		bean.setCreateTime(now);
+//		bean.setCreateTime(now);
 		bean.setUpdateTime(now);
 		TbUser tbUser = SessionUtil.getTbUser(getSession());
 		bean.setUserId(tbUser.getId());
