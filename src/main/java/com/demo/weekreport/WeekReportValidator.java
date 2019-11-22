@@ -14,7 +14,7 @@ import com.jfinal.validate.Validator;
 public class WeekReportValidator extends Validator {
 	
 	protected void validate(Controller controller) {
-		validateRequiredString("tbWeekReport.summary", "summaryMsg", "请输入 总结！");
+		validateRequiredString("tbWeekReport.summary", "summaryMsg", "请输入 下周计划！");
 	}
 	
 	protected void handleError(Controller controller) {
