@@ -12,10 +12,12 @@ import java.util.Date;
  **/
 @Data
 public class DownloadData {
-    @ExcelProperty("字符串标题")
+    @ExcelProperty("姓名")
     private String string;
-    @ExcelProperty("日期标题")
+    @ExcelProperty("工作描述")
+    private String content;
+    @ExcelProperty("日期")
     private Date date;
-    @ExcelProperty("数字标题")
+    @ExcelProperty("总结")
     private Double doubleData;
 }

@@ -33,6 +33,14 @@ public abstract class BaseTbWeekReport<M extends BaseTbWeekReport<M>> extends Mo
 		return getStr("content");
 	}
 
+	public void setReportDate(java.util.Date reportDate) {
+		set("reportDate", reportDate);
+	}
+	
+	public java.util.Date getReportDate() {
+		return get("reportDate");
+	}
+
 	public void setCreateTime(java.util.Date createTime) {
 		set("createTime", createTime);
 	}

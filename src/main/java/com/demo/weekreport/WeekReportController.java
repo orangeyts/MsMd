@@ -1,6 +1,8 @@
 package com.demo.weekreport;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.demo.blog.BlogInterceptor;
 import com.demo.blog.BlogValidator;
 import com.demo.common.model.Blog;
@@ -8,18 +10,24 @@ import com.demo.common.model.TbUser;
 import com.demo.common.model.TbWeekReport;
 import com.demo.tbuser.TbUserService;
 import com.demo.util.SessionUtil;
+import com.demo.vo.TbWeekReportVO;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.upload.UploadFile;
+import org.tio.utils.hutool.BeanUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 周报
@@ -32,23 +40,34 @@ public class WeekReportController extends Controller {
 	public void index() {
 		String startTime = getPara("startTime");
 		String endTime = getPara("endTime");
-//		Integer page = getParaToInt("page");
-		List<Object> paramValue = new ArrayList<Object>();
-		String condition = "";
-		if(startTime != null){
-			condition = condition + " and createTime>=?";
-			paramValue.add(startTime);
-		}
-		if(endTime != null){
-			condition = condition + " and createTime=<?";
-			paramValue.add(endTime);
-		}
 		Integer pageNumber = getParaToInt("page", 1);
-		System.out.println(pageNumber);
-		setAttr("page", service.paginate(pageNumber, 10,condition,paramValue));
+		Page<TbWeekReport> paginate = getTbWeekReportPage(startTime, endTime, pageNumber,20);
+		setAttr("page", paginate);
 		setAttr("startTime",startTime);
 		setAttr("endTime",endTime);
 		render("index.html");
+	}
+
+
+	/**
+	 * 导出的时候 用同样的处理逻辑 只是pageSize搞大一点就行了
+	 * @param startTime
+	 * @param endTime
+	 * @param pageNumber
+	 * @return
+	 */
+	private Page<TbWeekReport> getTbWeekReportPage(String startTime, String endTime, Integer pageNumber, Integer pageSize) {
+		List<Object> paramValue = new ArrayList<Object>();
+		String condition = "";
+		if(!StringUtils.isEmpty(startTime)){
+			condition = condition + " and reportDate>=?";
+			paramValue.add(startTime);
+		}
+		if(!StringUtils.isEmpty(endTime)){
+			condition = condition + " and reportDate<=?";
+			paramValue.add(endTime);
+		}
+		return service.paginate(pageNumber, pageSize, condition, paramValue);
 	}
 
 	public void add() {
@@ -64,7 +83,7 @@ public class WeekReportController extends Controller {
 		TbWeekReport bean = getBean(TbWeekReport.class);
 
 		Date now = new Date();
-//		bean.setCreateTime(now);
+		bean.setCreateTime(now);
 		bean.setUpdateTime(now);
 		TbUser tbUser = SessionUtil.getTbUser(getSession());
 		bean.setUserId(tbUser.getId());
@@ -95,15 +114,42 @@ public class WeekReportController extends Controller {
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * JDK 日期函数  https://mp.weixin.qq.com/s/az40Pa0BAXepCR4aiLan-g
+	 * @throws IOException
+	 */
     public void download() throws IOException {
+		LocalDate localDate = LocalDate.now();
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+		String format = localDate.format(dateTimeFormatter);
+		String sheetName = format +"_平台组-工作周报";
+
         HttpServletResponse response = getResponse();
         // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
         // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
-        String fileName = URLEncoder.encode("测试", "UTF-8");
+        String fileName = URLEncoder.encode(sheetName, "UTF-8");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), DownloadData.class).sheet("模板").doWrite(data());
+
+		String startTime = getPara("startTime");
+		String endTime = getPara("endTime");
+		Integer pageNumber = getParaToInt("page", 1);
+		Page<TbWeekReport> paginate = getTbWeekReportPage(startTime, endTime, pageNumber,100);
+		List<TbWeekReport> list = paginate.getList();
+
+		//转换到 VO list
+		List<TbWeekReportVO> result = list.stream().map(temp -> {
+			TbWeekReportVO obj = new TbWeekReportVO();
+			obj.setUserName(temp.getUserName());
+			obj.setContent(temp.getContent());
+			obj.setSummary(temp.getSummary());
+			obj.setReportDate(temp.getReportDate());
+			return obj;
+		}).collect(Collectors.toList());
+
+		EasyExcel.write(response.getOutputStream(), TbWeekReportVO.class).registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).sheet(sheetName).doWrite(result);
     }
 
     private List<DemoData> data() {
