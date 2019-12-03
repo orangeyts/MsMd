@@ -108,7 +108,17 @@ public class ProjectController extends Controller {
 	public void build() throws Exception {
 		Integer projectId = getParaToInt("projectId");
 		TbProject obj = service.findById(projectId);
-		runScript(obj);
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					runScript(obj);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 
 		setAttr("tbProject",obj);
 		render("/project/build.html");

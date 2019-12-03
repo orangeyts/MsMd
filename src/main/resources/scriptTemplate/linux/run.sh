@@ -9,7 +9,7 @@ export PATH=$PATH:$MAVEN_HOME/bin
 
 if [ ! -d "#(projectName??)" ];then
     echo clone
-    git clone https://#(scmUser??):#(scmPwd??)@#(scmPath??)
+    git clone https://#(scmUser??):#(scmPwd??)@#(scmPath??) #(projectName??)
 else
     echo 'git pull'
     cd #(projectName??)

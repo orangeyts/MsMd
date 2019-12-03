@@ -2,7 +2,7 @@ cd #(home??)
 set path=%path%;"#(gitHome??)"
 
 if exist #(projectName??) (
-    rem pause;
+    echo 'update project'
     cd #(projectName??)
 	git clean -df
 	git reset --hard
@@ -12,9 +12,9 @@ if exist #(projectName??) (
 )
 
 if not exist #(projectName??) (
-    rem pause;
+    echo 'init project'
 	echo clone
-	git clone https://#(scmUser??):#(scmPwd??)@#(scmPath??)
+	git clone https://#(scmUser??):#(scmPwd??)@#(scmPath??) #(projectName??)
 )
 
-pause;
+mvn clean install -DskiptTests
