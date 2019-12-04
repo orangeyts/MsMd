@@ -50,16 +50,54 @@
                 alert("WebSocket 连接没有建立成功！");
             }
         }
+        //加入群组
+        function joinGroup(groupId,userId,type){
+            if(!window.WebSocket){return;}
+            if(socket.readyState == WebSocket.OPEN){
+                var jsonObject = JSON.parse("{}");
+                jsonObject["groupId"] = groupId;
+                jsonObject["userId"] = userId;
+                jsonObject["type"] = type;
+                socket.send(JSON.stringify(jsonObject));
+            }else{
+                alert("WebSocket 连接没有建立成功！");
+            }
+        }
+        //群发消息
+        function groupMsg(groupId,message,type){
+            if(!window.WebSocket){return;}
+            if(socket.readyState == WebSocket.OPEN){
+                var jsonObject = JSON.parse("{}");
+                jsonObject["groupId"] = groupId;
+                jsonObject["message"] = message;
+                jsonObject["type"] = type;
+                socket.send(JSON.stringify(jsonObject));
+            }else{
+                alert("WebSocket 连接没有建立成功！");
+            }
+        }
 
     </script>
 </head>
 <body>
 <form onSubmit="return false;">
-    <label>ID</label><input type="text" id="uid" name="uid" value="#(uid)" /><br />
-    <label>TEXT</label><input type="text" name="message" value="这里输入消息" /> <br />
-    <label>TEXT</label><input type="text" name="toUser" value="这里输入对方id" /> <br />
-    <br /> <input type="button" value="发送ws消息"
-                  onClick="send(this.form.uid.value, this.form.message.value, this.form.toUser.value)" />
+    <label>当前用户id</label><input type="text" id="uid" name="uid" value="#(uid)" /><br />
+    <label>message</label><input type="text" name="message" value="这里输入消息" /> <br />
+    <label>对方Id</label><input type="text" name="toUser" value="这里输入对方id" /> <br />
+    <br/>
+    <input type="button" value="私信消息" onClick="send(this.form.uid.value, this.form.message.value, this.form.toUser.value)" />
+    <hr color="black" />
+    <div>
+        <select id="group">
+            <option value="1">群1</option>
+            <option value="2">群2</option>
+            <option value="3">群3</option>
+        </select>
+        <input type="button" value="加入群组" onClick="joinGroup(this.form.group.value, #(uid), 1)" />
+        <input type="button" value="群发消息" onClick="groupMsg(this.form.group.value, this.form.message.value, 2)" />
+    </div>
+
+
     <hr color="black" />
     <h3>服务端返回的应答消息</h3>
     <textarea id="responseText" style="width: 1024px;height: 300px;"></textarea>
