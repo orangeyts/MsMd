@@ -10,8 +10,10 @@ import com.demo.env.TbEnvConfigController;
 import com.demo.env.TbEnvConfigService;
 import com.demo.index.IndexController;
 import com.demo.io.HelloTioController;
+import com.demo.io.WsController;
 import com.demo.io.client.HelloClientStarter;
 import com.demo.io.server.HelloServerStarter;
+import com.demo.io.server.NettyServerStarter;
 import com.demo.project.ProjectController;
 import com.demo.step.StepController;
 import com.demo.tbuser.UserController;
@@ -57,9 +59,10 @@ public class DemoConfig extends JFinalConfig {
 	 * 可配置为：src/main/webapp 80 / 5
 	 * 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 //		JFinal.start("src/main/webapp", 801, "/msmd", 5);
 		UndertowServer.start(DemoConfig.class);
+        new NettyServerStarter(12345).runServer();
 	}
 	
 	/**
@@ -89,8 +92,10 @@ public class DemoConfig extends JFinalConfig {
 
 		me.add("/tio", HelloTioController.class);
 		me.add("/weekreport", WeekReportController.class);
-		me.add("/users", UserController.class);
-	}
+        me.add("/users", UserController.class);
+
+        me.add("/ws", WsController.class);
+    }
 	
 	public void configEngine(Engine me) {
 		me.addSharedObject("ctx", "msmd");
@@ -115,6 +120,7 @@ public class DemoConfig extends JFinalConfig {
 
 //		me.add(new HelloServerStarter());
 //		me.add(new HelloClientStarter());
+//		me.add(new NettyServerStarter(12345));
 	}
 	
 	public static DruidPlugin createDruidPlugin() {
