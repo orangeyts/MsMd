@@ -17,7 +17,7 @@
 ## 访问路径
     http://localhost
 
-## https://gitee.com/xiaoxustudent/jfinal-tio  WebSocket 参考
+## https://www.cnblogs.com/hhhshct/p/9507446.html  WebSocket 参考
 
 ## jfinal部署tomcat最佳实践
 <Context path="" docBase="/var/www/my_project" reloadable="false" />
