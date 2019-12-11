@@ -41,7 +41,8 @@
 	</div>
 	<div>
 		<label>代码仓库-账号信息</label>
-		<select name="tbProject.accountId">
+		<select name="tbProject.accountId" onchange="hideGitInfo(this)">
+			<option value="0">本地不编译工程</option>
 			#for(x : tbAccountList)
 				#if(tbProject.accountId?? == x.id)
 					<option value="#(x.id)" selected>#(x.userName)/**</option>
@@ -52,25 +53,28 @@
 
 		</select>
 	</div>
-	<div>
-		<label>项目类型</label>
-		<select name="tbProject.type" id="projectTypeSelect">
-			<option value="1">java</option>
-			<option value="0">vue</option>
-		</select>
+	<div id="gitInfo">
+		<div>
+			<label>项目类型</label>
+			<select name="tbProject.type" id="projectTypeSelect">
+				<option value="1">java</option>
+				<option value="0">vue</option>
+			</select>
+		</div>
+		<div>
+			<label>手机号</label>
+			<input type="text" name="tbProject.phone" value="#(tbProject.phone??)" />
+		</div>
+		<div>
+			<label>脚本名称</label>
+			<input type="text" name="tbProject.scriptFilePath" value="#(tbProject.scriptFilePath??)" />
+		</div>
+		<div>
+			<label>执行脚本</label>
+			<textarea name="tbProject.script" id="script" cols="200" rows="50">#(tbProject.script??)</textarea>#(contentMsg)
+		</div>
 	</div>
-	<div>
-		<label>手机号</label>
-		<input type="text" name="tbProject.phone" value="#(tbProject.phone??)" />
-	</div>
-	<div>
-		<label>脚本名称</label>
-		<input type="text" name="tbProject.scriptFilePath" value="#(tbProject.scriptFilePath??)" />
-	</div>
-	<div>
-		<label>执行脚本</label>
-		<textarea name="tbProject.script" id="script" cols="200" rows="50">#(tbProject.script??)</textarea>#(contentMsg)
-	</div>
+
 	<div>
 		<label>ssh-账号信息</label>
 		<select name="tbProject.sshAccountId">
@@ -84,6 +88,12 @@
 			#end
 
 		</select>
+	</div>
+	<div>
+		<pre>
+		1 #!/bin/sh
+		2 系统安装 yum -y install dos2unix
+		</pre>
 	</div>
 	<div>
 		<label>ssh执行脚本</label>
@@ -113,4 +123,14 @@
 		});
 　　　　//adding your code here
 　　});
+
+	//是否隐藏-代码相关配置
+	function hideGitInfo(selectObj){
+		var aaa = $(selectObj).val();
+		if(aaa == 0){
+			$("#gitInfo").hide();
+		}else{
+			$("#gitInfo").show();
+		}
+	}
 </script>

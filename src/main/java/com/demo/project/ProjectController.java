@@ -145,49 +145,56 @@ public class ProjectController extends Controller {
 
 		String script = obj.getScript();
 		Integer accountId = obj.getAccountId();
-		TbAccount tbAccount = tbAccountService.getTbAccount(accountId);
-		log.info("账户信息: {}  {}",tbAccount.getUserName(),tbAccount.getPwd());
-
+		if (log.isInfoEnabled()){
+			if (accountId == 0){
+				log.info("非本地编译工程,仅仅执行远端 shell文件");
+			}
+		}
 		Engine engine = Engine.use(ConstantConfig.ENJOY_KEY);
 
 		Kv by = Kv.by("home", home);
 		by.set("gitHome",gitRoot);
 		by.set("projectName",obj.getTitle());
-		by.set("scmUser",tbAccount.getUserName());
-		by.set("scmPwd",tbAccount.getPwd());
+
 
 		by.set("scmPath",obj.getScmPath());
-//        String s = engine.getTemplate("run.bat").renderToString(by);
-//        log.info("out: {}",s);
 		String osExtion = ".sh";
-		String osCmdPrefix = "";
-		if (ConstantOS.WINDOWS.equals(obj.getOs())){
-			osCmdPrefix = "cmd /c ";
-			osExtion = ".bat";
-		}else if (ConstantOS.LINUX.equals(obj.getOs())){
-			osExtion = ".sh";
-		}
-		String exeScriptFile = home + File.separator+by.get("projectName") + osExtion;
-		engine.getTemplateByString(obj.getScript()).render(by,exeScriptFile);
-//		engine.getTemplate(obj.getOs() + File.separator +"run" + osExtion).render(by,exeScriptFile);
 
-		List<String> commands = new ArrayList<String>();
-		String lineT = osCmdPrefix + exeScriptFile;
-		log.info("工程路径: {}",obj.getScriptFilePath());
-		File dir = new File(home);
-		String[] split = lineT.split(" ");
-		log.info("执行命令的值: {}",lineT);
-		if (ConstantOS.LINUX.equals(obj.getOs())){
-			String fileName = by.get("projectName") + osExtion;
-			String chmod = "chmod u+x "+ fileName;
-			log.info("授权dir: {} chmod: {}",dir,chmod);
-			new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
-            chmod = "dos2unix -q " + fileName;
-            log.info("转码 dir: {} chmod: {}",dir,chmod);
-            new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
-			log.info("授权.转码 .sh 成功");
+		if (accountId != 0){
+			TbAccount tbAccount = tbAccountService.getTbAccount(accountId);
+			by.set("scmUser",tbAccount.getUserName());
+			by.set("scmPwd",tbAccount.getPwd());
+			log.info("账户信息: {}  {}",tbAccount.getUserName(),tbAccount.getPwd());
+
+			String osCmdPrefix = "";
+			if (ConstantOS.WINDOWS.equals(obj.getOs())){
+				osCmdPrefix = "cmd /c ";
+				osExtion = ".bat";
+			}else if (ConstantOS.LINUX.equals(obj.getOs())){
+				osExtion = ".sh";
+			}
+			String exeScriptFile = home + File.separator+by.get("projectName") + osExtion;
+			engine.getTemplateByString(obj.getScript()).render(by,exeScriptFile);
+
+			List<String> commands = new ArrayList<String>();
+			String lineT = osCmdPrefix + exeScriptFile;
+			log.info("工程路径: {}",obj.getScriptFilePath());
+			File dir = new File(home);
+			String[] split = lineT.split(" ");
+			log.info("执行命令的值: {}",lineT);
+			if (ConstantOS.LINUX.equals(obj.getOs())){
+				String fileName = by.get("projectName") + osExtion;
+				String chmod = "chmod u+x "+ fileName;
+				log.info("授权dir: {} chmod: {}",dir,chmod);
+				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
+				chmod = "dos2unix -q " + fileName;
+				log.info("转码 dir: {} chmod: {}",dir,chmod);
+				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
+				log.info("授权.转码 .sh 成功");
+			}
+			new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
 		}
-		new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
+
 
 		if (obj.getSshAccountId().intValue() != 0){
 			TbAccount sshTbAccount = tbAccountService.getTbAccount(obj.getSshAccountId());
@@ -203,24 +210,12 @@ public class ProjectController extends Controller {
 			sshClient.sendCmd("chmod u+x " + remotePath + "/" + sshScriptFile);
 			sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile);
 
-
 			zipAndUploadRemoteServer(obj, home, by, sshClient);
-			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile);
-			log.info("sshCmdOut: {}",sshCmdOut);
+//			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile);
+//			log.info("sshCmdOut: {}",sshCmdOut);
 		}else{
 			log.warn("没有配置 ssh账户");
 		}
-
-		/*TbBuild tbBuild = new TbBuild();
-		tbBuild.setCreateTime(new Date());
-		tbBuild.setProjectId(obj.getId());
-		tbBuild.setTriggerDesc("desc");
-		boolean save = tbBuild.save();
-
-		String absPath = PathUtils.CI_HOME + File.separator + obj.getId() + File.separator + tbBuild.getId();
-		*/
-//		File dir = new File(absPath);
-
 	}
 
 	private void zipAndUploadRemoteServer(TbProject obj, String home, Kv by, SSHClient sshClient) throws Exception {
