@@ -3,16 +3,12 @@ package com.demo;
 import com.alibaba.druid.util.StringUtils;
 import com.demo.blog.BlogController;
 import com.demo.common.Slf4jLogFactory;
-import com.demo.common.model.TbEnvConfig;
 import com.demo.common.model._MappingKit;
 import com.demo.constant.ConstantConfig;
 import com.demo.env.TbEnvConfigController;
 import com.demo.env.TbEnvConfigService;
 import com.demo.index.IndexController;
-import com.demo.io.HelloTioController;
 import com.demo.io.WsController;
-import com.demo.io.client.HelloClientStarter;
-import com.demo.io.server.HelloServerStarter;
 import com.demo.io.server.NettyServerStarter;
 import com.demo.project.ProjectController;
 import com.demo.step.StepController;
@@ -20,16 +16,13 @@ import com.demo.tbuser.UserController;
 import com.demo.util.FileUtils;
 import com.demo.weekreport.WeekReportController;
 import com.jfinal.aop.Aop;
-import com.jfinal.aop.Inject;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
 import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
-import com.jfinal.core.JFinal;
 import com.jfinal.ext.interceptor.SessionInViewInterceptor;
-import com.jfinal.kit.FileKit;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
@@ -90,7 +83,6 @@ public class DemoConfig extends JFinalConfig {
 		me.add("/step", StepController.class);
 		me.add("/env", TbEnvConfigController.class);
 
-		me.add("/tio", HelloTioController.class);
 		me.add("/weekreport", WeekReportController.class);
         me.add("/users", UserController.class);
 
@@ -118,8 +110,6 @@ public class DemoConfig extends JFinalConfig {
 		_MappingKit.mapping(arp);
 		me.add(arp);
 
-//		me.add(new HelloServerStarter());
-//		me.add(new HelloClientStarter());
 //		me.add(new NettyServerStarter(12345));
 	}
 	

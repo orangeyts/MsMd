@@ -1,6 +1,5 @@
 package com.demo.io.server;
 
-import com.demo.io.common.Const;
 import com.demo.io.common.MyWebSocketHandler;
 import com.jfinal.plugin.IPlugin;
 import io.netty.bootstrap.ServerBootstrap;
@@ -15,12 +14,6 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import org.tio.server.ServerGroupContext;
-import org.tio.server.TioServer;
-import org.tio.server.intf.ServerAioHandler;
-import org.tio.server.intf.ServerAioListener;
-
-import java.io.IOException;
 
 /**
  *

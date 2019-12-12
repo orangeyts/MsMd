@@ -1,6 +1,7 @@
 package com.demo.io.common;
 
 import com.alibaba.fastjson.JSONObject;
+import com.demo.util.websocket.model.CommandType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelId;
@@ -40,12 +41,12 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         String longId = ctx.channel().id().asLongText();
         if (map.containsKey("login")) {
             login(map, ctx.channel().id());
-        }else if(type != null && type.intValue() == 1){
+        }else if(type != null && type.intValue() == CommandType.joinGroup){
             if (log.isInfoEnabled()){
                 log.info("用户 [{}] ,加入群组 [{}]",userId,groupId);
             }
             joinGroup(groupId,userId);
-        }else if(type != null && type.intValue() == 2){
+        }else if(type != null && type.intValue() == CommandType.groupMessage){
             if (log.isInfoEnabled()){
                 log.info("群发消息 [{}]  [{}]",groupId,message);
             }
