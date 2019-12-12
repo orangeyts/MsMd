@@ -19,7 +19,7 @@ public class SSHClientTest {
 
     @Test
     public void sendCmd() throws Exception {
-        String ret = sshClient.sendCmd("pwd");
+        String ret = sshClient.sendCmd("pwd",null);
 
         System.out.println("******************************");
         System.out.println(ret);
@@ -29,7 +29,7 @@ public class SSHClientTest {
         Assert.assertTrue(ret.length() > 0);
 
 //        ret = sshClient.sendCmd("vmstat");
-        ret = sshClient.sendCmd("ifconfig");
+        ret = sshClient.sendCmd("ifconfig",null);
 
         System.out.println("******************************");
         System.out.println(ret);

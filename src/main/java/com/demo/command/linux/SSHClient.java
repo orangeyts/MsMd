@@ -1,6 +1,11 @@
 package com.demo.command.linux;
 
 
+import com.alibaba.fastjson.JSON;
+import com.demo.common.model.TbBuild;
+import com.demo.util.websocket.MyWebSocketClient;
+import com.demo.util.websocket.model.CommandType;
+import com.demo.util.websocket.model.GroupMessage;
 import com.jcraft.jsch.*;
 
 import java.io.IOException;
@@ -180,7 +185,7 @@ public class SSHClient {
      *
      * @return
      */
-    public String sendCmd(String command) {
+    public String sendCmd(String command, TbBuild tbBuild) {
 
         String ret = "";
 
@@ -210,6 +215,7 @@ public class SSHClient {
                     if (i < 0) break;
 
                     ret = new String(tmp, 0, i);
+                    tbBuild.appendOutput(ret);
                     System.out.print(ret);
                 }
 

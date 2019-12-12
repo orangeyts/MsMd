@@ -7,8 +7,59 @@
 </fieldset>
 <script type="text/javascript">
 	console.log("javascript work...");
-	setInterval(function(){
+	/*setInterval(function(){
 		$("#scriptOutput").append("git pull"+"<br/>");
-	}, 1000);
+	}, 1000);*/
+
+	var socket;
+
+		function login(fromId){
+            if(!window.WebSocket){return;}
+            if(socket.readyState == WebSocket.OPEN){
+                var jsonObject = JSON.parse("{}");
+                jsonObject["login"] = fromId;
+                socket.send(JSON.stringify(jsonObject));
+                joinGroup("build_group_#(tbBuild.id)",fromId,1);
+            }else{
+                alert("WebSocket 连接没有建立成功！");
+            }
+        }
+        //加入群组
+        function joinGroup(groupId,userId,type){
+            if(!window.WebSocket){return;}
+            if(socket.readyState == WebSocket.OPEN){
+                var jsonObject = JSON.parse("{}");
+                jsonObject["groupId"] = groupId;
+                jsonObject["userId"] = userId;
+                jsonObject["type"] = type;
+                socket.send(JSON.stringify(jsonObject));
+            }else{
+                alert("WebSocket 连接没有建立成功！");
+            }
+        }
+
+        if(!window.WebSocket){
+            window.WebSocket = window.MozWebSocket;
+        }
+        if(window.WebSocket){
+            socket = new WebSocket("ws://127.0.0.1:12345/ws");
+            socket.onmessage = function(event){
+                var ta = document.getElementById('scriptOutput');
+                //ta.value += event.data+"\r\n";
+                $("#scriptOutput").append(event.data+"<br/>");
+            };
+            socket.onopen = function(event){
+                var ta = document.getElementById('scriptOutput');
+                ta.value = "Netty-WebSocket服务器。。。。。。连接  \r\n";
+                var uid = "#(session.uid)";
+                login(uid);
+            };
+            socket.onclose = function(event){
+                var ta = document.getElementById('scriptOutput');
+                ta.value = "Netty-WebSocket服务器。。。。。。关闭 \r\n";
+            };
+        }else{
+            alert("您的浏览器不支持WebSocket协议！");
+        }
 </script>
 #end

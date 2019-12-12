@@ -1,5 +1,6 @@
 package com.demo.project;
 
+import com.alibaba.fastjson.JSON;
 import com.demo.account.TbAccountService;
 import com.demo.command.CommandExecutor;
 import com.demo.command.PathUtils;
@@ -13,6 +14,10 @@ import com.demo.constant.ConstantOS;
 import com.demo.env.TbEnvConfigService;
 import com.demo.template.TemplateService;
 import com.demo.util.ZipUtils;
+import com.demo.util.websocket.MyWebSocketClient;
+import com.demo.util.websocket.model.CommandType;
+import com.demo.util.websocket.model.JoinGroup;
+import com.demo.util.websocket.model.Login;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.Kv;
@@ -108,12 +113,13 @@ public class ProjectController extends Controller {
 	public void build() throws Exception {
 		Integer projectId = getParaToInt("projectId");
 		TbProject obj = service.findById(projectId);
+		TbBuild tbBuild = getTbBuild(obj);
 
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					runScript(obj);
+					runScript(obj,tbBuild);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -121,6 +127,7 @@ public class ProjectController extends Controller {
 		}).start();
 
 		setAttr("tbProject",obj);
+		setAttr("tbBuild",tbBuild);
 		render("/project/build.html");
 	}
 	public void copy() throws Exception {
@@ -137,7 +144,9 @@ public class ProjectController extends Controller {
 	 * @param obj
 	 * @throws Exception
 	 */
-	private void runScript(TbProject obj) throws Exception {
+	private void runScript(TbProject obj,TbBuild tbBuild) throws Exception {
+
+
 		Map<String, String> config = tbEnvConfigService.getConfig();
 		String home = config.get(ConstantConfig.HOME);
 		String gitRoot = config.get(ConstantConfig.GIT_ROOT);
@@ -161,6 +170,7 @@ public class ProjectController extends Controller {
 		String osExtion = ".sh";
 
 		if (accountId != 0){
+			tbBuild.appendOutput("开始构建git工程");
 			TbAccount tbAccount = tbAccountService.getTbAccount(accountId);
 			by.set("scmUser",tbAccount.getUserName());
 			by.set("scmPwd",tbAccount.getPwd());
@@ -183,6 +193,7 @@ public class ProjectController extends Controller {
 			String[] split = lineT.split(" ");
 			log.info("执行命令的值: {}",lineT);
 			if (ConstantOS.LINUX.equals(obj.getOs())){
+				tbBuild.appendOutput("执行linux commandExecutor");
 				String fileName = by.get("projectName") + osExtion;
 				String chmod = "chmod u+x "+ fileName;
 				log.info("授权dir: {} chmod: {}",dir,chmod);
@@ -192,11 +203,13 @@ public class ProjectController extends Controller {
 				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
 				log.info("授权.转码 .sh 成功");
 			}
+			tbBuild.appendOutput("执行commandExecutor");
 			new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
 		}
 
 
 		if (obj.getSshAccountId().intValue() != 0){
+			tbBuild.appendOutput("开始构建ssh");
 			TbAccount sshTbAccount = tbAccountService.getTbAccount(obj.getSshAccountId());
 			SSHClient sshClient = new SSHClient();
 			sshClient.setHost(sshTbAccount.getIp()).setPort(22).setUsername(sshTbAccount.getUserName()).setPassword(sshTbAccount.getPwd());
@@ -207,15 +220,38 @@ public class ProjectController extends Controller {
 			engine.getTemplateByString(obj.getSshScript()).render(sshConfig, home + File.separator + sshScriptFile);
 			String remotePath = "/data";
 			sshClient.putFile(home, sshScriptFile,remotePath);
-			sshClient.sendCmd("chmod u+x " + remotePath + "/" + sshScriptFile);
-			sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile);
+			sshClient.sendCmd("chmod u+x " + remotePath + "/" + sshScriptFile,tbBuild);
+			sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile,tbBuild);
 
 			zipAndUploadRemoteServer(obj, home, by, sshClient);
-//			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile);
+			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile,tbBuild);
 //			log.info("sshCmdOut: {}",sshCmdOut);
 		}else{
 			log.warn("没有配置 ssh账户");
 		}
+	}
+
+
+	/**
+	 * 获取本次构建对象-以及websocket输出对象
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	private TbBuild getTbBuild(TbProject obj) throws Exception {
+		TbBuild tbBuild = new TbBuild();
+		tbBuild.setProjectId(obj.getId());
+		tbBuild.setTriggerDesc("开始构建");
+		tbBuild.save();
+
+		String url = "ws://127.0.0.1:12345/ws";
+		String loginMessage = JSON.toJSONString(new Login("build_" + tbBuild.getId()));
+		MyWebSocketClient myWebSocketClient = MyWebSocketClient.connectServerAndLogin(url,loginMessage);
+		String groupId = "build_group_" + tbBuild.getId();
+		myWebSocketClient.send(JSON.toJSONString(new JoinGroup("build_" + tbBuild.getId(),groupId,CommandType.joinGroup)));
+		tbBuild.setMyWebSocketClient(myWebSocketClient);
+		tbBuild.setGroupId(groupId);
+		return tbBuild;
 	}
 
 	private void zipAndUploadRemoteServer(TbProject obj, String home, Kv by, SSHClient sshClient) throws Exception {

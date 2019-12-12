@@ -7,7 +7,11 @@ import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * https://blog.csdn.net/tczhoulan/article/details/48162489
@@ -16,8 +20,12 @@ import javax.servlet.http.HttpSession;
 public class SessionAttrInterceptor implements Interceptor {
 
     public void intercept(Invocation ai) {
-        String url = ai.getController().getRequest().getRequestURI();
-        log.info("url: {}",url);
+        HttpServletRequest request = ai.getController().getRequest();
+        //获得客户端发送请求的完整url
+        String fullUrl = request.getRequestURL().toString();
+        String url = request.getRequestURI();
+        String referer = request.getHeader("Referer");
+        log.info("url: [{}]   fullUrl: [{}]",url,fullUrl);
         if (url.endsWith("/toLogin")|| (url.endsWith("/login"))|| (url.endsWith("/toRegister"))|| (url.endsWith("/register"))){
             ai.invoke();
         }else{
@@ -27,7 +35,11 @@ public class SessionAttrInterceptor implements Interceptor {
                 ai.invoke();
             }else {
                 log.error("session timeout");
-                ai.getController().redirect("/toLogin");
+                try {
+                    ai.getController().redirect("/toLogin?url="+ URLEncoder.encode(fullUrl,"UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
