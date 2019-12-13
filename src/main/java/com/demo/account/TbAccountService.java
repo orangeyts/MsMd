@@ -14,4 +14,7 @@ public class TbAccountService {
     public List<TbAccount> getTbAccountList(){
         return dao.find("select * from tb_account");
     }
+    public TbAccount getTbAccountList(String type){
+        return dao.findFirst("select * from tb_account where type=?",type);
+    }
 }

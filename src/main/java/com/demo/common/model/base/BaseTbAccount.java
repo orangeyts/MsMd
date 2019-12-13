@@ -25,6 +25,14 @@ public abstract class BaseTbAccount<M extends BaseTbAccount<M>> extends Model<M>
 		return getStr("type");
 	}
 
+	public void setRegionId(java.lang.String regionId) {
+		set("regionId", regionId);
+	}
+	
+	public java.lang.String getRegionId() {
+		return getStr("regionId");
+	}
+
 	public void setUserName(java.lang.String userName) {
 		set("userName", userName);
 	}

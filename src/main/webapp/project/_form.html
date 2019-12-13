@@ -41,7 +41,7 @@
 	</div>
 	<div>
 		<label>代码仓库-账号信息</label>
-		<select name="tbProject.accountId" onchange="hideGitInfo(this)">
+		<select name="tbProject.accountId" id="tbProject.accountId" onchange="hideGitInfo(this)">
 			<option value="0">本地不编译工程</option>
 			#for(x : tbAccountList)
 				#if(tbProject.accountId?? == x.id)
@@ -97,7 +97,30 @@
 	</div>
 	<div>
 		<label>ssh执行脚本</label>
-		<textarea name="tbProject.sshScript" cols="200" rows="50">#(tbProject.sshScript??)</textarea>#(contentMsg)
+		<textarea name="tbProject.sshScript" cols="200" rows="20">#(tbProject.sshScript??)</textarea>#(contentMsg)
+	</div>
+
+	<div>
+		<label>edas-账号信息</label>
+		<select name="tbProject.eadsAccountId">
+			<option value="0">不调用edas API</option>
+			#for(x : tbAccountList)
+			#if(tbProject.eadsAccountId?? == x.id)
+			<option value="#(x.id)" selected>#(x.type)/**</option>
+			#else
+			<option value="#(x.id)">#(x.type)/**</option>
+			#end
+			#end
+
+		</select>
+	</div>
+	<div>
+		<label>edasAppId</label>
+		<input type="text" name="tbProject.edasAppId" value="#(tbProject.edasAppId??)" />
+	</div>
+	<div>
+		<label>版本号</label>
+		<input type="text" name="tbProject.edasPackageVersion" value="#(tbProject.edasPackageVersion??)" />
 	</div>
 	<div>
 		<label>&nbsp;</label>
@@ -107,6 +130,9 @@
 <script type="text/javascript">
 
 	$(function(){
+		//是否隐藏git构建信息
+		hideGitInfo(document.getElementById("tbProject.accountId"));
+
 		$("#projectTypeSelect").val("#(tbProject.type??)");
 　　	$("#templateSelectId").change(function(){
 			var select_val = $(this).children('option:selected').val();

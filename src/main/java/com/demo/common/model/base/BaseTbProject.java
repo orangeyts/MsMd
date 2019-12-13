@@ -57,6 +57,30 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getInt("sshAccountId");
 	}
 
+	public void setEdasAppId(java.lang.String edasAppId) {
+		set("edasAppId", edasAppId);
+	}
+	
+	public java.lang.String getEdasAppId() {
+		return getStr("edasAppId");
+	}
+
+	public void setEdasPackageVersion(java.lang.String edasPackageVersion) {
+		set("edasPackageVersion", edasPackageVersion);
+	}
+	
+	public java.lang.String getEdasPackageVersion() {
+		return getStr("edasPackageVersion");
+	}
+
+	public void setEadsAccountId(java.lang.Integer eadsAccountId) {
+		set("eadsAccountId", eadsAccountId);
+	}
+	
+	public java.lang.Integer getEadsAccountId() {
+		return getInt("eadsAccountId");
+	}
+
 	public void setAccountId(java.lang.Integer accountId) {
 		set("accountId", accountId);
 	}

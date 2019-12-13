@@ -1,6 +1,7 @@
 package com.demo.project;
 
 import com.alibaba.fastjson.JSON;
+import com.aliyuncs.DefaultAcsClient;
 import com.demo.account.TbAccountService;
 import com.demo.command.CommandExecutor;
 import com.demo.command.PathUtils;
@@ -14,6 +15,7 @@ import com.demo.constant.ConstantOS;
 import com.demo.env.TbEnvConfigService;
 import com.demo.template.TemplateService;
 import com.demo.util.ZipUtils;
+import com.demo.util.edas.EdasAPI;
 import com.demo.util.websocket.MyWebSocketClient;
 import com.demo.util.websocket.model.CommandType;
 import com.demo.util.websocket.model.JoinGroup;
@@ -141,19 +143,18 @@ public class ProjectController extends Controller {
 
 	/**
 	 * 1 第一次clone 2 第二次 pull
-	 * @param obj
+	 * @param project
 	 * @throws Exception
 	 */
-	private void runScript(TbProject obj,TbBuild tbBuild) throws Exception {
+	private void runScript(TbProject project,TbBuild tbBuild) throws Exception {
 
 
 		Map<String, String> config = tbEnvConfigService.getConfig();
 		String home = config.get(ConstantConfig.HOME);
 		String gitRoot = config.get(ConstantConfig.GIT_ROOT);
 
-
-		String script = obj.getScript();
-		Integer accountId = obj.getAccountId();
+		String script = project.getScript();
+		Integer accountId = project.getAccountId();
 		if (log.isInfoEnabled()){
 			if (accountId == 0){
 				log.info("非本地编译工程,仅仅执行远端 shell文件");
@@ -163,10 +164,10 @@ public class ProjectController extends Controller {
 
 		Kv by = Kv.by("home", home);
 		by.set("gitHome",gitRoot);
-		by.set("projectName",obj.getTitle());
+		by.set("projectName",project.getTitle());
 
 
-		by.set("scmPath",obj.getScmPath());
+		by.set("scmPath",project.getScmPath());
 		String osExtion = ".sh";
 
 		if (accountId != 0){
@@ -177,22 +178,22 @@ public class ProjectController extends Controller {
 			log.info("账户信息: {}  {}",tbAccount.getUserName(),tbAccount.getPwd());
 
 			String osCmdPrefix = "";
-			if (ConstantOS.WINDOWS.equals(obj.getOs())){
+			if (ConstantOS.WINDOWS.equals(project.getOs())){
 				osCmdPrefix = "cmd /c ";
 				osExtion = ".bat";
-			}else if (ConstantOS.LINUX.equals(obj.getOs())){
+			}else if (ConstantOS.LINUX.equals(project.getOs())){
 				osExtion = ".sh";
 			}
 			String exeScriptFile = home + File.separator+by.get("projectName") + osExtion;
-			engine.getTemplateByString(obj.getScript()).render(by,exeScriptFile);
+			engine.getTemplateByString(project.getScript()).render(by,exeScriptFile);
 
 			List<String> commands = new ArrayList<String>();
 			String lineT = osCmdPrefix + exeScriptFile;
-			log.info("工程路径: {}",obj.getScriptFilePath());
+			log.info("工程路径: {}",project.getScriptFilePath());
 			File dir = new File(home);
 			String[] split = lineT.split(" ");
 			log.info("执行命令的值: {}",lineT);
-			if (ConstantOS.LINUX.equals(obj.getOs())){
+			if (ConstantOS.LINUX.equals(project.getOs())){
 				tbBuild.appendOutput("执行linux commandExecutor");
 				String fileName = by.get("projectName") + osExtion;
 				String chmod = "chmod u+x "+ fileName;
@@ -208,26 +209,35 @@ public class ProjectController extends Controller {
 		}
 
 
-		if (obj.getSshAccountId().intValue() != 0){
+		if (project.getSshAccountId().intValue() != 0){
 			tbBuild.appendOutput("开始构建ssh");
-			TbAccount sshTbAccount = tbAccountService.getTbAccount(obj.getSshAccountId());
+			TbAccount sshTbAccount = tbAccountService.getTbAccount(project.getSshAccountId());
 			SSHClient sshClient = new SSHClient();
 			sshClient.setHost(sshTbAccount.getIp()).setPort(22).setUsername(sshTbAccount.getUserName()).setPassword(sshTbAccount.getPwd());
 			sshClient.login();
 
 			String sshScriptFile =by.get("projectName") + "_ssh" + osExtion;
 			Kv sshConfig = Kv.by("home", home);
-			engine.getTemplateByString(obj.getSshScript()).render(sshConfig, home + File.separator + sshScriptFile);
+			engine.getTemplateByString(project.getSshScript()).render(sshConfig, home + File.separator + sshScriptFile);
 			String remotePath = "/data";
 			sshClient.putFile(home, sshScriptFile,remotePath);
 			sshClient.sendCmd("chmod u+x " + remotePath + "/" + sshScriptFile,tbBuild);
 			sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile,tbBuild);
 
-			zipAndUploadRemoteServer(obj, home, by, sshClient);
+			zipAndUploadRemoteServer(project, home, by, sshClient);
 			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile,tbBuild);
 //			log.info("sshCmdOut: {}",sshCmdOut);
 		}else{
 			log.warn("没有配置 ssh账户");
+		}
+		if (project.getEadsAccountId().intValue() != 0){
+			tbBuild.appendOutput("开始构建edas上传");
+			TbAccount edasTbAccount = tbAccountService.getTbAccount(project.getEadsAccountId());
+			DefaultAcsClient defaultAcsClient = EdasAPI.getDefaultAcsClient(edasTbAccount.getRegionId(), edasTbAccount.getUserName(), edasTbAccount.getPwd());
+			String all = EdasAPI.rollback(defaultAcsClient, project.getEdasAppId(), project.getEdasPackageVersion(), "all");
+			tbBuild.appendOutput(all);
+		}else{
+			log.warn("没有配置 edas账户");
 		}
 	}
 
