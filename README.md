@@ -81,3 +81,6 @@ Hi orangehs! You've successfully authenticated, but GITEE.COM does not provide s
 克隆地址就变成了 git@me.gitee.com:orangehs/MsMd.git 类似于dns解析一样的
 ```
 
+git checkout -b test origin/test
+git branch --set-upstream-to=origin/test test 设置默认push分支
+
