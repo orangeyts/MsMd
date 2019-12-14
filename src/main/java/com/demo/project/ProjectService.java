@@ -24,7 +24,8 @@ public class ProjectService {
 	private TbProject dao = new TbProject().dao();
 	
 	public Page<TbProject> paginate(int pageNumber, int pageSize) {
-		return dao.paginate(pageNumber, pageSize, "select *", "from tb_project order by id asc");
+		Page<TbProject> paginate = dao.paginate(pageNumber, pageSize, "select *", "from tb_project order by id asc");
+		return paginate;
 	}
 	
 	public TbProject findById(int id) {

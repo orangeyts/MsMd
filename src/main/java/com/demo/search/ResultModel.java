@@ -1,50 +1,23 @@
 package com.demo.search;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
  * 自定义分页实体类
  */
+@Data
 public class ResultModel<T> {
 
     // 商品列表
-    private List<T> skuList;
+    private List<T> list;
     // 商品总数
-    private Long recordCount;
+    private Long totalRow;
     // 总页数
-    private Long pageCount;
+    private Long totalPage;
     // 当前页
-    private long curPage;
+    private long pageNumber;
+    private long pageSize;
 
-    public List<T> getSkuList() {
-        return skuList;
-    }
-
-    public void setList(List<T> skuList) {
-        this.skuList = skuList;
-    }
-
-    public Long getRecordCount() {
-        return recordCount;
-    }
-
-    public void setRecordCount(Long recordCount) {
-        this.recordCount = recordCount;
-    }
-
-    public Long getPageCount() {
-        return pageCount;
-    }
-
-    public void setPageCount(Long pageCount) {
-        this.pageCount = pageCount;
-    }
-
-    public long getCurPage() {
-        return curPage;
-    }
-
-    public void setCurPage(long curPage) {
-        this.curPage = curPage;
-    }
 }

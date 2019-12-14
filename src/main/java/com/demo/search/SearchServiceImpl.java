@@ -4,12 +4,15 @@ import com.alibaba.druid.util.StringUtils;
 import com.demo.common.model.TbWeekReport;
 import com.demo.weekreport.WeekReportService;
 import com.jfinal.aop.Inject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
+import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.wltea.analyzer.lucene.IKAnalyzer;
@@ -24,6 +27,7 @@ import java.util.List;
 /**
  *
  */
+@Slf4j
 public class SearchServiceImpl implements SearchService {
 
     //每页查询20条数据
@@ -48,7 +52,7 @@ public class SearchServiceImpl implements SearchService {
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
 
         //2. 根据查询关键字封装查询对象
-        QueryParser queryParser = new QueryParser("name", analyzer);
+        QueryParser queryParser = new QueryParser("summary", analyzer);
         Query query1 = null;
         //判断传入的查询关键字是否为空, 如果为空查询所有, 如果不为空, 则根据关键字查询
         if (StringUtils.isEmpty(queryString)) {
@@ -79,26 +83,42 @@ public class SearchServiceImpl implements SearchService {
         //6. 创建搜索对象
         IndexSearcher indexSearcher = new IndexSearcher(reader);
         //7. 搜索并获取搜索结果
-        TopDocs topDocs = indexSearcher.search(builder.build(), end);
+        BooleanQuery build = builder.build();
+        TopDocs topDocs = indexSearcher.search(build, end);
         //8. 获取查询到的总条数
-        resultModel.setRecordCount(topDocs.totalHits.value);
+        resultModel.setTotalRow(topDocs.totalHits.value);
         //9. 获取查询到的结果集
         ScoreDoc[] scoreDocs = topDocs.scoreDocs;
 
         long endTime = System.currentTimeMillis();
         System.out.println("====消耗时间为=========" + (endTime - startTime) + "ms");
-
         //10. 遍历结果集封装返回的数据
+
+        //11. 高亮
+        SimpleHTMLFormatter htmlFormatter = new SimpleHTMLFormatter("<span style=\"color:red\">", "</span>");
+        Highlighter highlighter = new Highlighter(htmlFormatter, new QueryScorer(build));
+
         List<TbWeekReport> skuList = new ArrayList<TbWeekReport>();
         if (scoreDocs != null) {
             for (int i = start; i < scoreDocs.length; i ++) {
                 //通过查询到的文档编号, 找到对应的文档对象
-                Document document = reader.document(scoreDocs[i].doc);
+                int id = scoreDocs[i].doc;
+                Document document = reader.document(id);
+                String summary = document.get("summary");
+                TokenStream tokenStream = TokenSources.getAnyTokenStream(indexSearcher.getIndexReader(), id, "summary", analyzer);
+                TextFragment[] frag = highlighter.getBestTextFragments(tokenStream, summary, false, 10);
+                for (int j = 0; j < frag.length; j++) {
+                    if ((frag[j] != null) && (frag[j].getScore() > 0)) {
+                        summary = frag[j].toString();
+                        log.info("高亮词: {}",summary);
+                    }
+                }
+
                 //封装对象
                 TbWeekReport obj = new TbWeekReport();
                 obj.setId(Integer.parseInt(document.get("id")));
                 obj.setUserName(document.get("userName"));
-                obj.setSummary(document.get("summary"));
+                obj.setSummary(summary);
                 //obj.setCreateTime(LocalDate.(document.get("createTime"),DateTimeFormatter.ofPattern(""));
                 skuList.add(obj);
             }
@@ -106,10 +126,11 @@ public class SearchServiceImpl implements SearchService {
         //封装查询到的结果集
         resultModel.setList(skuList);
         //封装当前页
-        resultModel.setCurPage(page);
+        resultModel.setPageNumber(page);
+        resultModel.setPageSize(PAGE_SIZE);
         //总页数
         Long pageCount = topDocs.totalHits.value % PAGE_SIZE > 0 ? (topDocs.totalHits.value/PAGE_SIZE) + 1 : topDocs.totalHits.value/PAGE_SIZE;
-        resultModel.setPageCount(pageCount);
+        resultModel.setTotalPage(pageCount);
         return resultModel;
     }
 

@@ -26,6 +26,14 @@
 				<span class="gap">…</span>
 			#end
 			
+			<!--#for(i : [startPage..endPage])-->
+				<!--#if (currentPage == i)-->
+					<!--<span class="current">#(i)</span>-->
+				<!--#else-->
+					<!--<a href="#(link)?page=#(i)#(append)">#(i)</a>-->
+				<!--#end-->
+			<!--#end-->
+			
 			#if ((totalPage - currentPage) >= 8)
 				<span class="gap">…</span>
 				<a href="#(link)#(totalPage - 1)#(append)">#(totalPage - 1)</a>
