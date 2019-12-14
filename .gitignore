@@ -60,3 +60,6 @@ logs
 
 prod
 EdasAPIInternal.java
+
+# lucene index dir
+index
