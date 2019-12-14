@@ -231,6 +231,12 @@
 			<version>${lucene.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- IK中文分词器 -->
+		<dependency>
+			<groupId>org.wltea.ik-analyzer</groupId>
+			<artifactId>ik-analyzer</artifactId>
+			<version>8.1.0</version>
+		</dependency>
 		<!--lucene end-->
 
 

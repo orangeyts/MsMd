@@ -35,4 +35,8 @@ public class WeekReportService {
 	public void deleteById(int id) {
 		dao.deleteById(id);
 	}
+
+	public List<TbWeekReport> getAll(){
+		return dao.findAll();
+	}
 }
