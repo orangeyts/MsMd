@@ -1,7 +1,10 @@
 package com.demo.blog;
 
 import com.demo.common.model.Blog;
+import com.demo.common.model.TbWeekReport;
 import com.jfinal.plugin.activerecord.Page;
+
+import java.util.List;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -31,4 +34,8 @@ public class BlogService {
 	public void deleteById(int id) {
 		dao.deleteById(id);
 	}
+
+    public List<Blog> getAll() {
+		return dao.findAll();
+    }
 }

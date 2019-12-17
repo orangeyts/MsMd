@@ -33,4 +33,28 @@ public abstract class BaseBlog<M extends BaseBlog<M>> extends Model<M> implement
 		return getStr("content");
 	}
 
+	public void setCategory(java.lang.String category) {
+		set("category", category);
+	}
+	
+	public java.lang.String getCategory() {
+		return getStr("category");
+	}
+
+	public void setStartArticle(java.lang.Integer startArticle) {
+		set("startArticle", startArticle);
+	}
+	
+	public java.lang.Integer getStartArticle() {
+		return getInt("startArticle");
+	}
+
+	public void setAuthorAge(java.lang.Integer authorAge) {
+		set("authorAge", authorAge);
+	}
+	
+	public java.lang.Integer getAuthorAge() {
+		return getInt("authorAge");
+	}
+
 }

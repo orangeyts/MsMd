@@ -11,6 +11,7 @@ import com.demo.index.IndexController;
 import com.demo.io.WsController;
 import com.demo.io.server.NettyServerStarter;
 import com.demo.project.ProjectController;
+import com.demo.search.SearchBlogController;
 import com.demo.search.SearchController;
 import com.demo.step.StepController;
 import com.demo.tbuser.UserController;
@@ -86,6 +87,7 @@ public class DemoConfig extends JFinalConfig {
 
 		me.add("/weekreport", WeekReportController.class);
 		me.add("/search", SearchController.class);
+		me.add("/blogsearch", SearchBlogController.class);
         me.add("/users", UserController.class);
 
         me.add("/ws", WsController.class);

@@ -1,0 +1,72 @@
+#@layout()
+#define main()
+
+<script type="text/javascript">
+	var isExport = false;
+
+	//改变提交标志位
+	var changeBooleanExport = function(submitObj){
+		//console.log($(submitObj).attr("value"));
+		var submitType = $(submitObj).attr("value");
+		if(submitType == '导出'){
+			isExport = true;
+		}else{
+			isExport = false;
+		}
+	}
+
+	//根据 提交的按钮 改变 提交 URL
+	var changeUrl = function(formObj){
+		console.log($(formObj).attr("action"));
+		var ctxPath = $(formObj).attr("action");
+		if(isExport){
+			$(formObj).attr("action",ctxPath+"/weekreport/download")
+		}else{
+			$(formObj).attr("action",ctxPath+"/weekreport/index")
+		}
+
+		return true;
+	}
+</script>
+<h1>
+	<form action="/#(ctx??)/blogsearch" method="post">
+		<fieldset class="solid">
+			<legend>搜索</legend>
+			<span>
+				<label>用户名:</label>
+				<input type="text" name="userName" value="#(userName)" />
+			</span>
+			<span>
+				<label>总结:</label>
+				<input type="text" name="summary" value="#(summary)" />
+			</span>
+			<span>
+				<label></label>
+				<input value="搜索" type="submit">
+			</span>
+		</fieldset>
+	</form>
+</h1>
+<div class="table_box">
+	<table class="list">
+		<tbody>
+			<tr>
+				<th>id</th>
+				<th width="35%">类别</th>
+				<th>年龄</th>
+				<th>是否标星</th>
+			</tr>
+			
+			#for(x : result.getList())
+			<tr>
+				<td style="text-align:left;">#(x.id)</td>
+				<td style="text-align:left;">#(x.category)</td>
+				<td style="text-align:left;">#(x.authorAge)</td>
+				<td style="text-align:left;">#(x.startArticle)</td>
+			</tr>
+			#end
+		</tbody>
+	</table>
+	#@paginate(page.pageNumber, page.totalPage, "/msmd/blogsearch")
+</div>
+#end
