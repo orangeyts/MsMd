@@ -15,12 +15,12 @@ public class SearchBlogController extends Controller {
 	SearchBlogServiceImpl searchService;
 	
 	public void index() throws Exception {
-		String userName = getPara("userName");
-		String summary = getPara("summary");
+		String category = getPara("category");
+		String age = getPara("age");
 		Integer pageNumber = getParaToInt("page", 1);
 		ResultModel query = null;
 		try {
-			query = searchService.query(summary, userName, pageNumber);
+			query = searchService.query(category, age, pageNumber);
 		} catch (IndexNotFoundException e) {
 			log.error("初次使用没有索引重新创建一个");
 			searchService.createFullIndex();
@@ -28,8 +28,8 @@ public class SearchBlogController extends Controller {
 		setAttr("result", query);
 
 		setAttr("page", query);
-		setAttr("userName",userName);
-		setAttr("summary",summary);
+		setAttr("category",category);
+		setAttr("age",age);
 		render("index.html");
 	}
 	public void createFullIndex() throws Exception {

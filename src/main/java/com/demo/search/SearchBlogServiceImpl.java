@@ -37,7 +37,7 @@ public class SearchBlogServiceImpl implements SearchService {
     BlogService service;
 
     @Override
-    public ResultModel query(String queryString, String price, Integer page) throws Exception {
+    public ResultModel query(String category, String age, Integer page) throws Exception {
         long startTime = System.currentTimeMillis();
 
         //1. 需要使用的对象封装
@@ -52,21 +52,21 @@ public class SearchBlogServiceImpl implements SearchService {
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
 
         //2. 根据查询关键字封装查询对象
-        QueryParser queryParser = new QueryParser("summary", analyzer);
+        QueryParser queryParser = new QueryParser("category", analyzer);
         Query query1 = null;
         //判断传入的查询关键字是否为空, 如果为空查询所有, 如果不为空, 则根据关键字查询
-        if (StringUtils.isEmpty(queryString)) {
+        if (StringUtils.isEmpty(category)) {
             query1 = queryParser.parse("*:*");
         } else {
-            query1 = queryParser.parse(queryString);
+            query1 = queryParser.parse(category);
         }
         //将关键字查询对象, 封装到组合查询对象中
         builder.add(query1, BooleanClause.Occur.MUST);
 
         //3. 根据价格范围封装查询对象
-        if (!StringUtils.isEmpty(price)) {
-            String[] split = price.split("-");
-            Query query2 = IntPoint.newRangeQuery("price", Integer.parseInt(split[0]), Integer.parseInt(split[1]));
+        if (!StringUtils.isEmpty(age)) {
+            String[] split = age.split("-");
+            Query query2 = IntPoint.newRangeQuery("authorAge", Integer.parseInt(split[0]), Integer.parseInt(split[1]));
             //将价格查询对象, 封装到组合查询对象中
             builder.add(query2, BooleanClause.Occur.MUST);
         }

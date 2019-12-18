@@ -33,12 +33,64 @@
 		<fieldset class="solid">
 			<legend>搜索</legend>
 			<span>
-				<label>用户名:</label>
-				<input type="text" name="userName" value="#(userName)" />
+				<label>年龄:</label>
+				<select name="age">
+					<option value="">全部</option>
+
+					#if(age == '1-10')
+						<option value="1-10" selected>1-10</option>
+					#else
+						<option value="1-10">1-10</option>
+					#end
+					#if(age == '20-30')
+						<option value="20-30" selected>20-30</option>
+					#else
+						<option value="20-30">20-30</option>
+					#end
+				</select>
 			</span>
 			<span>
-				<label>总结:</label>
-				<input type="text" name="summary" value="#(summary)" />
+				<label>类别:</label>
+				<select name="category">
+					<option value="">全部</option>
+
+					#if(category == '星座')
+						<option value="星座" selected>星座</option>
+					#else
+						<option value="星座">星座</option>
+					#end
+
+					#if(category == '游戏')
+						<option value="游戏" selected>游戏</option>
+					#else
+						<option value="游戏">游戏</option>
+					#end
+
+					#if(category == '文娱')
+						<option value="文娱" selected>文娱</option>
+					#else
+						<option value="文娱">文娱</option>
+					#end
+
+				</select>
+			</span>
+			<span>
+				<label>标星:</label>
+				<select name="startArticle">
+					<option value="">全部</option>
+
+					#if(startArticle == 1)
+						<option value="1" selected>标星</option>
+					#else
+						<option value="0">标星</option>
+					#end
+
+					#if(startArticle == 0)
+						<option value="0" selected>普通</option>
+					#else
+						<option value="0">普通</option>
+					#end
+				</select>
 			</span>
 			<span>
 				<label></label>
@@ -62,7 +114,12 @@
 				<td style="text-align:left;">#(x.id)</td>
 				<td style="text-align:left;">#(x.category)</td>
 				<td style="text-align:left;">#(x.authorAge)</td>
-				<td style="text-align:left;">#(x.startArticle)</td>
+				#if(x.startArticle == 1)
+					<td style="text-align:left;">标星</td>
+				#else
+					<td style="text-align:left;">普通</td>
+				#end
+
 			</tr>
 			#end
 		</tbody>
