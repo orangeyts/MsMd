@@ -10,6 +10,8 @@ import com.jcraft.jsch.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 
 /**
  * https://www.jianshu.com/p/b2c928ea7d50
@@ -181,7 +183,7 @@ public class SSHClient {
 
 
     /**
-     * send command through the ssh session,return the ret of the channel
+     * exec 只能发送一次命令
      *
      * @return
      */
@@ -215,8 +217,8 @@ public class SSHClient {
                     if (i < 0) break;
 
                     ret = new String(tmp, 0, i);
+                    System.out.print("ssh--------------------- "+ret);
                     tbBuild.appendOutput(ret);
-                    System.out.print(ret);
                 }
 
                 // quit the process of waiting for ret
@@ -246,6 +248,68 @@ public class SSHClient {
         }
 
         return ret;
+    }
+
+    /**
+     * exec 只能发送一次命令
+     *
+     * @return
+     */
+    public String sendShell(String command, TbBuild tbBuild) throws Exception {
+        String result = "";
+
+        //2.尝试解决 远程ssh只能执行一句命令的情况
+        ChannelShell channelShell = (ChannelShell) session.openChannel("shell");
+        InputStream inputStream = channelShell.getInputStream();//从远端到达的数据  都能从这个流读取到
+        channelShell.setPty(true);
+        channelShell.connect(CHANNEL_TIMEOUT);
+
+        OutputStream outputStream = channelShell.getOutputStream();//写入该流的数据  都将发送到远程端
+        //使用PrintWriter 就是为了使用println 这个方法
+        //好处就是不需要每次手动给字符加\n
+        PrintWriter printWriter = new PrintWriter(outputStream);
+        printWriter.println("cd /data");
+        printWriter.println("ls");
+        printWriter.println("exit");//为了结束本次交互
+        printWriter.flush();//把缓冲区的数据强行输出
+
+        /**
+         shell管道本身就是交互模式的。要想停止，有两种方式：
+         一、人为的发送一个exit命令，告诉程序本次交互结束
+         二、使用字节流中的available方法，来获取数据的总大小，然后循环去读。
+         为了避免阻塞
+         */
+        byte[] tmp = new byte[1024];
+        while (true) {
+
+            while (inputStream.available() > 0) {
+                int i = inputStream.read(tmp, 0, 1024);
+                if (i < 0) break;
+                String s = new String(tmp, 0, i);
+                if (s.indexOf("--More--") >= 0) {
+                    outputStream.write((" ").getBytes());
+                    outputStream.flush();
+                }
+                System.out.println(s);
+                tbBuild.appendOutput(s);
+            }
+            if (channelShell.isClosed()) {
+                System.out.println("exit-status:" + channelShell.getExitStatus());
+                break;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+            }
+
+        }
+        outputStream.close();
+        inputStream.close();
+        channelShell.disconnect();
+        session.disconnect();
+        System.out.println("DONE");
+
+        return result;
     }
 
     /**

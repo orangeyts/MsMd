@@ -18,19 +18,19 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("与客户端建立连接，通道开启！");
+        log.info("与客户端建立连接，通道开启！");
         MyChannelHandlerPool.channelGroup.add(ctx.channel());
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("与客户端断开连接，通道关闭！");
+        log.info("与客户端断开连接，通道关闭！");
         MyChannelHandlerPool.channelGroup.remove(ctx.channel());
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-        System.out.println("客户端收到服务器数据：" + msg.text());
+        log.info("服务器收到客户端发送数据：" + msg.text());
         String msgText = msg.text();
         JSONObject jsonObject = JSONObject.parseObject(msgText);
         Map<String, Object> map = jsonObject;

@@ -225,7 +225,8 @@ public class ProjectController extends Controller {
 			sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile,tbBuild);
 
 			zipAndUploadRemoteServer(project, home, by, sshClient);
-			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile,tbBuild);
+//			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile,tbBuild);
+			String sshCmdOut = sshClient.sendShell(remotePath + "/" + sshScriptFile, tbBuild);
 //			log.info("sshCmdOut: {}",sshCmdOut);
 		}else{
 			log.warn("没有配置 ssh账户");
