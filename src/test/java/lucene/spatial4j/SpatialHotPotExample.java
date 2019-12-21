@@ -29,6 +29,8 @@ import java.io.InputStreamReader;
 /**
  * https://www.iteye.com/blog/xpenxpen-2317529
  * https://www.iteye.com/blog/iamyida-2204455
+ * http://api.map.baidu.com/lbsapi/getpoint/index.html 坐标拾取
+ * https://map.baidu.com/@11585280.82,3555907.48,12z  右上角-工具箱-测距
  *
  * Lucene spatial演示
  * 出处：官方junit代码
@@ -112,9 +114,7 @@ public class SpatialHotPotExample {
     }
 
     private void search() throws Exception {
-        searchInner("蜀大侠");
-        System.out.println("----------------");
-        searchInner("大龙燚");
+        searchInner("园区");
     }
 
     private void searchInner(String keyword) throws Exception {
