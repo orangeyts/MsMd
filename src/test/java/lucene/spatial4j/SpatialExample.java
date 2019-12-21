@@ -3,6 +3,7 @@ package lucene.spatial4j;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.document.Document;
@@ -25,6 +26,7 @@ import org.apache.lucene.spatial.prefix.tree.SpatialPrefixTree;
 import org.apache.lucene.spatial.query.SpatialArgs;
 import org.apache.lucene.spatial.query.SpatialOperation;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.junit.Test;
 import org.locationtech.spatial4j.context.SpatialContext;
@@ -39,6 +41,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * https://www.iteye.com/blog/xpenxpen-2317529
  * https://www.iteye.com/blog/iamyida-2204455
+ * https://tech.meituan.com/2014/09/05/lucene-distance.html
+ * https://tech.meituan.com/2014/09/02/solr-spatial-search.html
  *
  * Lucene spatial演示
  * 出处：官方junit代码
@@ -62,7 +66,7 @@ public class SpatialExample {
     /** 索引目录 */
     private Directory directory;
 
-    protected void init() {
+    protected void init() throws IOException {
         // SpatialContext也可以通过SpatialContextFactory工厂类来构建
         this.ctx = SpatialContext.GEO;
 
@@ -74,6 +78,8 @@ public class SpatialExample {
 
         this.strategy = new RecursivePrefixTreeStrategy(grid, "myGeoField");
 
+        //用文件索引,可以luke查看一下,实际存储的是什么内容
+//        this.directory = FSDirectory.open(Paths.get("d:\\luceneIndexDirGeo"));
         this.directory = new RAMDirectory();
     }
 
@@ -147,7 +153,9 @@ public class SpatialExample {
         bqb.add(query, BooleanClause.Occur.MUST);
         bqb.add(new TermQuery(new Term("name", keyword)), BooleanClause.Occur.MUST);
 
-        TopDocs docs = indexSearcher.search(bqb.build(), 20, distSort);
+        BooleanQuery build = bqb.build();
+        System.out.println(build);
+        TopDocs docs = indexSearcher.search(build, 20, distSort);
         printDocs(indexSearcher, docs, args);
 
         indexReader.close();
