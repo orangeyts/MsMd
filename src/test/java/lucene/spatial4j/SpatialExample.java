@@ -146,7 +146,7 @@ public class SpatialExample {
         Sort distSort = new Sort(doubleValuesSource.getSortField(false)).rewrite(indexSearcher); // false=asc                                                                                         dist
 
         SpatialArgs args = new SpatialArgs(SpatialOperation.Intersects,
-                ctx.makeCircle(pt, DistanceUtils.dist2Degrees(3.0, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
+                ctx.makeCircle(pt, DistanceUtils.dist2Degrees(500.0, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
         Query query = strategy.makeQuery(args);
 
         BooleanQuery.Builder bqb = new BooleanQuery.Builder();

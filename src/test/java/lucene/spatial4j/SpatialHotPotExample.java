@@ -18,6 +18,7 @@ import org.apache.lucene.store.RAMDirectory;
 import org.junit.Test;
 import org.locationtech.spatial4j.context.SpatialContext;
 import org.locationtech.spatial4j.distance.DistanceUtils;
+import org.locationtech.spatial4j.io.GeohashUtils;
 import org.locationtech.spatial4j.shape.Point;
 import org.locationtech.spatial4j.shape.Shape;
 import org.wltea.analyzer.lucene.IKAnalyzer;
@@ -43,6 +44,10 @@ public class SpatialHotPotExample {
         init();
         indexPoints();
         search();
+        Point wm6n = GeohashUtils.decode("wm6n", ctx);
+        System.out.println(wm6n);
+        int i = GeohashUtils.lookupHashLenForWidthHeight(104.08944, 30.663198);
+        System.out.println(i);
     }
 
     /** Spatial4j上下文 */
@@ -59,7 +64,7 @@ public class SpatialHotPotExample {
         this.ctx = SpatialContext.GEO;
 
         //网格最大11层, geohash的精度
-        int maxLevels = 11;
+        int maxLevels = 18;
 
         //Spatial Tiers
         SpatialPrefixTree grid = new GeohashPrefixTree(ctx, maxLevels);
@@ -101,7 +106,9 @@ public class SpatialHotPotExample {
         // Potentially more than one shape in this field is supported by some
         // strategies; see the javadocs of the SpatialStrategy impl to see.
         for (Shape shape : shapes) {
-            for (Field f : strategy.createIndexableFields(shape)) {
+            Field[] indexableFields = strategy.createIndexableFields(shape);
+            System.out.println("gird length: "+indexableFields.length);
+            for (Field f : indexableFields) {
                 doc.add(f);
             }
             // store it too; the format is up to you
@@ -129,18 +136,19 @@ public class SpatialHotPotExample {
         // the distance in km
         DoubleValuesSource doubleValuesSource = strategy.makeDistanceValueSource(pt, DistanceUtils.DEG_TO_KM);
         //按距离由近及远排序
-        Sort distSort = new Sort(doubleValuesSource.getSortField(false)).rewrite(indexSearcher); // false=asc                                                                                         dist
+        Sort distSort = new Sort(doubleValuesSource.getSortField(true)).rewrite(indexSearcher); // false=asc                                                                                         dist
 
         SpatialArgs args = new SpatialArgs(SpatialOperation.Intersects,
-                ctx.makeCircle(pt, DistanceUtils.dist2Degrees(100.0, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
+                ctx.makeCircle(pt, DistanceUtils.dist2Degrees(200.0, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
         Query query = strategy.makeQuery(args);
+        System.out.println(query);
 
         BooleanQuery.Builder bqb = new BooleanQuery.Builder();
-//        bqb.add(query, BooleanClause.Occur.MUST);
+        bqb.add(query, BooleanClause.Occur.MUST);
         bqb.add(new TermQuery(new Term("name", keyword)), BooleanClause.Occur.MUST);
 
-//        TopDocs docs = indexSearcher.search(bqb.build(), 20, distSort);
-        TopDocs docs = indexSearcher.search(bqb.build(), 20);
+        TopDocs docs = indexSearcher.search(bqb.build(), 20, distSort);
+//        TopDocs docs = indexSearcher.search(bqb.build(), 20);
         printDocs(indexSearcher, docs, args);
 
         indexReader.close();
