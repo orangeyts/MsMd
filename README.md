@@ -66,6 +66,16 @@ edas_config.yaml无法配置私有内部地址上传，可以使用oss sdk(inter
 https://help.aliyun.com/document_detail/62123.html?spm=a2c4g.11186623.6.747.4328d29aS5dHC0
 
 .ssh多git账户修改,下载的时候要用git协议,不能用https协议,还要配置项目私有配置
+
+1.取消global
+git config --global --unset user.name
+git config --global --unset user.email
+
+2.设置每个项目repo的自己的user.email
+git config  user.email "xxxx@xx.com"
+git config  user.name "xxxx"
+
+git config user.name "apple"
 git config user.email "112260085@qq.com"
 
 https://www.cnblogs.com/fourous/p/11424285.html
