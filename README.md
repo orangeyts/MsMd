@@ -1,10 +1,5 @@
-#### jenkins线上中了一次病毒(并不是说jenkins不强大,正式因为太强大和代码开放，和用的人多导致hacker惦记上了)
-
-## 设计原则
-1. 尽量把工作放在maven中,这里只是触发一下构建而已,例如edas:deploy等自定义maven mojo插件
-
 ## 使用步骤：
-1. 创建数据库脚本；
+1. 创建数据库脚本 a_little_config.txt 修改为 a_little_config_db.txt 修改IP和用户名密码，导入db_init.sql脚本
 2. 创建项目；
 3. 部署项目；
 
@@ -32,6 +27,7 @@ chmod u+x *
 ## 转码
 需要运行linux命令的服务器 要安装 yum -y install dos2unix,否则在window上生成的文件,由于格式问题，无法执行
 dos2unix -q spring-mvc-chat.sh
+
 
 ## 前端项目记得在环境安装 nodejs
 [nodejs](https://www.cnblogs.com/emao/p/5511394.html)

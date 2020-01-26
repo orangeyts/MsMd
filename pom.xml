@@ -395,11 +395,14 @@
             <artifactId>lucene-analyzers-smartcn</artifactId>
             <version>${lucene.version}</version>
         </dependency>
-        <!-- IK中文分词器 -->
+        <!-- IK中文分词器 https://github.com/blueshen/ik-analyzer 需要本地安装
+
+        mvn install:install-file -DgroupId=org.wltea.ik-analyzer -DartifactId=ik-analyzer -Dversion=3.2.8 -Dpackaging=jar -Dfile=ik-analyzer-8.4.0.jar
+        -->
         <dependency>
             <groupId>org.wltea.ik-analyzer</groupId>
             <artifactId>ik-analyzer</artifactId>
-            <version>8.1.0</version>
+            <version>8.4.0</version>
         </dependency>
         <!--lucene end-->
 

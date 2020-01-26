@@ -1,5 +1,6 @@
 package com.demo.command;
 
+import com.demo.common.model.TbBuild;
 import com.demo.common.model.TbProject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,7 +71,7 @@ public class CommandExecutor {
      * ProcessBuilder 用法
      * @throws IOException
      */
-    public void execWindowCmd(Map<String, String> userEnv,File dir, String... command) throws IOException {
+    public void execWindowCmd(Map<String, String> userEnv, File dir, TbBuild tbBuild,String... command) throws IOException {
 
         ProcessBuilder pb = new ProcessBuilder();
         // 独立环境变量
@@ -93,6 +94,7 @@ public class CommandExecutor {
             String line1 = null;
             while ((line1 = br1.readLine()) != null) {
                 log.info("sh脚本执行输出: {}",line1);
+                tbBuild.appendOutput(line1);
             }
         } catch (IOException e) {
             log.error("IO异常",e);

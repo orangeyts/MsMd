@@ -198,14 +198,17 @@ public class ProjectController extends Controller {
 				String fileName = by.get("projectName") + osExtion;
 				String chmod = "chmod u+x "+ fileName;
 				log.info("授权dir: {} chmod: {}",dir,chmod);
-				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
+				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
 				chmod = "dos2unix -q " + fileName;
-				log.info("转码 dir: {} chmod: {}",dir,chmod);
-				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
-				log.info("授权.转码 .sh 成功");
+//				log.info("转码 dir: {} chmod: {}",dir,chmod);
+//				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
+//				log.info("授权.转码 .sh 成功");
 			}
 			tbBuild.appendOutput("执行commandExecutor");
-			new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,split);
+			for (int i =0 ; i < 50;i++){
+				tbBuild.appendOutput(i+"mock output");
+			}
+			new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,split);
 		}
 
 
