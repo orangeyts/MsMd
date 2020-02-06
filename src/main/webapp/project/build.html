@@ -42,11 +42,15 @@
             window.WebSocket = window.MozWebSocket;
         }
         if(window.WebSocket){
-            socket = new WebSocket("ws://127.0.0.1:12345/ws");
+            socket = new WebSocket("ws://#(serverIp):12345/ws");
             socket.onmessage = function(event){
-                var ta = document.getElementById('scriptOutput');
+                var outDiv = document.getElementById('scriptOutput');
                 //ta.value += event.data+"\r\n";
                 $("#scriptOutput").append(event.data+"<br/>");
+
+				//随着输出增加 滚动到底部
+                //outDiv.scrollTop = outDiv.scrollHeight;
+                $(window).scrollTop($(document).height()-$(window).height());
             };
             socket.onopen = function(event){
                 var ta = document.getElementById('scriptOutput');

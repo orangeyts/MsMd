@@ -33,6 +33,14 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getStr("os");
 	}
 
+	public void setSubProjectJson(java.lang.String subProjectJson) {
+		set("subProjectJson", subProjectJson);
+	}
+	
+	public java.lang.String getSubProjectJson() {
+		return getStr("subProjectJson");
+	}
+
 	public void setType(java.lang.Integer type) {
 		set("type", type);
 	}

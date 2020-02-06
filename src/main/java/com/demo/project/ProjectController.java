@@ -1,5 +1,6 @@
 package com.demo.project;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.aliyuncs.DefaultAcsClient;
 import com.demo.account.TbAccountService;
@@ -20,6 +21,7 @@ import com.demo.util.websocket.MyWebSocketClient;
 import com.demo.util.websocket.model.CommandType;
 import com.demo.util.websocket.model.JoinGroup;
 import com.demo.util.websocket.model.Login;
+import com.demo.vo.SubProjectVO;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.Kv;
@@ -92,7 +94,9 @@ public class ProjectController extends Controller {
 	}
 	
 	public void edit() {
-		setAttr("tbProject", service.findById(getParaToInt()));
+		TbProject byId = service.findById(getParaToInt());
+		setAttr("tbProject", byId);
+		setAttr("subProjects", JSON.parseArray(byId.getSubProjectJson(),SubProjectVO.class));
 		List<TbAccount> tbAccountList = tbAccountService.getTbAccountList();
 		setAttr("tbAccountList", tbAccountList);
 	}
@@ -128,6 +132,10 @@ public class ProjectController extends Controller {
 			}
 		}).start();
 
+		Map<String, String> config = tbEnvConfigService.getConfig();
+		String serverIp = config.get(ConstantConfig.SERVER_IP);
+
+		setAttr("serverIp",serverIp);
 		setAttr("tbProject",obj);
 		setAttr("tbBuild",tbBuild);
 		render("/project/build.html");
@@ -200,9 +208,9 @@ public class ProjectController extends Controller {
 				log.info("授权dir: {} chmod: {}",dir,chmod);
 				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
 				chmod = "dos2unix -q " + fileName;
-//				log.info("转码 dir: {} chmod: {}",dir,chmod);
-//				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,chmod.split(" "));
-//				log.info("授权.转码 .sh 成功");
+				log.info("转码 dir: {} chmod: {}",dir,chmod);
+				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
+				log.info("授权.转码 .sh 成功");
 			}
 			tbBuild.appendOutput("执行commandExecutor");
 			for (int i =0 ; i < 50;i++){
@@ -219,17 +227,24 @@ public class ProjectController extends Controller {
 			sshClient.setHost(sshTbAccount.getIp()).setPort(22).setUsername(sshTbAccount.getUserName()).setPassword(sshTbAccount.getPwd());
 			sshClient.login();
 
-			String sshScriptFile =by.get("projectName") + "_ssh" + osExtion;
-			Kv sshConfig = Kv.by("home", home);
-			engine.getTemplateByString(project.getSshScript()).render(sshConfig, home + File.separator + sshScriptFile);
+//			String sshScriptFile =by.get("projectName") + "_ssh" + osExtion;
+//			Kv sshConfig = Kv.by("home", home);
+//			engine.getTemplateByString(project.getSshScript()).render(sshConfig, home + File.separator + sshScriptFile);
 			String remotePath = "/data";
-			sshClient.putFile(home, sshScriptFile,remotePath);
-			sshClient.sendCmd("chmod u+x " + remotePath + "/" + sshScriptFile,tbBuild);
-			sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile,tbBuild);
+//			sshClient.putFile(home, sshScriptFile,remotePath);
+//			sshClient.sendCmd("chmod u+x " + remotePath + "/" + sshScriptFile,tbBuild);
+//			sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile,tbBuild);
 
-			zipAndUploadRemoteServer(project, home, by, sshClient);
+			String subProjectJson = project.getSubProjectJson();
+			if (!StringUtils.isEmpty(subProjectJson)){
+				List<SubProjectVO> subProjectVOS = JSON.parseArray(subProjectJson, SubProjectVO.class);
+				for(SubProjectVO subProject : subProjectVOS){
+//					zipAndUploadRemoteServer(project, home, by, sshClient,"v4-common-parent/v4-nuo-service-user","target/v4-nuo-service-user.jar",tbBuild);
+					zipAndUploadRemoteServer(project, home, by, sshClient,subProject.getProjectPath(),subProject.getProjectName(),tbBuild);
+				}
+			}
 //			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile,tbBuild);
-			String sshCmdOut = sshClient.sendShell(remotePath + "/" + sshScriptFile, tbBuild);
+//			String sshCmdOut = sshClient.sendShell(remotePath + "/" + sshScriptFile, tbBuild);
 //			log.info("sshCmdOut: {}",sshCmdOut);
 		}else{
 			log.warn("没有配置 ssh账户");
@@ -268,17 +283,36 @@ public class ProjectController extends Controller {
 		return tbBuild;
 	}
 
-	private void zipAndUploadRemoteServer(TbProject obj, String home, Kv by, SSHClient sshClient) throws Exception {
+
+	/**
+	 * 压缩文件上传
+	 * @param obj
+	 * @param home
+	 * @param by
+	 * @param sshClient
+	 * @param projectPath
+	 * @param projectName
+	 * @throws Exception
+	 */
+	private void zipAndUploadRemoteServer(TbProject obj, String home, Kv by, SSHClient sshClient,String projectPath,String projectName, TbBuild tbBuild) throws Exception {
 		String zipDir = null;
 		String zipFile = null;
-		String zipFileName = "dist.zip";
+		String zipFileName = projectName+".zip";
 		if (obj.getType().intValue() == ConstantConfig.VUE){
 			zipDir = home + File.separator+by.get("projectName") + File.separator + "dist";
 			zipFile = zipDir + File.separator + zipFileName;
 			ZipUtils.compress(zipDir,zipFile);
+		}else if (obj.getType().intValue() == ConstantConfig.MAVEN){
+			zipDir = home + File.separator+by.get("projectName") + File.separator + projectPath;
+			zipFile = zipDir + File.separator + zipFileName;
+			ZipUtils.compress(zipDir,zipFile);
 		}
 		if (zipFile != null){
-			sshClient.putFile(zipDir,zipFileName,"/data");
+			String out = String.format("dir [%s]  zipFileName [%s] ",zipDir,zipFileName);
+			tbBuild.appendOutput(out);
+			log.info(out);
+			sshClient.putFile(zipDir,zipFileName,"/data/"+by.get("projectName"));
+			tbBuild.appendOutput("ssh 上传成功");
 			log.info("{}  上传成功",zipFileName);
 		}
 	}

@@ -63,13 +63,13 @@ function start()
 function stop()
 {
     # 支持集群部署
-    kill `pgrep -f ${APP_BASE_PATH}` 2>/dev/null
+    #kill `pgrep -f ${APP_BASE_PATH}` 2>/dev/null
     
     # kill 命令不使用 -9 参数时，会回调 onStop() 方法，确定不需要此回调建议使用 -9 参数
     # kill `pgrep -f ${MAIN_CLASS}` 2>/dev/null
 
     # 以下代码与上述代码等价
-    # kill $(pgrep -f ${MAIN_CLASS}) 2>/dev/null
+    kill $(pgrep -f ${MAIN_CLASS}) 2>/dev/null
 }
 
 if [[ "$COMMAND" == "start" ]]; then

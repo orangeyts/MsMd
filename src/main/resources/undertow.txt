@@ -2,7 +2,7 @@
 
 undertow.devMode=true
 undertow.host=0.0.0.0
-undertow.port=801
+undertow.port=80
 undertow.contextPath=/msmd
 
 # 打成 fatjar 部署的项目开启下面的配置

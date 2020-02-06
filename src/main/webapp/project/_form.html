@@ -101,6 +101,21 @@
 	</div>
 
 	<div>
+		<label>子工程-部署工程信息</label>
+		<div id="jsonConfigDiv">
+			#for(obj : subProjects)
+			<div>
+				<input type="text" class="demo demo-textarea" title="工程路径 v4-common-parent/v4-nuo-service-user"  value="#(obj.projectPath)">
+				<input type="text" class="demo demo-textarea" title="工程名称 target/v4-nuo-service-user.jar" value="#(obj.projectName)">
+				<div> <a onclick="delOneLunbo(this)">删除本条</a> </div>
+			</div>
+			<hr/>
+			#end
+		</div>
+	</div>
+	<button type="button" class="btn btn-primary" onclick="addUrl()">添加-子工程部署信息</button>
+
+	<div>
 		<label>edas-账号信息</label>
 		<select name="tbProject.eadsAccountId">
 			<option value="0">不调用edas API</option>
@@ -159,4 +174,39 @@
 			$("#gitInfo").show();
 		}
 	}
+
+	//克隆一个url 追加
+    function addUrl(){
+        var cloneUrl = $("#jsonConfigDiv").children(":first").clone();
+        $("#jsonConfigDiv").append(cloneUrl);
+    }
+
+    //删除一个
+    function delOneLunbo(obj){
+        $(obj).parent().parent().remove();
+    }
+
+	//提交表单的时候，把 子工程信息 拼接成json格式
+    function appendJsonConfig(){
+        var subProjects = [];
+        $("#jsonConfigDiv").children().each(function(){
+            console.log(this.innerHTML);
+            var url = {};
+            $(this).children().each(function(index){
+                if(this.value){
+                    console.log(index);
+                    if(index == 0){
+                        url.projectPath = this.value;
+                    }else if(index == 1){
+                        url.projectName = this.value;
+                    }
+                }
+            });
+            subProjects.push(url);
+        });
+        var jsonValue = JSON.stringify(subProjects);
+        console.log(jsonValue);
+        $("#projectForm").append("<input type='hidden' name='tbProject.subProjectJson' value='" + jsonValue + "'/>");
+        return true;
+    }
 </script>
