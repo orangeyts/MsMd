@@ -76,6 +76,7 @@ git config user.email "112260085@qq.com"
 
 https://www.cnblogs.com/fourous/p/11424285.html
 
+ssh-keygen -t rsa -f ~/.ssh/id_rsa_x -C "112260085@qq.com"
 ```
 $ ssh -T git@gitee.com
 Hi nuo! You've successfully authenticated, but GITEE.COM does not provide shell access.
