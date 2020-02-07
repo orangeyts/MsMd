@@ -107,9 +107,32 @@
 			<div>
 				<input type="text" class="demo demo-textarea" title="工程路径 v4-common-parent/v4-nuo-service-user"  value="#(obj.projectPath)">
 				<input type="text" class="demo demo-textarea" title="工程名称 target/v4-nuo-service-user.jar" value="#(obj.projectName)">
+
+				<select>
+					#if(obj.zip)
+						<option value="1" selected>压缩</option>
+						<option value="0">不压缩</option>
+					#else
+						<option value="1">压缩</option>
+						<option value="0" selected>不压缩</option>
+					#end
+				</select>
+				<input type="text" class="demo demo-textarea" title="选择压缩的文件夹或者文件 用空格分开" value="#(obj.zipFolderOrFile)">
+
+				<select>
+					<option value="0">不上传ssh</option>
+					#for(x : tbAccountList)
+						#if(obj.sshId?? == x.id)
+						<option value="#(x.id)" selected>#(x.type)/**</option>
+						#else
+						<option value="#(x.id)">#(x.type)/**</option>
+						#end
+					#end
+
+				</select>
 				<div> <a onclick="delOneLunbo(this)">删除本条</a> </div>
+				<hr/>
 			</div>
-			<hr/>
 			#end
 		</div>
 	</div>
@@ -120,11 +143,11 @@
 		<select name="tbProject.eadsAccountId">
 			<option value="0">不调用edas API</option>
 			#for(x : tbAccountList)
-			#if(tbProject.eadsAccountId?? == x.id)
-			<option value="#(x.id)" selected>#(x.type)/**</option>
-			#else
-			<option value="#(x.id)">#(x.type)/**</option>
-			#end
+				#if(tbProject.eadsAccountId?? == x.id)
+				<option value="#(x.id)" selected>#(x.type)/**</option>
+				#else
+				<option value="#(x.id)">#(x.type)/**</option>
+				#end
 			#end
 
 		</select>
@@ -140,6 +163,7 @@
 	<div>
 		<label>&nbsp;</label>
 		<input value="提交" type="submit">
+		<input value="test" type="button" onclick="appendJsonConfig()">
 	</div>
 </fieldset>
 <script type="text/javascript">
@@ -189,16 +213,26 @@
 	//提交表单的时候，把 子工程信息 拼接成json格式
     function appendJsonConfig(){
         var subProjects = [];
+        console.log("size-----   "+$("#jsonConfigDiv").children().length);
         $("#jsonConfigDiv").children().each(function(){
-            console.log(this.innerHTML);
+            //console.log(this.innerHTML);
+            console.log(this);
+            //console.log($(this).children().length);
             var url = {};
             $(this).children().each(function(index){
+            	//console.log(this);
                 if(this.value){
-                    console.log(index);
+                    //console.log(index+" : "+this.value);
                     if(index == 0){
                         url.projectPath = this.value;
                     }else if(index == 1){
                         url.projectName = this.value;
+                    }else if(index == 2){
+                        url.zip = this.value==1?true:false;
+                    }else if(index == 3){
+                        url.zipFolderOrFile = this.value;
+                    }else if(index == 4){
+                        url.sshId = this.value;
                     }
                 }
             });
@@ -207,6 +241,6 @@
         var jsonValue = JSON.stringify(subProjects);
         console.log(jsonValue);
         $("#projectForm").append("<input type='hidden' name='tbProject.subProjectJson' value='" + jsonValue + "'/>");
-        return true;
+        return false;
     }
 </script>

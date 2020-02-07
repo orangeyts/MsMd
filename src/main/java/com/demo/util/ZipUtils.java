@@ -107,4 +107,42 @@ public class ZipUtils {
             compressbyType(file, zos, baseDir + dir.getName() + File.separator);
         }
     }
+
+    /**
+     * 压缩一个文件夹下，可选择的几个文件
+     *
+     * @param srcFilePath
+     * @param destFilePath
+     * @param firstLevelName    srcFilePath路径下的文件 或者 文件夹的名称
+     */
+    public static void compressMultiFolder(String srcFilePath, String destFilePath, String... firstLevelName) throws IOException {
+        ZipOutputStream zos = null;
+        FileOutputStream fos = null;
+        try {
+            File zipFile = new File(destFilePath);
+            fos = new FileOutputStream(zipFile);
+            zos = new ZipOutputStream(fos);
+
+            File src = null;
+            for (String subFileOrDir : firstLevelName) {
+                src = new File(srcFilePath + File.separator + subFileOrDir);
+
+                if (!src.exists()) {
+                    throw new RuntimeException(srcFilePath + "不存在");
+                }
+
+                String baseDir = "";
+                compressbyType(src, zos, baseDir);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (zos != null){
+                zos.close();
+            }
+            if (fos != null){
+                fos.close();
+            }
+        }
+    }
 }

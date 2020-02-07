@@ -240,7 +240,7 @@ public class ProjectController extends Controller {
 				List<SubProjectVO> subProjectVOS = JSON.parseArray(subProjectJson, SubProjectVO.class);
 				for(SubProjectVO subProject : subProjectVOS){
 //					zipAndUploadRemoteServer(project, home, by, sshClient,"v4-common-parent/v4-nuo-service-user","target/v4-nuo-service-user.jar",tbBuild);
-					zipAndUploadRemoteServer(project, home, by, sshClient,subProject.getProjectPath(),subProject.getProjectName(),tbBuild);
+					zipAndUploadRemoteServer(project, home, by, sshClient,subProject,tbBuild);
 				}
 			}
 //			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile,tbBuild);
@@ -290,23 +290,28 @@ public class ProjectController extends Controller {
 	 * @param home
 	 * @param by
 	 * @param sshClient
-	 * @param projectPath
-	 * @param projectName
+	 * @param subProject
 	 * @throws Exception
 	 */
-	private void zipAndUploadRemoteServer(TbProject obj, String home, Kv by, SSHClient sshClient,String projectPath,String projectName, TbBuild tbBuild) throws Exception {
+	private void zipAndUploadRemoteServer(TbProject obj, String home, Kv by, SSHClient sshClient,SubProjectVO subProject, TbBuild tbBuild) throws Exception {
+		String projectPath = subProject.getProjectPath();
+		String projectName = subProject.getProjectName();
+
 		String zipDir = null;
 		String zipFile = null;
 		String zipFileName = projectName+".zip";
-		if (obj.getType().intValue() == ConstantConfig.VUE){
-			zipDir = home + File.separator+by.get("projectName") + File.separator + "dist";
-			zipFile = zipDir + File.separator + zipFileName;
-			ZipUtils.compress(zipDir,zipFile);
-		}else if (obj.getType().intValue() == ConstantConfig.MAVEN){
-			zipDir = home + File.separator+by.get("projectName") + File.separator + projectPath;
-			zipFile = zipDir + File.separator + zipFileName;
-			ZipUtils.compress(zipDir,zipFile);
+		if (subProject.getZip()){
+			if (obj.getType().intValue() == ConstantConfig.VUE){
+				zipDir = home + File.separator+by.get("projectName") + File.separator + "dist";
+				zipFile = zipDir + File.separator + zipFileName;
+				ZipUtils.compressMultiFolder(zipDir,zipFile,subProject.getZipFolderOrFile().split(" "));
+			}else if (obj.getType().intValue() == ConstantConfig.MAVEN){
+				zipDir = home + File.separator+by.get("projectName") + File.separator + projectPath;
+				zipFile = zipDir + File.separator + zipFileName;
+				ZipUtils.compressMultiFolder(zipDir,zipFile,subProject.getZipFolderOrFile().split(" "));
+			}
 		}
+
 		if (zipFile != null){
 			String out = String.format("dir [%s]  zipFileName [%s] ",zipDir,zipFileName);
 			tbBuild.appendOutput(out);
