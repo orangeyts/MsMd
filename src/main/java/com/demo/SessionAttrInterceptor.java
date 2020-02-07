@@ -37,13 +37,14 @@ public class SessionAttrInterceptor implements Interceptor {
         }else{
             String uid = null;
             Cookie[] cookies = ai.getController().getRequest().getCookies();
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(ConstantConfig.SESSION_KEY)){
-                    uid = cookie.getValue();
-                    log.info("user id ok : [{}]",uid);
+            if (cookies != null && cookies.length > 0){
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals(ConstantConfig.SESSION_KEY)){
+                        uid = cookie.getValue();
+                        log.info("user id ok : [{}]",uid);
+                    }
                 }
             }
-
             if (uid != null){
                 HttpSession session = ai.getController().getSession();
 
