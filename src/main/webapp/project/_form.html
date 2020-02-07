@@ -96,11 +96,6 @@
 		</pre>
 	</div>
 	<div>
-		<label>ssh执行脚本</label>
-		<textarea name="tbProject.sshScript" cols="200" rows="20">#(tbProject.sshScript??)</textarea>#(contentMsg)
-	</div>
-
-	<div>
 		<label>子工程-部署工程信息</label>
 		<div id="jsonConfigDiv">
 			#for(obj : subProjects)
@@ -130,13 +125,17 @@
 					#end
 
 				</select>
+				<textarea cols="200" rows="10">#(obj.sshScript??)</textarea>
 				<div> <a onclick="delOneLunbo(this)">删除本条</a> </div>
 				<hr/>
 			</div>
 			#end
 		</div>
 	</div>
-	<button type="button" class="btn btn-primary" onclick="addUrl()">添加-子工程部署信息</button>
+	<div>
+		<label>添加</label>
+		<button type="button" class="btn btn-primary" onclick="addUrl()">子工程部署信息</button>
+	</div>
 
 	<div>
 		<label>edas-账号信息</label>
@@ -163,7 +162,7 @@
 	<div>
 		<label>&nbsp;</label>
 		<input value="提交" type="submit">
-		<input value="test" type="button" onclick="appendJsonConfig()">
+<!--		<input value="test" type="button" onclick="appendJsonConfig()">-->
 	</div>
 </fieldset>
 <script type="text/javascript">
@@ -233,6 +232,8 @@
                         url.zipFolderOrFile = this.value;
                     }else if(index == 4){
                         url.sshId = this.value;
+                    }else if(index == 5){
+                        url.sshScript = this.value;
                     }
                 }
             });
@@ -241,6 +242,6 @@
         var jsonValue = JSON.stringify(subProjects);
         console.log(jsonValue);
         $("#projectForm").append("<input type='hidden' name='tbProject.subProjectJson' value='" + jsonValue + "'/>");
-        return false;
+        return true;
     }
 </script>

@@ -4,14 +4,17 @@ import com.alibaba.druid.util.StringUtils;
 import com.demo.common.model.Blog;
 import com.demo.common.model.TbUser;
 import com.demo.constant.ConstantConfig;
+import com.demo.env.TbEnvConfigService;
 import com.demo.tbuser.TbUserService;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.Cookie;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * 本 demo 仅表达最为粗浅的 jfinal 用法，更为有价值的实用的企业级用法
@@ -24,6 +27,9 @@ public class IndexController extends Controller {
 
 	@Inject
 	TbUserService service;
+	@Inject
+	TbEnvConfigService tbEnvConfigService;
+
 	public void index() {
 		render("index.html");
 	}
@@ -42,6 +48,13 @@ public class IndexController extends Controller {
 		String url = getPara("url");
 		TbUser login = service.login(username, password);
 		if (login != null){
+			Cookie cookie = new Cookie(ConstantConfig.SESSION_KEY,login.getId()+"");
+			Map<String, String> config = tbEnvConfigService.getConfig();
+			String cookiedomain = config.get(ConstantConfig.COOKIEDOMAIN);
+			cookie.setDomain(cookiedomain);
+			cookie.setMaxAge(10000000);
+
+			getResponse().addCookie(cookie);
 			getSession().setAttribute(ConstantConfig.SESSION_KEY,login);
 			if (StringUtils.isEmpty(url)){
 				forwardAction("/weekreport");

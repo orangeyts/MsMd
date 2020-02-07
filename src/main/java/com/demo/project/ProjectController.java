@@ -221,11 +221,7 @@ public class ProjectController extends Controller {
 
 
 		if (project.getSshAccountId().intValue() != 0){
-			tbBuild.appendOutput("开始构建ssh");
-			TbAccount sshTbAccount = tbAccountService.getTbAccount(project.getSshAccountId());
-			SSHClient sshClient = new SSHClient();
-			sshClient.setHost(sshTbAccount.getIp()).setPort(22).setUsername(sshTbAccount.getUserName()).setPassword(sshTbAccount.getPwd());
-			sshClient.login();
+			tbBuild.appendOutput("开始构建ssh--------");
 
 //			String sshScriptFile =by.get("projectName") + "_ssh" + osExtion;
 //			Kv sshConfig = Kv.by("home", home);
@@ -239,8 +235,25 @@ public class ProjectController extends Controller {
 			if (!StringUtils.isEmpty(subProjectJson)){
 				List<SubProjectVO> subProjectVOS = JSON.parseArray(subProjectJson, SubProjectVO.class);
 				for(SubProjectVO subProject : subProjectVOS){
+					TbAccount sshTbAccount = tbAccountService.getTbAccount(subProject.getSshId());
+					SSHClient sshClient = new SSHClient();
+					sshClient.setHost(sshTbAccount.getIp()).setPort(22).setUsername(sshTbAccount.getUserName()).setPassword(sshTbAccount.getPwd());
+					sshClient.login();
 //					zipAndUploadRemoteServer(project, home, by, sshClient,"v4-common-parent/v4-nuo-service-user","target/v4-nuo-service-user.jar",tbBuild);
+					//压缩文件并且 上传到远程服务器
 					zipAndUploadRemoteServer(project, home, by, sshClient,subProject,tbBuild);
+
+					tbBuild.appendOutput("start 生成ssh脚本");
+					String sshScriptFile =by.get("projectName") + "_ssh" + osExtion;
+					engine.getTemplateByString(subProject.getSshScript()).render(by, home + File.separator + sshScriptFile);
+					tbBuild.appendOutput("end 生成ssh脚本");
+					remotePath = remotePath+"/" + project.getTitle();
+					sshClient.putFile(home, sshScriptFile,remotePath);
+					sshClient.sendCmd("chmod u+x " + remotePath + "/" + sshScriptFile,tbBuild);
+					sshClient.sendCmd("dos2unix " + remotePath + "/" + sshScriptFile,tbBuild);
+					log.info("执行启动程序脚本 [{}]",remotePath + "/" + sshScriptFile);
+					tbBuild.appendOutput("执行启动程序脚本");
+					sshClient.sendCmd(remotePath + "/" + sshScriptFile,tbBuild);
 				}
 			}
 //			String sshCmdOut = sshClient.sendCmd(remotePath + "/" + sshScriptFile,tbBuild);
@@ -316,7 +329,7 @@ public class ProjectController extends Controller {
 			String out = String.format("dir [%s]  zipFileName [%s] ",zipDir,zipFileName);
 			tbBuild.appendOutput(out);
 			log.info(out);
-			sshClient.putFile(zipDir,zipFileName,"/data/"+by.get("projectName"));
+			sshClient.putFile(zipDir,zipFileName,"/data/"+by.get("projectName")+"/project_versions");
 			tbBuild.appendOutput("ssh 上传成功");
 			log.info("{}  上传成功",zipFileName);
 		}
