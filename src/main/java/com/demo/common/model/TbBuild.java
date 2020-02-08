@@ -25,6 +25,11 @@ public class TbBuild extends BaseTbBuild<TbBuild> {
         this.update();
         myWebSocketClient.send(JSON.toJSONString(new GroupMessage(this.groupId,msg,CommandType.groupMessage)));
     }
+    public void appendOutputNoBR(String msg){
+        this.setTriggerDesc(this.getTriggerDesc()+msg+" ");
+        this.update();
+        myWebSocketClient.send(JSON.toJSONString(new GroupMessage(this.groupId,msg,CommandType.groupMessage)));
+    }
 
     public MyWebSocketClient getMyWebSocketClient() {
         return myWebSocketClient;

@@ -3,6 +3,7 @@ package com.demo.command.linux;
 
 import com.alibaba.fastjson.JSON;
 import com.demo.common.model.TbBuild;
+import com.demo.util.ExceptionUtil;
 import com.demo.util.websocket.MyWebSocketClient;
 import com.demo.util.websocket.model.CommandType;
 import com.demo.util.websocket.model.GroupMessage;
@@ -45,7 +46,7 @@ public class SSHClient {
     /**
      * ssh session
      */
-    private Session session = null;
+    public Session session = null;
 
     /**
      * ssh channel
@@ -148,17 +149,29 @@ public class SSHClient {
      *            远程路径,若为空,表示当前路径,若服务器上无此目录,则会自动创建
      * @throws Exception
      */
-    public void putFile(String localPath, String localFile, String remotePath)
+    public void putFile(String localPath, String localFile, String remotePath,TbBuild tbBuild)
             throws Exception {
         Channel channelSftp = session.openChannel("sftp");
         channelSftp.connect();
+        tbBuild.appendOutput("连接sftp "+session.getHost());
         ChannelSftp c = (ChannelSftp) channelSftp;
         String remoteFile = null;
         if (remotePath != null && remotePath.trim().length() > 0) {
-            try {
-                c.mkdir(remotePath);
-            } catch (Exception e) {
+            String[] folders = remotePath.split( "/" );
+            boolean isFirst = true;
+            for ( String folder : folders ) {
+                if ( folder.length() > 0 ) {
+                    try {
+                        c.cd( isFirst?"/"+folder:folder );
+                    }
+                    catch ( SftpException e ) {
+                        c.mkdir(folder);
+                        c.cd( folder );
+                    }
+                    isFirst = false;
+                }
             }
+            tbBuild.appendOutput("创建远程目录成功 " + remotePath);
             remoteFile = remotePath + "/.";
         } else {
             remoteFile = ".";
@@ -176,7 +189,7 @@ public class SSHClient {
                 file = localPath + "/" + file;
             }
         }
-        c.put(file, remoteFile);
+        c.put(file, remoteFile,new MyProgressMonitor(tbBuild));
 
         channelSftp.disconnect();
     }
@@ -236,12 +249,8 @@ public class SSHClient {
                 }
             }
 
-        } catch (JSchException e) {
-            e.printStackTrace();
-            System.err.println(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println(e);
+        } catch (Exception e) {
+            tbBuild.appendOutput(ExceptionUtil.getStackTrace(e));
         } finally {
             // close channel
             this.channel.disconnect();

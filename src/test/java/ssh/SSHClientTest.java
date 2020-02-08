@@ -1,6 +1,10 @@
 package ssh;
 
 import com.demo.command.linux.SSHClient;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +17,7 @@ public class SSHClientTest {
     @Before
     public void setUp() throws Exception {
         sshClient = new SSHClient();
-        sshClient.setHost("ip").setPort(22).setUsername("root").setPassword("root");
+        sshClient.setHost("localhost").setPort(22).setUsername("root").setPassword("");
         sshClient.login();
     }
 
@@ -41,7 +45,31 @@ public class SSHClientTest {
 
     @Test
     public void uploadFile() throws Exception {
-        sshClient.putFile("E:\\", "微信图片_20180413173224.png","/data");
+        sshClient.putFile("E:\\", "微信图片_20180413173224.png","/data/sdf/asfsdf",null);
+    }
+
+    @Test
+    public void mkdir() throws Exception {
+        Channel channelSftp = sshClient.session.openChannel("sftp");
+        channelSftp.connect();
+        ChannelSftp c = (ChannelSftp) channelSftp;
+
+
+        String remotePath = "/data/ss/dd";
+        String[] folders = remotePath.split( "/" );
+        boolean isFirst = true;
+        for ( String folder : folders ) {
+            if ( folder.length() > 0 ) {
+                try {
+                    c.cd( isFirst?"/"+folder:folder );
+                }
+                catch ( SftpException e ) {
+                    c.mkdir(folder);
+                    c.cd( folder );
+                }
+                isFirst = false;
+            }
+        }
     }
 
     @After
