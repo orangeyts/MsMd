@@ -264,6 +264,69 @@ public class SSHClient {
      *
      * @return
      */
+    public String sendCmd(String command) {
+
+        String ret = "";
+
+        // judge whether the session or channel is connected
+        if (!session.isConnected()) {
+            this.login();
+        }
+
+        // open channel for sending command
+        try {
+            this.channel = session.openChannel("exec");
+            ((ChannelExec) this.channel).setCommand(command);
+            this.channel.connect(CHANNEL_TIMEOUT);
+
+            // no output stream
+            channel.setInputStream(null);
+
+            ((ChannelExec) channel).setErrStream(System.err);
+
+            InputStream in = channel.getInputStream();
+
+            // acquire for ret
+            byte[] tmp = new byte[1024];
+            while (true) {
+                while (in.available() > 0) {
+                    int i = in.read(tmp, 0, 1024);
+                    if (i < 0) break;
+
+                    ret = new String(tmp, 0, i);
+                    System.out.print("ssh--------------------- "+ret);
+                }
+
+                // quit the process of waiting for ret
+                if (channel.isClosed()) {
+                    if (in.available() > 0) continue;
+                    System.out.println("exit-status: " + channel.getExitStatus());
+                    break;
+                }
+
+                // wait every 100ms
+                try {
+                    Thread.sleep(CYCLE_TIME);
+                } catch (Exception ee) {
+                    System.err.println(ee);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // close channel
+            this.channel.disconnect();
+        }
+
+        return ret;
+    }
+
+    /**
+     * exec 只能发送一次命令
+     *
+     * @return
+     */
     public String sendShell(String command, TbBuild tbBuild) throws Exception {
         String result = "";
 
