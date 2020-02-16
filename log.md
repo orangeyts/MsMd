@@ -78,6 +78,10 @@ git checkout -b test origin/test
 git branch --set-upstream-to=origin/test test 设置默认push分支
 
 
+socketIO兼容性问题
+https://www.cnblogs.com/pomer-huang/p/netty-socketio.html
+
+
 tail -f /root/soft/MsMd/catalina.base_IS_UNDEFINED/logs/admin.log
 tail -f /root/soft/catalina.base_IS_UNDEFINED/logs/admin.log
 cd /Users/sheng/Downloads/cihome/
