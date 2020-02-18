@@ -1,0 +1,15 @@
+#@layout()
+#define main()
+
+<fieldset class="solid">
+	<legend>创建Blog</legend>
+	<input type="hidden" name="blog.id" value="#(blog.id??)" />
+	<div>
+		<label>#(blog.title??)</label>
+	</div>
+	<div>
+		#(blog.content??)
+	</div>
+</fieldset>
+
+#end

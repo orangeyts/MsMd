@@ -8,6 +8,7 @@ import com.demo.env.TbEnvConfigService;
 import com.demo.tbuser.TbUserService;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
+import com.jfinal.kit.PropKit;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.Cookie;
@@ -50,8 +51,15 @@ public class IndexController extends Controller {
 		if (login != null){
 			Cookie cookie = new Cookie(ConstantConfig.SESSION_KEY,login.getId()+"");
 			Map<String, String> config = tbEnvConfigService.getConfig();
-			String cookiedomain = config.get(ConstantConfig.COOKIEDOMAIN);
-			cookie.setDomain(cookiedomain);
+
+
+			PropKit.use("a_little_config_db.txt");
+			if (PropKit.getBoolean("devMode", false)){
+				cookie.setDomain("localhost");
+			}else {
+				String cookiedomain = config.get(ConstantConfig.COOKIEDOMAIN);
+				cookie.setDomain(cookiedomain);
+			}
 			cookie.setMaxAge(10000000);
 
 			getResponse().addCookie(cookie);

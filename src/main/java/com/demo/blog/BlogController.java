@@ -40,7 +40,10 @@ public class BlogController extends Controller {
 	public void edit() {
 		setAttr("blog", service.findById(getParaToInt()));
 	}
-	
+	public void one() {
+		setAttr("blog", service.findById(getParaToInt()));
+	}
+
 	/**
 	 * save 与 update 的业务逻辑在实际应用中也应该放在 serivce 之中，
 	 * 并要对数据进正确性进行验证，在此仅为了偷懒
