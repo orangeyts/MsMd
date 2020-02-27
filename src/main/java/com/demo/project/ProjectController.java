@@ -347,7 +347,7 @@ public class ProjectController extends Controller {
 			String out = String.format("ssh传送文件到服务器: dir [%s]  zipFileName [%s] ",zipDir,zipFileName);
 			tbBuild.appendOutput(out);
 			log.info(out);
-			sshClient.putFile(zipDir,zipFileName,"/data/"+subProject.getProjectName()+"/project_versions",tbBuild);
+			sshClient.putFile(zipDir,zipFileName,subProject.getSshTargetDir()+File.separator+subProject.getProjectName()+"/project_versions",tbBuild);
 			tbBuild.appendOutput("ssh 上传成功");
 			log.info("{}  上传成功",zipFileName);
 		}

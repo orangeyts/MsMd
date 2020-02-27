@@ -126,6 +126,7 @@
 
 				</select>
 				<textarea cols="200" rows="10">#(obj.sshScript??)</textarea>
+				<input type="text" class="demo demo-textarea" title="部署目录前缀" value="#(obj.sshTargetDir)">
 				<div> <a onclick="delOneLunbo(this)">删除本条</a> </div>
 				<hr/>
 			</div>
@@ -234,6 +235,8 @@
                         url.sshId = this.value;
                     }else if(index == 5){
                         url.sshScript = this.value;
+                    }else if(index == 6){
+                        url.sshTargetDir = this.value;
                     }
                 }
             });
