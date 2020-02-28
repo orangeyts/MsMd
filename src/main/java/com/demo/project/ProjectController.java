@@ -237,7 +237,7 @@ public class ProjectController extends Controller {
 				if (!StringUtils.isEmpty(subProjectJson)){
 					List<SubProjectVO> subProjectVOS = JSON.parseArray(subProjectJson, SubProjectVO.class);
 					for(SubProjectVO subProject : subProjectVOS){
-						String remotePath = "/data";
+						String remotePath = subProject.getSshTargetDir();
 
 						TbAccount sshTbAccount = tbAccountService.getTbAccount(subProject.getSshId());
 						SSHClient sshClient = new SSHClient();
