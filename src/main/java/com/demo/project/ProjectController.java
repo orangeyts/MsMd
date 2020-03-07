@@ -100,6 +100,10 @@ public class ProjectController extends Controller {
 		setAttr("subProjects", JSON.parseArray(byId.getSubProjectJson(),SubProjectVO.class));
 		List<TbAccount> tbAccountList = tbAccountService.getTbAccountList();
 		setAttr("tbAccountList", tbAccountList);
+
+		//
+		List<TbProject> projectList = service.getList();
+		setAttr("projectList", projectList);
 	}
 	
 	/**
@@ -120,7 +124,15 @@ public class ProjectController extends Controller {
 	public void build() throws Exception {
 		Integer projectId = getParaToInt("projectId");
 		TbProject obj = service.findById(projectId);
+		if (obj.getStatus() == 1){
+			setAttr("errorMsg","工程正在运行中，请稍后重试");
+			render(modelKey+".html");
+			return;
+		}
+
 		TbBuild tbBuild = getTbBuild(obj);
+
+		obj.updateProjectStatus(1);
 
 		new Thread(new Runnable() {
 			@Override
@@ -129,6 +141,8 @@ public class ProjectController extends Controller {
 					runScript(obj,tbBuild);
 				} catch (Exception e) {
 					e.printStackTrace();
+				}finally {
+					obj.updateProjectStatus(0);
 				}
 			}
 		}).start();
@@ -155,7 +169,7 @@ public class ProjectController extends Controller {
 	 * @param project
 	 * @throws Exception
 	 */
-	private void runScript(TbProject project,TbBuild tbBuild) {
+	private void runScript(TbProject project,TbBuild tbBuild) throws Exception {
 
 
 		try {
@@ -279,6 +293,7 @@ public class ProjectController extends Controller {
 			}
 		} catch (Exception e) {
 			tbBuild.appendOutput(ExceptionUtil.getStackTrace(e));
+			throw e;
 		}
 	}
 

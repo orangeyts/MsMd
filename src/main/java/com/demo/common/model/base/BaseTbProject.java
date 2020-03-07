@@ -33,6 +33,22 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getStr("os");
 	}
 
+	public void setStatus(java.lang.Integer status) {
+		set("status", status);
+	}
+	
+	public java.lang.Integer getStatus() {
+		return getInt("status");
+	}
+
+	public void setRelatedId(java.lang.Integer relatedId) {
+		set("relatedId", relatedId);
+	}
+	
+	public java.lang.Integer getRelatedId() {
+		return getInt("relatedId");
+	}
+
 	public void setSubProjectJson(java.lang.String subProjectJson) {
 		set("subProjectJson", subProjectJson);
 	}

@@ -20,6 +20,20 @@
 		</select>
 	</div>
 	<div>
+		<label>关联工程</label>
+		<select name="tbProject.relatedId">
+			<option value="0">无关联工程</option>
+			#for(x : projectList)
+			#if(tbProject.relatedId?? == x.id)
+			<option value="#(x.id)" selected>#(x.title)</option>
+			#else
+			<option value="#(x.id)">#(x.title)</option>
+			#end
+			#end
+
+		</select>
+	</div>
+	<div>
 		<label>脚本模板</label>
 	#if(tbProject.id?? == null)
 		<select id="templateSelectId">

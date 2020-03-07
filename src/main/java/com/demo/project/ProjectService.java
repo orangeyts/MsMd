@@ -46,4 +46,8 @@ public class ProjectService {
 			throw new RuntimeException("名字重复");
 		}
 	}
+
+    public List<TbProject> getList() {
+		return dao.findAll();
+    }
 }
