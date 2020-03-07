@@ -163,7 +163,13 @@ public class ProjectController extends Controller {
 		TbProject project = service.findById(projectId);
 		TbBuild tbBuild = buildService.findById(project.getBuildId());
 		setAttr("tbBuild",tbBuild);
-		render("/project/build.html");
+
+		Map<String, String> config = tbEnvConfigService.getConfig();
+		String serverIp = config.get(ConstantConfig.SERVER_IP);
+
+		setAttr("serverIp",serverIp);
+		setAttr("uuid",UUID.randomUUID().toString());
+		render("/project/buildOut.html");
 	}
 
 	public void copy() throws Exception {

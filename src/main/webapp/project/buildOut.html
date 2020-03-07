@@ -56,7 +56,7 @@
             socket.onopen = function(event){
                 var ta = document.getElementById('scriptOutput');
                 ta.value = "Netty-WebSocket服务器。。。。。。连接  \r\n";
-                var uid = "#(session.uid.id)";
+                var uid = "#(uuid)";
                 login(uid);
             };
             socket.onclose = function(event){
