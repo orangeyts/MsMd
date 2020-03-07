@@ -9,14 +9,14 @@
 		<tbody id="up">
 			<tr>
 				<th width="4%">id</th>
-				<th width="35%">标题</th>
+				<th width="30%">标题</th>
 				<th>项目类型</th>
 				<th>操作系统</th>
 				<th>负责人</th>
 				<th>手机号</th>
 				<th>创建时间</th>
 				<th>更新时间</th>
-				<th width="20%">操作</th>
+				<th width="25%">操作</th>
 			</tr>
 			
 			#for(x : projectPage.getList())
@@ -38,11 +38,12 @@
 				<td style="text-align:left;">#(x.createTime)</td>
 				<td style="text-align:left;">#(x.updateTime)</td>
 				<td style="text-align:left;">
-					&nbsp;&nbsp;<a onclick="confirm('确定要删除吗?')?location.href='/#(ctx??)/project/delete/#(x.id)':''" href="javascript:;">删除</a>
+<!--					&nbsp;&nbsp;<a onclick="confirm('确定要删除吗?')?location.href='/#(ctx??)/project/delete/#(x.id)':''" href="javascript:;">删除</a>-->
 					&nbsp;&nbsp;<a href="/#(ctx??)/project/edit/#(x.id)">修改</a>
 					&nbsp;&nbsp;<a href="/#(ctx??)/step?projectId=#(x.id)">步骤</a>
 						#if(x.status?? == 1)
 							运行中...
+							<a href="/#(ctx??)/project/buildOut?projectId=#(x.id)">查看输出</a>
 						#else
 							<a href="/#(ctx??)/project/build?projectId=#(x.id)">启动</a>
 						#end

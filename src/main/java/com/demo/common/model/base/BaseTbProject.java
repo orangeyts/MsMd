@@ -33,6 +33,14 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getStr("os");
 	}
 
+	public void setBuildId(java.lang.Integer buildId) {
+		set("buildId", buildId);
+	}
+	
+	public java.lang.Integer getBuildId() {
+		return getInt("buildId");
+	}
+
 	public void setStatus(java.lang.Integer status) {
 		set("status", status);
 	}

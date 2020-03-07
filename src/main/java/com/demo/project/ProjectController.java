@@ -50,6 +50,8 @@ public class ProjectController extends Controller {
 	@Inject
 	ProjectService service;
 	@Inject
+	BuildService buildService;
+	@Inject
 	TbAccountService tbAccountService;
 	@Inject
 	TemplateService templateService;
@@ -132,7 +134,7 @@ public class ProjectController extends Controller {
 
 		TbBuild tbBuild = getTbBuild(obj);
 
-		obj.updateProjectStatus(1);
+		obj.updateProjectStatus(1,tbBuild.getId());
 
 		new Thread(new Runnable() {
 			@Override
@@ -142,7 +144,7 @@ public class ProjectController extends Controller {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}finally {
-					obj.updateProjectStatus(0);
+					obj.updateProjectStatus(0,tbBuild.getId());
 				}
 			}
 		}).start();
@@ -155,6 +157,15 @@ public class ProjectController extends Controller {
 		setAttr("tbBuild",tbBuild);
 		render("/project/build.html");
 	}
+
+	public void buildOut(){
+		Integer projectId = getParaToInt("projectId");
+		TbProject project = service.findById(projectId);
+		TbBuild tbBuild = buildService.findById(project.getBuildId());
+		setAttr("tbBuild",tbBuild);
+		render("/project/build.html");
+	}
+
 	public void copy() throws Exception {
 		Integer projectId = getParaToInt("projectId");
 		TbProject obj = service.findById(projectId);
