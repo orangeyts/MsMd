@@ -44,3 +44,38 @@ db.auth("root", "123456as" )
 
 - 导入测试数据
 mongorestore dump
+
+
+
+https://www.cnblogs.com/meiriyixiaobu/p/10114888.html
+
+https://www.cnblogs.com/wadeyu/p/7928625.html
+
+db.system.users.find()
+
+
+db.createUser(
+    {
+        user:"admin",
+        pwd:"irootech123",
+        roles:[
+            {role:"root", db:"admin"}
+        ]
+    }
+)
+
+
+db.createUser({user:"admin",pwd:"123",roles:["readWrite"]})
+
+db.updateUser('root',{pwd:'654321',roles:[{role:'root',db:'admin'}]})
+
+mongo localhost:27017/admin -u admin -p 123
+
+#全局查看
+mongostat -h localhost:27017 -u admin -p 123 --authenticationDatabase=admin
+
+# 查看具体的集合的读写情况
+mongotop -h localhost:27017 -u admin -p 123 --authenticationDatabase=admin
+
+# 查看日志的 执行计划
+tail -f /mnt/data/soft/mongodata/mongod.log
