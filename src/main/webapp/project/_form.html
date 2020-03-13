@@ -215,8 +215,41 @@
 
 	//克隆一个url 追加
     function addUrl(){
-        var cloneUrl = $("#jsonConfigDiv").children(":first").clone();
-        $("#jsonConfigDiv").append(cloneUrl);
+    	var firstChild = $("#jsonConfigDiv").children(":first");
+    	if(firstChild.length != 0){
+			var cloneUrl = firstChild.clone();
+        	$("#jsonConfigDiv").append(cloneUrl);
+    	}else{
+			//没有任何信息,需要自动拼装一个
+			$("#jsonConfigDiv").append(dynimicHtml());
+    	}
+
+    }
+
+    function dynimicHtml(){
+
+    	var str =
+				'<div>' +
+				'<input type=\"text\" class=\"demo demo-textarea\" title=\"工程路径 v4-common-parent/v4-service-user\" value=\"v4-common-parent/v4-service-user/target\">' +
+				'<input type=\"text\" class=\"demo demo-textarea\" title=\"工程名称 target/v4-service-user.jar\" value=\"v4-service-user\">' +
+				'<select>' +
+				'<option value=\"1\" selected=\"\">压缩</option>' +
+				'<option value=\"0\">不压缩</option>' +
+				'</select>' +
+				'<input type=\"text\" class=\"demo demo-textarea\" title=\"选择压缩的文件夹或者文件 用空格分开\" value=\"lib v4-service-user.jar\">' +
+				'<select>' +
+				'<option value=\"0\">不上传ssh</option>' +
+				'<option value=\"2\"  selected=\"\">2/**</option>' +
+				'</select>' +
+				'<textarea cols=\"200\" rows=\"10\">#!/bin/sh' +
+				'source /mnt/data/#(subProjectName)/runApp.sh' +
+				'</textarea>' +
+				'<input type=\"text\" class=\"demo demo-textarea\" title=\"部署目录前缀\" value=\"/mnt/data\">' +
+				'<div> <a onclick=\"delOneLunbo(this)\">删除本条</a> </div>' +
+				'<hr>' +
+				'</div>';
+
+				return str;
     }
 
     //删除一个

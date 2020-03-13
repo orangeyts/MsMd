@@ -44,8 +44,8 @@ public class SpatialHotPotExample {
         init();
         indexPoints();
         search();
-        Point wm6n = GeohashUtils.decode("wm6n", ctx);
-        System.out.println(wm6n);
+        Point wm6n = GeohashUtils.decode("wm3yyhsp", ctx);
+        System.out.println("------------------"+wm6n);
         int i = GeohashUtils.lookupHashLenForWidthHeight(104.08944, 30.663198);
         System.out.println(i);
     }
@@ -64,7 +64,7 @@ public class SpatialHotPotExample {
         this.ctx = SpatialContext.GEO;
 
         //网格最大11层, geohash的精度
-        int maxLevels = 18;
+        int maxLevels = 19;
 
         //Spatial Tiers
         SpatialPrefixTree grid = new GeohashPrefixTree(ctx, maxLevels);
@@ -139,7 +139,7 @@ public class SpatialHotPotExample {
         Sort distSort = new Sort(doubleValuesSource.getSortField(true)).rewrite(indexSearcher); // false=asc                                                                                         dist
 
         SpatialArgs args = new SpatialArgs(SpatialOperation.Intersects,
-                ctx.makeCircle(pt, DistanceUtils.dist2Degrees(200.0, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
+                ctx.makeCircle(pt, DistanceUtils.dist2Degrees(5.0, DistanceUtils.EARTH_MEAN_RADIUS_KM)));
         Query query = strategy.makeQuery(args);
         System.out.println(query);
 

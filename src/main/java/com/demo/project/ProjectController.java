@@ -16,6 +16,7 @@ import com.demo.constant.ConstantOS;
 import com.demo.env.TbEnvConfigService;
 import com.demo.template.TemplateService;
 import com.demo.util.ExceptionUtil;
+import com.demo.util.OSUtils;
 import com.demo.util.ZipUtils;
 import com.demo.util.edas.EdasAPI;
 import com.demo.util.websocket.MyWebSocketClient;
@@ -26,6 +27,7 @@ import com.demo.vo.SubProjectVO;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.Kv;
+import com.jfinal.kit.PropKit;
 import com.jfinal.template.Engine;
 import lombok.extern.slf4j.Slf4j;
 
@@ -152,6 +154,9 @@ public class ProjectController extends Controller {
 		Map<String, String> config = tbEnvConfigService.getConfig();
 		String serverIp = config.get(ConstantConfig.SERVER_IP);
 
+		if (PropKit.getBoolean("devMode", false)){
+			serverIp = "localhost";
+		}
 		setAttr("serverIp",serverIp);
 		setAttr("tbProject",obj);
 		setAttr("tbBuild",tbBuild);
@@ -236,20 +241,23 @@ public class ProjectController extends Controller {
 				log.info("执行命令的值: {}",lineT);
 				if (ConstantOS.LINUX.equals(project.getOs())){
 					tbBuild.appendOutput("执行linux commandExecutor");
-					String fileName = by.get("projectName") + osExtion;
-					String chmod = "chmod u+x "+ fileName;
-					log.info("授权dir: {} chmod: {}",dir,chmod);
-					new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
-					chmod = "dos2unix -q " + fileName;
-					log.info("转码 dir: {} chmod: {}",dir,chmod);
-					new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
-					log.info("授权.转码 .sh 成功");
+					if (OSUtils.LINUX){
+						String fileName = by.get("projectName") + osExtion;
+						String chmod = "chmod u+x "+ fileName;
+						log.info("授权dir: {} chmod: {}",dir,chmod);
+						new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
+						chmod = "dos2unix -q " + fileName;
+						log.info("转码 dir: {} chmod: {}",dir,chmod);
+						new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
+						log.info("授权.转码 .sh 成功");
+
+						tbBuild.appendOutput("执行commandExecutor");
+						new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,split);
+					}else{
+						//windows 测试环境 自己安装打包 命令无法执行
+					}
 				}
-				tbBuild.appendOutput("执行commandExecutor");
-//				for (int i =0 ; i < 50;i++){
-//					tbBuild.appendOutput(i+"mock output");
-//				}
-				new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,split);
+
 			}
 
 
