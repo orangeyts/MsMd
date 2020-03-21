@@ -12,3 +12,8 @@
 ## 访问路径
     http://localhost
 
+
+
+感谢 https://github.com/le5le-com/topology-vue,用于流程图的绘制
+需要前后端分离+nginx配置静态文件部署
+
