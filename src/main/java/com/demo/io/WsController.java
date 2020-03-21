@@ -18,4 +18,8 @@ public class WsController extends Controller {
 
         render("/project/createjs.html");
     }
+    public void wheel(){
+
+        render("/project/wheel.html");
+    }
 }

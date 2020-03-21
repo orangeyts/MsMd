@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>判断鼠标向下向上滚动的demo</title>
+    <style>
+body{
+    height: 3333px;
+}
+</style>
+<body>
+
+</body>
+<script>
+//这里主要考虑兼容的问题
+var agent = navigator.userAgent;
+if (/.*Firefox.*/.test(agent)) {
+    document.addEventListener("DOMMouseScroll", function(e) {
+        e = e || window.event;
+        var detail = e.detail;
+        if (detail > 0) {
+            console.log("鼠标向下滚动");
+        } else {
+            console.warn("鼠标向上滚动");
+        }
+    });
+} else {
+    document.onmousewheel = function(e) {
+        e = e || window.event;
+        var wheelDelta = e.wheelDelta;
+        if (wheelDelta > 0) {
+            console.log("鼠标向上滚动");
+        } else {
+            console.warn("鼠标向下滚动");
+        }
+    }
+}
+</script>
+</head>
+
+</html>

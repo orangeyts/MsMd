@@ -11,7 +11,8 @@
 	/*setInterval(function(){
 		$("#scriptOutput").append("git pull"+"<br/>");
 	}, 1000);*/
-
+	//默认向下滚动 看到最新 追加的内容，通过判断 鼠标滚轮 滑动数量，智能判断 是否真的想看 最新的内容
+var down = true;
 	var socket;
 
 		function login(fromId){
@@ -51,7 +52,10 @@
 
 				//随着输出增加 滚动到底部
                 //outDiv.scrollTop = outDiv.scrollHeight;
-                $(window).scrollTop($(document).height()-$(window).height());
+                if(down){
+                	$(window).scrollTop($(document).height()-$(window).height());
+                }
+
             };
             socket.onopen = function(event){
                 var ta = document.getElementById('scriptOutput');
@@ -66,5 +70,23 @@
         }else{
             alert("您的浏览器不支持WebSocket协议！");
         }
+
+		var downCount = 0;
+        document.onmousewheel = function(e) {
+        e = e || window.event;
+        var wheelDelta = e.wheelDelta;
+        if (wheelDelta > 0) {
+        	down = false;
+            console.log("鼠标向上滚动");
+        } else {
+        	downCount++;
+        	if(downCount > 200){
+				down = true;
+				downCount = 0;
+				console.log("向下幅度 累计到200,变为自动追加");
+        	}
+            console.warn("鼠标向下滚动");
+        }
+    }
 </script>
 #end
