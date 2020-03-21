@@ -62,6 +62,7 @@ public class ProjectController extends Controller {
 
 	public void index() {
 		setAttr(modelKey+"Page", service.paginate(getParaToInt(0, 1), 10));
+		setCookie("csrf",UUID.randomUUID().toString(),3600);
 		render(modelKey+".html");
 	}
 	
@@ -127,6 +128,12 @@ public class ProjectController extends Controller {
 	}
 	public void build() throws Exception {
 		Integer projectId = getParaToInt("projectId");
+		String csrf = getCookie("csrf");
+		if (StringUtils.isEmpty(csrf)){
+			renderText("请从工程页面进入");
+			return;
+		}
+		removeCookie("csrf");
 		TbProject obj = service.findById(projectId);
 		if (obj.getStatus() == 1){
 			setAttr("errorMsg","工程正在运行中，请稍后重试");

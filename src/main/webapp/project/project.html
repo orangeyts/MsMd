@@ -45,7 +45,11 @@
 							运行中...
 							<a href="/#(ctx??)/project/buildOut?projectId=#(x.id)">查看输出</a>
 						#else
-							<a href="/#(ctx??)/project/build?projectId=#(x.id)">启动</a>
+							#if( x.title.contains("prod"))
+								<a onclick="confirm('确定要启动正式吗?')?location.href='/#(ctx??)/project/build?projectId=#(x.id)':''" href="javascript:;">删除</a>
+							#else
+								<a href="/#(ctx??)/project/build?projectId=#(x.id)">启动</a>
+							#end
 						#end
 					&nbsp;&nbsp;
 					&nbsp;&nbsp;<a href="/#(ctx??)/project/copy?projectId=#(x.id)">copy</a>
