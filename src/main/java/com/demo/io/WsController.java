@@ -13,4 +13,9 @@ public class WsController extends Controller {
         getRequest().setAttribute("uid",random.nextInt(10000));
         render("/project/socket.html");
     }
+
+    public void createjs(){
+
+        render("/project/createjs.html");
+    }
 }

@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="/#(ctx??)/assets/js/createjs.min.js" type="text/javascript" ></script>
+    <title>create-js</title>
+    <script>
+
+    function connection(x,y) {
+        var  canvas  =  document.createElement('canvas');
+        var  shape  = new  createjs.Shape();
+        graphics = shape.graphics;//起点位置
+        graphics.beginStroke("blue");//线的颜色
+        graphics.setStrokeStyle(5);//线的粗细
+        graphics.moveTo(1000,200);//终点
+        graphics.lineTo(x,y);
+        canvas.addChild(shape);
+}
+
+      function init() {
+        var stage = new createjs.Stage("demoCanvas");
+
+        var circle = new createjs.Shape();
+        circle.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 50);
+        circle.x = 100;
+        circle.y = 100;
+
+        graphics = circle.graphics;
+        graphics.beginStroke("blue");//线的颜色
+        graphics.setStrokeStyle(1);//线的粗细
+        graphics.moveTo(1000,1000);//终点
+        graphics.lineTo(0,0);
+
+        stage.addChild(circle);
+
+        stage.update();
+
+      }
+</script>
+</head>
+
+<body onload="init();">
+    <canvas id="demoCanvas" width="500" height="300"></canvas>
+</body>
+
+</html>
