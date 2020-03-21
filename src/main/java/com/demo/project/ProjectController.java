@@ -29,6 +29,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.PropKit;
 import com.jfinal.template.Engine;
+import com.jfinal.upload.UploadFile;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -127,6 +128,7 @@ public class ProjectController extends Controller {
 		redirect("/"+modelKey);
 	}
 	public void build() throws Exception {
+		UploadFile uploadFile = getFile("zip");
 		Integer projectId = getParaToInt("projectId");
 		String csrf = getCookie("csrf");
 		if (StringUtils.isEmpty(csrf)){
@@ -149,7 +151,7 @@ public class ProjectController extends Controller {
 			@Override
 			public void run() {
 				try {
-					runScript(obj,tbBuild);
+					runScript(obj,tbBuild,uploadFile);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}finally {
@@ -198,7 +200,7 @@ public class ProjectController extends Controller {
 	 * @param project
 	 * @throws Exception
 	 */
-	private void runScript(TbProject project,TbBuild tbBuild) throws Exception {
+	private void runScript(TbProject project,TbBuild tbBuild,UploadFile uploadFile) throws Exception {
 
 
 		try {
@@ -223,49 +225,55 @@ public class ProjectController extends Controller {
 			by.set("scmPath",project.getScmPath());
 			String osExtion = ".sh";
 
-			if (accountId != 0){
-				tbBuild.appendOutput("开始构建git工程");
-				TbAccount tbAccount = tbAccountService.getTbAccount(accountId);
-				by.set("scmUser",tbAccount.getUserName());
-				by.set("scmPwd",tbAccount.getPwd());
-				log.info("账户信息: {}  {}",tbAccount.getUserName(),tbAccount.getPwd());
 
-				String osCmdPrefix = "";
-				if (ConstantOS.WINDOWS.equals(project.getOs())){
-					osCmdPrefix = "cmd /c ";
-					osExtion = ".bat";
-				}else if (ConstantOS.LINUX.equals(project.getOs())){
-					osExtion = ".sh";
-				}
-				String exeScriptFile = home + File.separator+by.get("projectName") + osExtion;
-				engine.getTemplateByString(project.getScript()).render(by,exeScriptFile);
+			if (project.getType().intValue() == ConstantConfig.MAVEN){
+				if (accountId != 0){
+					tbBuild.appendOutput("开始构建git工程");
+					TbAccount tbAccount = tbAccountService.getTbAccount(accountId);
+					by.set("scmUser",tbAccount.getUserName());
+					by.set("scmPwd",tbAccount.getPwd());
+					log.info("账户信息: {}  {}",tbAccount.getUserName(),tbAccount.getPwd());
 
-				List<String> commands = new ArrayList<String>();
-				String lineT = osCmdPrefix + exeScriptFile;
-				log.info("工程路径: {}",project.getScriptFilePath());
-				File dir = new File(home);
-				String[] split = lineT.split(" ");
-				log.info("执行命令的值: {}",lineT);
-				if (ConstantOS.LINUX.equals(project.getOs())){
-					tbBuild.appendOutput("执行linux commandExecutor");
-					if (OSUtils.LINUX){
-						String fileName = by.get("projectName") + osExtion;
-						String chmod = "chmod u+x "+ fileName;
-						log.info("授权dir: {} chmod: {}",dir,chmod);
-						new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
-						chmod = "dos2unix -q " + fileName;
-						log.info("转码 dir: {} chmod: {}",dir,chmod);
-						new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
-						log.info("授权.转码 .sh 成功");
-
-						tbBuild.appendOutput("执行commandExecutor");
-						new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,split);
-					}else{
-						//windows 测试环境 自己安装打包 命令无法执行
+					String osCmdPrefix = "";
+					if (ConstantOS.WINDOWS.equals(project.getOs())){
+						osCmdPrefix = "cmd /c ";
+						osExtion = ".bat";
+					}else if (ConstantOS.LINUX.equals(project.getOs())){
+						osExtion = ".sh";
 					}
-				}
+					String exeScriptFile = home + File.separator+by.get("projectName") + osExtion;
+					engine.getTemplateByString(project.getScript()).render(by,exeScriptFile);
 
+					List<String> commands = new ArrayList<String>();
+					String lineT = osCmdPrefix + exeScriptFile;
+					log.info("工程路径: {}",project.getScriptFilePath());
+					File dir = new File(home);
+					String[] split = lineT.split(" ");
+					log.info("执行命令的值: {}",lineT);
+					if (ConstantOS.LINUX.equals(project.getOs())){
+						tbBuild.appendOutput("执行linux commandExecutor");
+						if (OSUtils.LINUX){
+							String fileName = by.get("projectName") + osExtion;
+							String chmod = "chmod u+x "+ fileName;
+							log.info("授权dir: {} chmod: {}",dir,chmod);
+							new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
+							chmod = "dos2unix -q " + fileName;
+							log.info("转码 dir: {} chmod: {}",dir,chmod);
+							new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,chmod.split(" "));
+							log.info("授权.转码 .sh 成功");
+
+							tbBuild.appendOutput("执行commandExecutor");
+							new CommandExecutor().execWindowCmd(Collections.emptyMap(),dir,tbBuild,split);
+						}else{
+							//windows 测试环境 自己安装打包 命令无法执行
+						}
+					}
+
+				}
+			}else{
+				//目前-maven工程才构建
 			}
+
 
 
 			if (project.getSshAccountId().intValue() != 0){
@@ -291,7 +299,7 @@ public class ProjectController extends Controller {
 						sshClient.login();
 	//					zipAndUploadRemoteServer(project, home, by, sshClient,"v4-common-parent/v4-nuo-service-user","target/v4-nuo-service-user.jar",tbBuild);
 						//压缩文件并且 上传到远程服务器
-						zipAndUploadRemoteServer(project, home, by, sshClient,subProject,tbBuild);
+						zipAndUploadRemoteServer(project, home, by, sshClient,subProject,tbBuild,uploadFile);
 
 						tbBuild.appendOutput("start 生成ssh脚本");
 						String sshScriptFile = subProject.getProjectName() + "_ssh" + osExtion;
@@ -362,7 +370,7 @@ public class ProjectController extends Controller {
 	 * @param subProject
 	 * @throws Exception
 	 */
-	private void zipAndUploadRemoteServer(TbProject obj, String home, Kv by, SSHClient sshClient,SubProjectVO subProject, TbBuild tbBuild) throws Exception {
+	private void zipAndUploadRemoteServer(TbProject obj, String home, Kv by, SSHClient sshClient,SubProjectVO subProject, TbBuild tbBuild,UploadFile uploadFile) throws Exception {
 		String projectPath = subProject.getProjectPath();
 		String projectName = subProject.getProjectName();
 
@@ -374,9 +382,12 @@ public class ProjectController extends Controller {
 			zipFileName = projectName+".zip";
 
 			if (obj.getType().intValue() == ConstantConfig.VUE){
-				zipDir = home + File.separator+by.get("projectName") + File.separator + "dist";
-				zipFile = zipDir + File.separator + zipFileName;
-				ZipUtils.compressMultiFolder(zipDir,zipFile,subProject.getZipFolderOrFile().split(" "));
+//				zipDir = home + File.separator+by.get("projectName") + File.separator + "dist";
+//				zipFile = zipDir + File.separator + zipFileName;
+//				ZipUtils.compressMultiFolder(zipDir,zipFile,subProject.getZipFolderOrFile().split(" "));
+				//前端文件现在 还是手动打包
+				zipDir = uploadFile.getUploadPath();
+				zipFile = zipDir + File.separator + uploadFile.getFileName();
 			}else if (obj.getType().intValue() == ConstantConfig.MAVEN){
 				zipDir = home + File.separator+by.get("projectName") + File.separator + projectPath;
 				zipFile = zipDir + File.separator + zipFileName;
