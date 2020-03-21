@@ -1,0 +1,23 @@
+#@layout()
+#define main()
+<h1>project管理 ---&gt; 手动上传工程project
+</h1>
+<div class="form_box">
+	<form action="/#(ctx??)/project/uploadBuild" enctype="multipart/form-data" method="post">
+		<fieldset class="solid">
+			<legend>创建tbProject</legend>
+			<input type="hidden" name="projectId" value="#(tbProject.id??)" />
+
+			<div id="uploadProject">
+				<label>上传</label>
+				<input type="file" name="zip">
+			</div>
+
+			<div>
+				<label></label>
+				<input value="构建" type="submit">
+			</div>
+		</fieldset>
+	</form>
+</div>
+#end

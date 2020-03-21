@@ -41,6 +41,14 @@ public abstract class BaseTbProject<M extends BaseTbProject<M>> extends Model<M>
 		return getInt("buildId");
 	}
 
+	public void setUploadFile(java.lang.Integer uploadFile) {
+		set("uploadFile", uploadFile);
+	}
+	
+	public java.lang.Integer getUploadFile() {
+		return getInt("uploadFile");
+	}
+
 	public void setStatus(java.lang.Integer status) {
 		set("status", status);
 	}

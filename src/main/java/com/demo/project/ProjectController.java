@@ -107,6 +107,7 @@ public class ProjectController extends Controller {
 		List<TbAccount> tbAccountList = tbAccountService.getTbAccountList();
 		setAttr("tbAccountList", tbAccountList);
 
+		setCookie("csrf",UUID.randomUUID().toString(),3600);
 		//
 		List<TbProject> projectList = service.getList();
 		setAttr("projectList", projectList);
@@ -128,7 +129,20 @@ public class ProjectController extends Controller {
 		redirect("/"+modelKey);
 	}
 	public void build() throws Exception {
+		internalBuild(null);
+	}
+
+	public void toUploadbBuild() throws Exception {
+		TbProject byId = service.findById(getParaToInt("projectId"));
+		setAttr("tbProject", byId);
+		setCookie("csrf",UUID.randomUUID().toString(),3600);
+	}
+	public void uploadBuild() throws Exception {
 		UploadFile uploadFile = getFile("zip");
+		internalBuild(uploadFile);
+	}
+
+	private void internalBuild(UploadFile uploadFile) throws Exception {
 		Integer projectId = getParaToInt("projectId");
 		String csrf = getCookie("csrf");
 		if (StringUtils.isEmpty(csrf)){
@@ -156,6 +170,7 @@ public class ProjectController extends Controller {
 					e.printStackTrace();
 				}finally {
 					obj.updateProjectStatus(0,tbBuild.getId());
+					uploadFile.getFile().delete();
 				}
 			}
 		}).start();
@@ -381,7 +396,7 @@ public class ProjectController extends Controller {
 			tbBuild.appendOutput("压缩文件...");
 			zipFileName = projectName+".zip";
 
-			if (obj.getType().intValue() == ConstantConfig.VUE){
+			if (obj.getUploadFile().intValue() == 1){
 //				zipDir = home + File.separator+by.get("projectName") + File.separator + "dist";
 //				zipFile = zipDir + File.separator + zipFileName;
 //				ZipUtils.compressMultiFolder(zipDir,zipFile,subProject.getZipFolderOrFile().split(" "));

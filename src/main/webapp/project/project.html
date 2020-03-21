@@ -46,9 +46,18 @@
 							<a href="/#(ctx??)/project/buildOut?projectId=#(x.id)">查看输出</a>
 						#else
 							#if( x.title.contains("prod"))
-								<a onclick="confirm('确定要启动正式吗?')?location.href='/#(ctx??)/project/build?projectId=#(x.id)':''" href="javascript:;">启动</a>
+								#if(x.uploadFile?? == 1)
+									<a onclick="confirm('确定要启动正式吗?')?location.href='/#(ctx??)/project/toUploadbBuild?projectId=#(x.id)':''" href="javascript:;">启动</a>
+								#else
+									<a onclick="confirm('确定要启动正式吗?')?location.href='/#(ctx??)/project/build?projectId=#(x.id)':''" href="javascript:;">启动</a>
+								#end
 							#else
-								<a href="/#(ctx??)/project/build?projectId=#(x.id)">启动</a>
+								#if(x.uploadFile?? == 1)
+									<a href="/#(ctx??)/project/toUploadbBuild?projectId=#(x.id)">启动</a>
+								#else
+									<a href="/#(ctx??)/project/build?projectId=#(x.id)">启动</a>
+								#end
+
 							#end
 						#end
 					&nbsp;&nbsp;

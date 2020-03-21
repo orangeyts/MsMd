@@ -8,87 +8,103 @@
 		<input type="text" name="tbProject.title" value="#(tbProject.title??)" />
 	</div>
 	<div>
-		<label>OS类型</label>
-		<select name="tbProject.os" id="osSelectId">
-			#if(tbProject.os?? == 'linux')
-			<option value="linux" selected>linux</option>
-			<option value="windows">windows</option>
+		<label>项目类型</label>
+		<select name="tbProject.type" id="projectTypeSelect">
+			<option value="1">java</option>
+			<option value="0">vue</option>
+		</select>
+	</div>
+	<div>
+		<label>是否上传工程</label>
+		<select name="tbProject.uploadFile">
+			#if(tbProject.uploadFile?? == 1)
+			<option value="1" selected>是</option>
+			<option value="0">否</option>
 			#else
-			<option value="linux" selected>linux</option>
-			<option value="windows" selected>windows</option>
+			<option value="1">是</option>
+			<option value="0" selected>否</option>
 			#end
 		</select>
 	</div>
-	<div>
-		<label>关联工程</label>
-		<select name="tbProject.relatedId">
-			<option value="0">无关联工程</option>
-			#for(x : projectList)
-			#if(tbProject.relatedId?? == x.id)
-			<option value="#(x.id)" selected>#(x.title)</option>
-			#else
-			<option value="#(x.id)">#(x.title)</option>
-			#end
-			#end
 
-		</select>
-	</div>
-	<div>
-		<label>脚本模板</label>
-	#if(tbProject.id?? == null)
-		<select id="templateSelectId">
-			#for(x : templateList)
-			<option value="#(x.id)">#(x.name)</option>
-			#end
-		</select>
-	#else
-		编辑无法选择模板
-	#end
-	</div>
-	<div>
-		<label>项目负责人</label>
-		<input type="text" name="tbProject.dutyPerson" value="#(tbProject.dutyPerson??)" />
-	</div>
-	<div>
-		<label>代码仓库</label>
-		<input type="text" name="tbProject.scmPath" value="#(tbProject.scmPath??)" />
-	</div>
-	<div>
-		<label>代码仓库-账号信息</label>
-		<select name="tbProject.accountId" id="tbProject.accountId" onchange="hideGitInfo(this)">
-			<option value="0">本地不编译工程</option>
-			#for(x : tbAccountList)
-				#if(tbProject.accountId?? == x.id)
-					<option value="#(x.id)" selected>#(x.userName)/**</option>
-				#else
-					<option value="#(x.id)">#(x.userName)/**</option>
-				#end
-			#end
+	<div id="scmBuildProject">
 
-		</select>
-	</div>
-	<div id="gitInfo">
 		<div>
-			<label>项目类型</label>
-			<select name="tbProject.type" id="projectTypeSelect">
-				<option value="1">java</option>
-				<option value="0">vue</option>
+			<label>OS类型</label>
+			<select name="tbProject.os" id="osSelectId">
+				#if(tbProject.os?? == 'linux')
+				<option value="linux" selected>linux</option>
+				<option value="windows">windows</option>
+				#else
+				<option value="linux" selected>linux</option>
+				<option value="windows" selected>windows</option>
+				#end
 			</select>
 		</div>
 		<div>
-			<label>手机号</label>
-			<input type="text" name="tbProject.phone" value="#(tbProject.phone??)" />
+			<label>关联工程</label>
+			<select name="tbProject.relatedId">
+				<option value="0">无关联工程</option>
+				#for(x : projectList)
+				#if(tbProject.relatedId?? == x.id)
+				<option value="#(x.id)" selected>#(x.title)</option>
+				#else
+				<option value="#(x.id)">#(x.title)</option>
+				#end
+				#end
+
+			</select>
 		</div>
 		<div>
-			<label>脚本名称</label>
-			<input type="text" name="tbProject.scriptFilePath" value="#(tbProject.scriptFilePath??)" />
+			<label>脚本模板</label>
+		#if(tbProject.id?? == null)
+			<select id="templateSelectId">
+				#for(x : templateList)
+				<option value="#(x.id)">#(x.name)</option>
+				#end
+			</select>
+		#else
+			编辑无法选择模板
+		#end
 		</div>
 		<div>
-			<label>执行脚本</label>
-			<textarea name="tbProject.script" id="script" cols="200" rows="50">#(tbProject.script??)</textarea>#(contentMsg)
+			<label>项目负责人</label>
+			<input type="text" name="tbProject.dutyPerson" value="#(tbProject.dutyPerson??)" />
+		</div>
+		<div>
+			<label>代码仓库</label>
+			<input type="text" name="tbProject.scmPath" value="#(tbProject.scmPath??)" />
+		</div>
+		<div>
+			<label>代码仓库-账号信息</label>
+			<select name="tbProject.accountId" id="tbProject.accountId" onchange="hideGitInfo(this)">
+				<option value="0">本地不编译工程</option>
+				#for(x : tbAccountList)
+					#if(tbProject.accountId?? == x.id)
+						<option value="#(x.id)" selected>#(x.userName)/**</option>
+					#else
+						<option value="#(x.id)">#(x.userName)/**</option>
+					#end
+				#end
+
+			</select>
+		</div>
+		<div id="gitInfo">
+			<div>
+				<label>手机号</label>
+				<input type="text" name="tbProject.phone" value="#(tbProject.phone??)" />
+			</div>
+			<div>
+				<label>脚本名称</label>
+				<input type="text" name="tbProject.scriptFilePath" value="#(tbProject.scriptFilePath??)" />
+			</div>
+			<div>
+				<label>执行脚本</label>
+				<textarea name="tbProject.script" id="script" cols="200" rows="50">#(tbProject.script??)</textarea>#(contentMsg)
+			</div>
 		</div>
 	</div>
-
+<!--	end scmBuild div-->
 	<div>
 		<label>ssh-账号信息</label>
 		<select name="tbProject.sshAccountId">
