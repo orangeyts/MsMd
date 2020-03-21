@@ -46,7 +46,7 @@
 							<a href="/#(ctx??)/project/buildOut?projectId=#(x.id)">查看输出</a>
 						#else
 							#if( x.title.contains("prod"))
-								<a onclick="confirm('确定要启动正式吗?')?location.href='/#(ctx??)/project/build?projectId=#(x.id)':''" href="javascript:;">删除</a>
+								<a onclick="confirm('确定要启动正式吗?')?location.href='/#(ctx??)/project/build?projectId=#(x.id)':''" href="javascript:;">启动</a>
 							#else
 								<a href="/#(ctx??)/project/build?projectId=#(x.id)">启动</a>
 							#end
