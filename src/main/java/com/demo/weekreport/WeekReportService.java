@@ -25,7 +25,7 @@ public class WeekReportService {
 	
 	public Page<TbWeekReport> paginate(int pageNumber, int pageSize, String condition,List<Object> paramValue) {
 		return dao.paginate(pageNumber, pageSize, "select * ",
-				"FROM tb_week_report WHERE 1=1 " + condition + " order by userId, createTime desc", paramValue.toArray());
+				"FROM tb_week_report WHERE 1=1 " + condition + " order by reportDate desc", paramValue.toArray());
 	}
 	
 	public TbWeekReport findById(int id) {
