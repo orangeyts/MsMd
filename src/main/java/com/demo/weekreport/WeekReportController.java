@@ -9,6 +9,8 @@ import com.demo.common.model.Blog;
 import com.demo.common.model.TbUser;
 import com.demo.common.model.TbWeekReport;
 import com.demo.tbuser.TbUserService;
+import com.demo.util.DateUtils;
+import com.demo.util.DateVO;
 import com.demo.util.SessionUtil;
 import com.demo.vo.TbWeekReportVO;
 import com.jfinal.aop.Before;
@@ -57,16 +59,22 @@ public class WeekReportController extends Controller {
 	 * @return
 	 */
 	private Page<TbWeekReport> getTbWeekReportPage(String startTime, String endTime, Integer pageNumber, Integer pageSize) {
+		//日期默认加在当前周的日志
+		DateVO nowDateVO = DateUtils.getNowDateVO();
+
 		List<Object> paramValue = new ArrayList<Object>();
 		String condition = "";
-		if(!StringUtils.isEmpty(startTime)){
-			condition = condition + " and reportDate>=?";
-			paramValue.add(startTime);
+		if(StringUtils.isEmpty(startTime)){
+			startTime = nowDateVO.getMon();
 		}
-		if(!StringUtils.isEmpty(endTime)){
-			condition = condition + " and reportDate<=?";
-			paramValue.add(endTime);
+		condition = condition + " and reportDate>=?";
+		paramValue.add(startTime);
+
+		if(StringUtils.isEmpty(endTime)){
+			endTime = nowDateVO.getSun();
 		}
+		condition = condition + " and reportDate<=?";
+		paramValue.add(endTime);
 		return service.paginate(pageNumber, pageSize, condition, paramValue);
 	}
 
