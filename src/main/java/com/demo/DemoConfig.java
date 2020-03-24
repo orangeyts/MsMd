@@ -1,6 +1,7 @@
 package com.demo;
 
 import com.alibaba.druid.util.StringUtils;
+import com.demo.api.APIController;
 import com.demo.blog.BlogController;
 import com.demo.common.Slf4jLogFactory;
 import com.demo.common.model._MappingKit;
@@ -91,6 +92,7 @@ public class DemoConfig extends JFinalConfig {
         me.add("/users", UserController.class);
 
         me.add("/ws", WsController.class);
+        me.add("/api", APIController.class);
     }
 	
 	public void configEngine(Engine me) {

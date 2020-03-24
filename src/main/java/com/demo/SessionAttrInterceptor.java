@@ -32,7 +32,7 @@ public class SessionAttrInterceptor implements Interceptor {
         String url = request.getRequestURI();
         String referer = request.getHeader("Referer");
         log.info("url: [{}]   fullUrl: [{}]",url,fullUrl);
-        if (url.endsWith("/toLogin")|| (url.endsWith("/login"))|| (url.endsWith("/toRegister"))|| (url.endsWith("/register"))){
+        if (url.startsWith("/msmd/api")||url.endsWith("/toLogin")|| (url.endsWith("/login"))|| (url.endsWith("/toRegister"))|| (url.endsWith("/register"))){
             ai.invoke();
         }else{
             String uid = null;
