@@ -1,5 +1,6 @@
 package com.demo.api;
 
+import com.alibaba.fastjson.JSON;
 import com.demo.blog.BlogService;
 import com.demo.common.model.TbTopology;
 import com.jfinal.aop.Inject;
@@ -54,7 +55,11 @@ public class APIController extends Controller {
     }
 
     public void topologyOne() {
-        renderJson(service.findById(getParaToInt()));
+        TbTopology topology = service.findById(getParaToInt());
+        //把data转换为 JSON对象
+        System.out.println(topology.getData());
+        topology.set("data", JSON.parseObject(topology.getData()));
+        renderJson(topology);
     }
 
     public void wheel(){
