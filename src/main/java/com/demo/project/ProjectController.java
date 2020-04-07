@@ -24,6 +24,7 @@ import com.demo.util.websocket.model.CommandType;
 import com.demo.util.websocket.model.JoinGroup;
 import com.demo.util.websocket.model.Login;
 import com.demo.vo.SubProjectVO;
+import com.jcraft.jsch.JSchException;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.Kv;
@@ -62,7 +63,8 @@ public class ProjectController extends Controller {
 	TbEnvConfigService tbEnvConfigService;
 
 	public void index() {
-		setAttr(modelKey+"Page", service.paginate(getParaToInt(0, 1), 10));
+		Integer pageNumber = getParaToInt("page", 1);
+		setAttr(modelKey+"Page", service.paginate(pageNumber, 10));
 		setCookie("csrf",UUID.randomUUID().toString(),3600);
 		render(modelKey+".html");
 	}
@@ -346,8 +348,13 @@ public class ProjectController extends Controller {
 			}else{
 				log.warn("没有配置 edas账户");
 			}
-		} catch (Exception e) {
+		}catch (JSchException e){
+			tbBuild.appendOutput("ssh通道异常: "+e.getMessage());
+			log.error(e.getMessage(),e);
+			throw e;
+		}catch (Exception e) {
 			tbBuild.appendOutput(ExceptionUtil.getStackTrace(e));
+			log.error(e.getMessage(),e);
 			throw e;
 		}
 	}
