@@ -27,12 +27,22 @@ public class AliyunSDKTest {
 
     private static String accessKeyId;
     private static String accessSecret;
+    private static String[] portRange;
+    private static String groupId;
+
+    /**
+     * 命名空间前缀 用于切换不同的配置
+     */
+    private static String prefixNameSpace = "he.";
+    private static String prefixNameSpace1 = "common.";
 
     @BeforeClass
     public static void beforeClass() throws Exception {
         PropKit.use("a_little_config_db.txt");
-        accessKeyId = PropKit.get("common.accessKeyId");
-        accessSecret = PropKit.get("common.accessSecret");
+        accessKeyId = PropKit.get(prefixNameSpace + "accessKeyId");
+        accessSecret = PropKit.get(prefixNameSpace + "accessSecret");
+        groupId = PropKit.get(prefixNameSpace + "groupId");
+        portRange = PropKit.get(prefixNameSpace + "portRange").split(",");
 
     }
 
@@ -57,7 +67,8 @@ public class AliyunSDKTest {
         DefaultProfile profile = DefaultProfile.getProfile("cn-shenzhen", accessKeyId, accessSecret);
         IAcsClient client = new DefaultAcsClient(profile);
 
-        String[] portRange = {"27017/27017","22/22"};
+//        String[] portRange = {"27017/27017","22/22"};
+//        String[] portRange = {"3306/3306","22/22"};
         //当前网络公网IP
         String currentNetPublicIP = getPublicIP();
 
@@ -65,7 +76,7 @@ public class AliyunSDKTest {
         for (String port : portRange) {
             AuthorizeSecurityGroupRequest request = new AuthorizeSecurityGroupRequest();
             request.setRegionId("cn-shenzhen");
-            request.setSecurityGroupId("sg-wz9d2a0eoi8avx4u4i7d");
+            request.setSecurityGroupId(groupId);
             request.setNicType("internet");
             request.setIpProtocol("TCP");
             request.setDescription("gen by SDK " + DateKit.toStr(new Date(),DateKit.timeStampPattern));
