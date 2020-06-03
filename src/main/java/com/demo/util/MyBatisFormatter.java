@@ -26,7 +26,7 @@ public class MyBatisFormatter {
             log.info(paramValue);
             String param = paramValue.split("\\(")[0];
             if (paramValue.contains("String")) {
-                param = "\"" + param + "\"";
+                param = "\"" + param.trim() + "\"";
             } else {
                /* log.info("非字符串参数 按照实际类型,格式化输出");
                 String regex = "\\(([^}]*)\\)";
