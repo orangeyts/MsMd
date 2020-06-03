@@ -6,12 +6,14 @@ import com.demo.common.model.TbUser;
 import com.demo.constant.ConstantConfig;
 import com.demo.env.TbEnvConfigService;
 import com.demo.tbuser.TbUserService;
+import com.demo.util.MyBatisFormatter;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.PropKit;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.Cookie;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -94,6 +96,16 @@ public class IndexController extends Controller {
 			renderText("用户已存在");
 		}
 		redirect("/weekreport/index");
+	}
+
+	public void mybatisFormatSql() throws Exception {
+		String sql = get("sql");
+		log.info("sql: [{}]",sql);
+		if (!StringUtils.isEmpty(sql)){
+			sql = MyBatisFormatter.format(sql.trim());
+		}
+		setAttr("sql",sql);
+		render("mybatisFormatSql.html");
 	}
 }
 
