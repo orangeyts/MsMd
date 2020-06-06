@@ -14,7 +14,7 @@
     <lucene.version>8.3.1</lucene.version>
   </properties>
 
-    <!-- 使用阿里 maven 库
+    <!-- 使用阿里 maven 库-->
     <repositories>
 		<repository>
 			<id>ali-maven</id>
@@ -29,7 +29,7 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	-->
+
 
     <!-- 添加快照版本库,updatePolicy: always、daily、interval、never -->
     <!-- repositories>

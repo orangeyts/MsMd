@@ -107,6 +107,15 @@ public class IndexController extends Controller {
 		setAttr("sql",sql);
 		render("mybatisFormatSql.html");
 	}
+
+	public void mybatisFormatSqlAjax() throws Exception {
+		String sql = get("sql");
+		log.info("sql: [{}]",sql);
+		if (!StringUtils.isEmpty(sql)){
+			sql = MyBatisFormatter.format(sql.trim());
+		}
+		renderText(sql);
+	}
 }
 
 
